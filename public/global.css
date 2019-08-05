@@ -72,7 +72,7 @@ body {
 }
 
 .logo_left {
-	background: url(../img/logo.png);
+	background: url(./img/logo.png);
 	width: 34px;
 	height: 34px;
 	background-position: center;
@@ -113,7 +113,7 @@ body {
 }
 
 .icons-header-left1 {
-	background: url(../img/save.png);
+	background: url(./img/save.png);
 	width: 50%;
 	height: 100%;
 	background-position: center;
@@ -129,7 +129,7 @@ body {
 }
 
 .icons-header-left2 {
-	background: url(../img/ping.png);
+	background: url(./img/ping.png);
 	width: 50%;
 	height: 100%;
 	background-position: center;
@@ -152,7 +152,7 @@ body {
 }
 
 .icons-header-right1 {
-	background: url(../img/rect.png);
+	background: url(./img/rect.png);
 	width: 50%;
 	height: 100%;
 	background-position: center;
@@ -168,7 +168,7 @@ body {
 }
 
 .icons-header-right2 {
-	background: url(../img/rect1.png);
+	background: url(./img/rect1.png);
 	width: 50%;
 	height: 100%;
 	background-position: center;
@@ -195,7 +195,7 @@ body {
 input.header-input {
 	height: 36px;
 	width: 358px;
-	background: url(../img/search.png) no-repeat #FFF;
+	background: url(./img/search.png) no-repeat #FFF;
 	background-position: 340px center;
 	border: 0px solid #818181;
 	outline: none;
@@ -213,7 +213,7 @@ input.header-input {
 input.header-input:focus {
 	height: 36px;
 	width: 358px;
-	background: url(../img/search1.png) no-repeat #FFF;
+	background: url(./img/search1.png) no-repeat #FFF;
 	background-position: 340px center;
 	transition: background 0.33s ease;
 	text-indent: 17px;
@@ -305,7 +305,7 @@ input.header-input:-moz-placeholder {
 	}
 	.account:before {
 		content: '';
-		background: url(../img/arrow-down.png);
+		background: url(./img/arrow-down.png);
 		background-repeat: no-repeat;
 		display: block;
 		position: relative;
@@ -339,7 +339,7 @@ input.header-input:-moz-placeholder {
 	}
 	.account:before {
 		content: '';
-		background: url(../img/arrow-down.png);
+		background: url(./img/arrow-down.png);
 		background-repeat: no-repeat;
 		display: block;
 		position: absolute;
@@ -365,7 +365,7 @@ input.header-input:-moz-placeholder {
 }
 
 .icons-vert-top-1 {
-	background: url(../img/icon-vert1.png);
+	background: url(./img/icon-vert1.png);
 	width: 54px;
 	height: 54px;
 	background-position: center;
@@ -380,7 +380,7 @@ input.header-input:-moz-placeholder {
 }
 
 .icons-vert-top-2 {
-	background: url(../img/icon-vert2.png);
+	background: url(./img/icon-vert2.png);
 	width: 54px;
 	height: 54px;
 	background-position: center;
@@ -395,7 +395,7 @@ input.header-input:-moz-placeholder {
 }
 
 .icons-vert-top-3 {
-	background: url(../img/icon-vert3.png);
+	background: url(./img/icon-vert3.png);
 	width: 54px;
 	height: 54px;
 	background-position: center;
@@ -421,7 +421,7 @@ input.header-input:-moz-placeholder {
 }
 
 .icons-vert-bottom-1 {
-	background: #FFF url(../img/icon-vert-down.png);
+	background: #FFF url(./img/icon-vert-down.png);
 	width: 24px;
 	height: 24px;
 	background-position: center;
@@ -437,7 +437,7 @@ input.header-input:-moz-placeholder {
 
 @media (min-height: 444px) {
 	.copyright {
-		background: url(../img/scan.png);
+		background: url(./img/scan.png);
 		position: absolute;
 		bottom: 0;
 		right: 0;
@@ -514,7 +514,7 @@ input.header-input:-moz-placeholder {
 
 .right-controls-pop-r1-text:before {
 	content: '';
-	background: url(../img/icon1-pop.png);
+	background: url(./img/icon1-pop.png);
 	background-repeat: no-repeat;
 	display: block;
 	position: relative;
@@ -525,7 +525,7 @@ input.header-input:-moz-placeholder {
 }
 
 .right-controls-pop-r1-сlose {
-	background: url(../img/icon2-pop.png);
+	background: url(./img/icon2-pop.png);
 	width: 12px;
 	height: 12px;
 	background-position: center;
@@ -554,7 +554,7 @@ input.header-input:-moz-placeholder {
 }
 
 .right-controls-1 {
-	background: #FFF url(../img/icon-right1.png);
+	background: #FFF url(./img/icon-right1.png);
 	width: 40px;
 	height: 40px;
 	background-position: center;
@@ -571,7 +571,7 @@ input.header-input:-moz-placeholder {
 }
 
 .right-controls-1-1 {
-	background: #FFF url(../img/icon-right2.png);
+	background: #FFF url(./img/icon-right2.png);
 	width: 40px;
 	height: 40px;
 	background-position: center;
@@ -587,7 +587,7 @@ input.header-input:-moz-placeholder {
 }
 
 .right-controls-2 {
-	background: #FFF url(../img/icon-right2.png);
+	background: #FFF url(./img/icon-right2.png);
 	width: 40px;
 	height: 40px;
 	background-position: center;
@@ -629,7 +629,7 @@ input.header-input:-moz-placeholder {
 	position: absolute;
 	width: 12px;
 	height: 12px;
-	background: #FFF url(../img/plus.png);
+	background: #FFF url(./img/plus.png);
 	background-position: center;
 	background-repeat: no-repeat;
 	transition: all 0.23s ease;
@@ -673,7 +673,7 @@ input.header-input:-moz-placeholder {
 	position: absolute;
 	width: 12px;
 	height: 12px;
-	background: #FFF url(../img/minus.png);
+	background: #FFF url(./img/minus.png);
 	background-position: center;
 	background-repeat: no-repeat;
 	transition: all 0.23s ease;
@@ -705,7 +705,7 @@ input.header-input:-moz-placeholder {
 	position: absolute;
 	width: 18px;
 	height: 18px;
-	background: url(../img/left-icon-1.png);
+	background: url(./img/left-icon-1.png);
 	background-position: center;
 	background-repeat: no-repeat;
 	transition: all 0.23s ease;
@@ -737,7 +737,7 @@ input.header-input:-moz-placeholder {
 	position: absolute;
 	width: 18px;
 	height: 18px;
-	background: url(../img/left-icon-1-active.png);
+	background: url(./img/left-icon-1-active.png);
 	background-position: center;
 	background-repeat: no-repeat;
 	transition: all 0.23s ease;
@@ -897,7 +897,7 @@ input[type=radio].css-checkbox+label.css-label.chk {
 }
 
 label.css-label {
-	background-image: url(../img/ch.png);
+	background-image: url(./img/ch.png);
 	-webkit-touch-callout: none;
 	-webkit-user-select: none;
 	-khtml-user-select: none;
