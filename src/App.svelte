@@ -18,20 +18,11 @@
 	}
 </style>
 
-{#await promise}
-	<!-- promise is pending -->
-	<p>waiting for the promise to resolve...</p>
-{:then value}
-	<!-- promise was fulfilled -->
-	<p>The value is {value}</p>
-{:catch error}
-	<!-- promise was rejected -->
-	<p>Something went wrong: {error.message}</p>
-{/await}
+
 
   <div class="header">
 	 <div class="block_left">
-		<a href="http://fires.ru" class="logo">
+		<a href="#" class="logo">
 		   <div class="logo_left">
 			  &nbsp;
 		   </div>
@@ -79,5 +70,29 @@
 		<div class="right-controls-2"></div>
 		<Zoom ></Zoom>
 	</div>
+
+      <div id="flexWrapper">
+         <div class="right-controls-pop" id="control-pop">
+            <div class="right-controls-pop-r1">
+               <div class="right-controls-pop-r1-text">Подложка</div>
+               <div class="right-controls-pop-r1-сlose" id="close-pop"></div>
+            </div>
+            <div class="right-controls-pop-r2">
+               <div class="radio-arr"><span class="spacer"><input type="radio" name="radiog_dark" id="radio1" class="css-checkbox" /><label for="radio1" class="css-label radGroup1 radGroup2">Карта</label></div>
+               <div class="radio-arr"><span class="spacer"><input type="radio" name="radiog_dark" id="radio2" class="css-checkbox" checked="checked"/><label for="radio2" class="css-label radGroup1 radGroup2">Спутник ру</label></div>
+               <div class="radio-arr"><span class="spacer"><input type="radio" name="radiog_dark" id="radio3" class="css-checkbox" /><label for="radio3" class="css-label radGroup1 radGroup2">MapTiler Topo</label></div>
+               <div class="radio-arr"><span class="spacer"><input type="radio" name="radiog_dark" id="radio4" class="css-checkbox" /><label for="radio4" class="css-label radGroup1 radGroup2">MapBox</label></div>
+               <div class="radio-arr"><span class="spacer"><input type="radio" name="radiog_dark" id="radio5" class="css-checkbox" /><label for="radio5" class="css-label radGroup1 radGroup2">Рельеф RuMap</label></div>
+            </div>
+            <div class="right-controls-pop-r3">
+               <label class="control control-checkbox">
+               Координатная сетка
+               <input type="checkbox" checked="checked" />
+               <div class="control_indicator"></div>
+            </div>
+         </div>
+      </div>
+
   <div class="copyright"></div>
+  <div class="copyright-bottom"></div>
 
