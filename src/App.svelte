@@ -18,6 +18,17 @@
 	}
 </style>
 
+{#await promise}
+	<!-- promise is pending -->
+	<p>waiting for the promise to resolve...</p>
+{:then value}
+	<!-- promise was fulfilled -->
+	<p>The value is {value}</p>
+{:catch error}
+	<!-- promise was rejected -->
+	<p>Something went wrong: {error.message}</p>
+{/await}
+
   <div class="header">
 	 <div class="block_left">
 		<a href="http://fires.ru" class="logo">
@@ -64,6 +75,9 @@
 	  </div>
 	  <!--Container for Map-->
 	<Map on:notify="{callbackFunction}"></Map>
-	<Zoom ></Zoom>
+	<div class="right-controls">
+		<div class="right-controls-2"></div>
+		<Zoom ></Zoom>
+	</div>
   <div class="copyright"></div>
 

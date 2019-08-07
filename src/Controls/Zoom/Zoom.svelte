@@ -32,11 +32,8 @@
 	});
 </script>
 
-  <div class="right-controls">
-	 <div class="right-controls-2"></div>
 	 <div class="right-controls-3">
 		<div class="right-controls-3-1" on:click={zoomIn}></div>
 		<div class="right-controls-3-2" bind:this={zoom}>5</div>
 		<div class="right-controls-3-3" on:click={zoomOut}></div>
 	 </div>
-  </div>
