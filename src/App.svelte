@@ -79,6 +79,17 @@ console.log('leafletMap1', leafletMap);
 			<div class="icons-vert-bottom-1"></div>
 		 </div>
 	  </div>
+	  
+<div class="sidebar-opened">
+   <div class="sidebar-opened-row1">
+      <div class="sidebar-opened-row1-left">Название проекта/компании</div>
+      <div class="sidebar-opened-row1-right"></div>
+   </div>
+   <div class="sidebar-opened-row2">
+      <input type="text" name="input1" class="header-input1">
+   </div>
+</div>
+	  
 	  <!--Container for Map-->
 	<Map></Map>
 	<div class="right-controls">
