@@ -56,14 +56,8 @@
 			distanceUnit: 'auto',
 			squareUnit: 'auto',
 		});
-		let osm = L.tileLayer('//tilessputnik.ru/{z}/{x}/{y}.png', {
-			maxZoom: 21,
-			maxNativeZoom: 18,
-			attribution: '<a target="_blank" href="http://maps.sputnik.ru" class="">Спутник</a> - © Ростелеком | © <a href="http://osm.org/copyright">OpenStreetMap</a> contributors'
-		});
-		map.addLayer(osm);
 		resize();
-		leafletMap.update(n => map);
+		leafletMap.set(map);
 		
 		// dispatch('leafletMap', leafletMap);
     });

@@ -12,9 +12,12 @@
 console.log('sssssssss', value);
 		base_visible = value;
 	});
+	const unsubscribe1 = leafletMap.subscribe(value => {
+console.log('leafletMap', value);
+	});
 	let toggleBase = () => {
 		baseContVisible.update(n => !n);
-console.log('leafletMap', leafletMap);
+console.log('leafletMap1', leafletMap);
 	};
 /*
 	export let name;
