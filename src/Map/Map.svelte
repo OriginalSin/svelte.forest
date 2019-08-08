@@ -1,9 +1,11 @@
 <script>
     import {onMount, createEventDispatcher, setContext, getContext} from 'svelte';
     // import {loadMap} from '../Map/Actions.js';
-    
-    let mapContainer;    
-    export let leafletMap = null;
+
+	import { leafletMap } from '../stores.js';
+
+	let mapContainer;    
+	let map = null;
 
     // setContext ('leafletMap', leafletMap);
     export let center = [55.727110, 37.441406];
@@ -19,7 +21,7 @@
     export let baseLayers = [];    
     
     const resize = () => {
-        leafletMap.invalidateSize();
+        map.invalidateSize();
     };
 
 	const dispatch = createEventDispatcher();
@@ -41,7 +43,7 @@
 		zoom = DefaultZoom || zoom;
 		distanceUnit = DistanceUnit || distanceUnit;
 		squareUnit = SquareUnit || squareUnit;
-		leafletMap = L.map(mapContainer, {
+		map = L.map(mapContainer, {
 			center,
 			minZoom,
 			zoom,
@@ -59,9 +61,11 @@
 			maxNativeZoom: 18,
 			attribution: '<a target="_blank" href="http://maps.sputnik.ru" class="">Спутник</a> - © Ростелеком | © <a href="http://osm.org/copyright">OpenStreetMap</a> contributors'
 		});
-		leafletMap.addLayer(osm);
+		map.addLayer(osm);
 		resize();
-		dispatch('leafletMap', leafletMap);
+		leafletMap.update(n => map);
+		
+		// dispatch('leafletMap', leafletMap);
     });
 </script>
 

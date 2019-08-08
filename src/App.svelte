@@ -1,15 +1,29 @@
 <script>
     import {onMount, setContext, getContext} from 'svelte';
+	
+	import { baseContVisible, leafletMap } from './stores.js';
+
     import Map from './Map/Map.svelte';
     import Zoom from './Controls/Zoom/Zoom.svelte';
+    import Base from './Controls/Base/Base.svelte';
 
+	let base_visible = false;
+	const unsubscribe = baseContVisible.subscribe(value => {
+console.log('sssssssss', value);
+		base_visible = value;
+	});
+	let toggleBase = () => {
+		baseContVisible.update(n => !n);
+console.log('leafletMap', leafletMap);
+	};
+/*
 	export let name;
 	
 	export let leafletMap = null;
 	function callbackFunction(event) {
 		console.log(`Notify fired! Detail: ${event.detail}`)
 	}
-
+*/
 </script>
 
 <style>
@@ -18,18 +32,16 @@
 	}
 </style>
 
-
-
   <div class="header">
 	 <div class="block_left">
-		<a href="#" class="logo">
+		<span class="logo">
 		   <div class="logo_left">
 			  &nbsp;
 		   </div>
 		   <div class="logo_left_text">
 			  Logo
 		   </div>
-		</a>
+		</span>
 		<div class="left-icons">
 		   <div class="left-icons-left">
 			  <div class="icons-header-left1"></div>
@@ -65,33 +77,13 @@
 		 </div>
 	  </div>
 	  <!--Container for Map-->
-	<Map on:notify="{callbackFunction}"></Map>
+	<Map></Map>
 	<div class="right-controls">
-		<div class="right-controls-2"></div>
+		<div class="right-controls-2" on:click={toggleBase}></div>
 		<Zoom ></Zoom>
 	</div>
 
-      <div id="flexWrapper">
-         <div class="right-controls-pop" id="control-pop">
-            <div class="right-controls-pop-r1">
-               <div class="right-controls-pop-r1-text">Подложка</div>
-               <div class="right-controls-pop-r1-сlose" id="close-pop"></div>
-            </div>
-            <div class="right-controls-pop-r2">
-               <div class="radio-arr"><span class="spacer"><input type="radio" name="radiog_dark" id="radio1" class="css-checkbox" /><label for="radio1" class="css-label radGroup1 radGroup2">Карта</label></div>
-               <div class="radio-arr"><span class="spacer"><input type="radio" name="radiog_dark" id="radio2" class="css-checkbox" checked="checked"/><label for="radio2" class="css-label radGroup1 radGroup2">Спутник ру</label></div>
-               <div class="radio-arr"><span class="spacer"><input type="radio" name="radiog_dark" id="radio3" class="css-checkbox" /><label for="radio3" class="css-label radGroup1 radGroup2">MapTiler Topo</label></div>
-               <div class="radio-arr"><span class="spacer"><input type="radio" name="radiog_dark" id="radio4" class="css-checkbox" /><label for="radio4" class="css-label radGroup1 radGroup2">MapBox</label></div>
-               <div class="radio-arr"><span class="spacer"><input type="radio" name="radiog_dark" id="radio5" class="css-checkbox" /><label for="radio5" class="css-label radGroup1 radGroup2">Рельеф RuMap</label></div>
-            </div>
-            <div class="right-controls-pop-r3">
-               <label class="control control-checkbox">
-               Координатная сетка
-               <input type="checkbox" checked="checked" />
-               <div class="control_indicator"></div>
-            </div>
-         </div>
-      </div>
+	<Base />
 
   <div class="copyright"></div>
   <div class="copyright-bottom"></div>

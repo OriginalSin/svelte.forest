@@ -506,10 +506,6 @@ input.header-input:focus:-moz-placeholder {
 
 /*#flexWrapper make transition:all 0.23s ease-in-out from display: none; to display:block*/
 
-#flexWrapper {
-	display: block;
-}
-
 .right-controls-pop-r1 {
 	display: flex;
 	flex-direction: row;
@@ -1016,6 +1012,9 @@ label.css-label {
 
 
 /*END CHECKBOXES STYLES*/
+.hidden {
+	display: none;
+} 
 
 #map {
 	width: calc(100vw - 54px);
@@ -1025,3 +1024,4 @@ label.css-label {
 	left: 54px;
 	background: #FFF;
 }
+
