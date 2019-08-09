@@ -66,7 +66,8 @@ console.log('leafletMap1', leafletMap);
 	 </div>
 	 <div class="block_right">
 		<input type="text" name="input" placeholder="Поиск по адресам и координатам" class="header-input">
-		<div class="account">Иннокентий Константинопольсикй</div>
+		<div class="account">Имя Фамилия</div>
+		<div class="account-star"></div>
 	 </div>
   </div>
 	  <div class="sidebar">
