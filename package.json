@@ -12,6 +12,8 @@
     "svelte": "^3.0.0"
   },
   "dependencies": {
+    "rollup-plugin-eslint": "^7.0.0",
+    "rollup-plugin-web-worker-loader": "^0.5.2",
     "sirv-cli": "^0.4.4"
   },
   "scripts": {

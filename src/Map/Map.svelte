@@ -4,6 +4,11 @@
 
 	import { leafletMap } from '../stores.js';
 
+	import Requests from '../worker/Requests.js';
+import DataWorker from 'web-worker:../worker';
+
+let dataWorker;
+
 	let mapContainer;    
 	let map = null;
 
@@ -58,7 +63,19 @@
 		});
 		resize();
 		leafletMap.set(map);
+
+if (!dataWorker) {
+	setTimeout(function() {
+		dataWorker = new DataWorker();
 		
+	}, 250);
+}
+// dataWorker.postMessage('Hello World!');
+		
+		// Requests.getMap().then((json) => {
+	// console.log('json', json);
+		// });
+
 		// dispatch('leafletMap', leafletMap);
     });
 </script>

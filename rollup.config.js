@@ -4,7 +4,16 @@ import commonjs from 'rollup-plugin-commonjs';
 import livereload from 'rollup-plugin-livereload';
 import { terser } from 'rollup-plugin-terser';
 
+import webWorkerLoader from 'rollup-plugin-web-worker-loader';
+
+// const path = require('path');
+// const packageJson = require('./package.json');
+const eslint = require('rollup-plugin-eslint').eslint;
+
 const production = !process.env.ROLLUP_WATCH;
+const ver = 'forest_1.0';
+// const outputName = `${packageJson.name}_${packageJson.version}`;
+//const JS_OUTPUT = `${outputName}.js`;
 
 export default {
 	input: 'src/main.js',
@@ -12,7 +21,7 @@ export default {
 		sourcemap: true,
 		format: 'iife',
 		name: 'app',
-		file: 'public/bundle.js'
+		file: 'public/' + ver + '.js'
 	},
 	plugins: [
 		svelte({
@@ -21,8 +30,16 @@ export default {
 			// we'll extract any component CSS out into
 			// a separate file — better for performance
 			css: css => {
-				css.write('public/bundle.css');
+				css.write('public/' + ver + '.css');
 			}
+		}),
+        webWorkerLoader({
+			// sourcemap?: boolean,        // when inlined, should a source map be included in the final output. Default: false
+			// inline?: boolean,           // should the worker code be inlined (Base64). Default: true
+			// preserveSource?: boolean,   // when inlined and this option is enabled, the full source code is included in the
+										// built file, otherwise it's embedded as a base64 string. Default: false
+			loadPath: 'src/worker'           // this options is useful when the worker scripts need to be loaded from another folder.
+										// Default: ''
 		}),
 
 		// If you have external dependencies installed from
@@ -34,6 +51,7 @@ export default {
 			browser: true,
 			dedupe: importee => importee === 'svelte' || importee.startsWith('svelte/')
 		}),
+        // eslint(),
 		commonjs(),
 
 		// Watch the `public` directory and refresh the

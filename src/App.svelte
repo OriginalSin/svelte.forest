@@ -4,6 +4,7 @@
 	import { baseContVisible, leafletMap } from './stores.js';
 
     import Map from './Map/Map.svelte';
+    import LayersTree from './Controls/LayersTree/LayersTree.svelte';
     import Zoom from './Controls/Zoom/Zoom.svelte';
     import Base from './Controls/Base/Base.svelte';
 
@@ -19,14 +20,7 @@ console.log('leafletMap', value);
 		baseContVisible.update(n => !n);
 console.log('leafletMap1', leafletMap);
 	};
-/*
-	export let name;
-	
-	export let leafletMap = null;
-	function callbackFunction(event) {
-		console.log(`Notify fired! Detail: ${event.detail}`)
-	}
-*/
+
 </script>
 
 <style>
@@ -82,69 +76,8 @@ console.log('leafletMap1', leafletMap);
 	  </div>
 	  
       <!--OPENED SIDEBAR-->
-      <div class="sidebar-opened">
-         <div class="sidebar-opened-row1">
-            <div class="sidebar-opened-row1-left">Название проекта/компании</div>
-            <div class="sidebar-opened-row1-right"></div>
-         </div>
-         <div class="sidebar-opened-row2">
-            <input type="text" name="input1" class="header-input1">
-         </div>
-         <div class="sidebar-opened-row3">
-            <div class="sidebar-opened-row3-left">
-               <label class="control control-checkbox">
-               Выделить все
-               <input type="checkbox" />
-               <div class="control_indicator"></div>
-            </div>
-            <div class="sidebar-opened-row3-right">
-               <div class="sidebar-opened-row3-right-el1"></div>
-               <div class="sidebar-opened-row3-right-el2"></div>
-               <div class="sidebar-opened-row3-right-el3"></div>
-               <div class="sidebar-opened-row3-right-el4"></div>
-            </div>
-         </div>
+		<LayersTree ></LayersTree>
 
-         <div class="sidebar-opened-row-el">
-            <div class="sidebar-opened-el-left">
-               <label class="control control-checkbox control-black control-group">
-               Делянки
-               <input type="checkbox" checked="checked" />
-               <div class="control_indicator"></div>
-            </div>
-            <div class="sidebar-opened-el-right"></div>
-         </div>
-
-         <div class="sidebar-opened-row-el">
-            <div class="sidebar-opened-el-left">
-               <label class="control control-checkbox control-black control-empty">
-               Пустой слой
-               <input type="checkbox" />
-               <div class="control_indicator"></div>
-            </div>
-            <div class="sidebar-opened-el-right"></div>
-         </div>
-
-         <div class="sidebar-opened-row-el">
-            <div class="sidebar-opened-el-left">
-               <label class="control control-checkbox control-black control-group">
-               Квартальные сети
-               <input type="checkbox" checked="checked" />
-               <div class="control_indicator"></div>
-            </div>
-            <div class="sidebar-opened-el-right"></div>
-         </div>
-
-         <div class="sidebar-opened-row-el">
-            <div class="sidebar-opened-el-left">
-               <label class="control control-checkbox control-black control-empty">
-               Пустой слой
-               <input type="checkbox" checked="checked" />
-               <div class="control_indicator"></div>
-            </div>
-            <div class="sidebar-opened-el-right"></div>
-         </div>
-      </div>
       <!--END OPENED SIDEBAR-->
 	  
 	  <!--Container for Map-->
