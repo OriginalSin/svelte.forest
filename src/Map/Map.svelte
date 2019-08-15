@@ -67,7 +67,7 @@ let dataWorker;
 if (!dataWorker) {
 	setTimeout(function() {
 		dataWorker = new DataWorker();
-		
+		dataWorker.postMessage('Hello World!');		
 	}, 250);
 }
 // dataWorker.postMessage('Hello World!');
