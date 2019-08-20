@@ -21,6 +21,20 @@ console.log('leafletMap', value);
 console.log('leafletMap1', leafletMap);
 	};
 
+	let sidebar_num = 1;
+	let sidebar_visible = true;
+	let toggleSidebar = (ev) => {
+console.log('toggleSidebar', ev);
+		sidebar_visible = !sidebar_visible;
+	};
+	let openSidebar = (nm) => {
+console.log('openSidebar', sidebar_num, nm);
+		sidebar_num = nm;
+		// let target = ev.target.classList.contains()
+		// sidebar_visible = !sidebar_visible;
+	};
+
+
 </script>
 
 <style>
@@ -66,19 +80,27 @@ console.log('leafletMap1', leafletMap);
   </div>
 	  <div class="sidebar">
 		 <div class="icons-vert-top">
-			<div class="icons-vert-top-1"></div>
-			<div class="icons-vert-top-2"></div>
-			<div class="icons-vert-top-3"></div>
+			<div class="icons-vert-top-1" on:click="{() => {openSidebar(1);}}"></div>
+			<div class="icons-vert-top-2" on:click="{() => {openSidebar(2);}}"></div>
+			<div class="icons-vert-top-3" on:click="{() => {openSidebar(3);}}"></div>
 		 </div>
 		 <div class="icons-vert-bottom">
-			<div class="icons-vert-bottom-1"></div>
+			<div class="icons-vert-bottom-1" on:click="{toggleSidebar}"></div>
 		 </div>
 	  </div>
 	  
-      <!--OPENED SIDEBAR-->
+{#if sidebar_visible}
+	  <!--OPENED SIDEBAR-->
+	{#if sidebar_num === 1}
 		<LayersTree ></LayersTree>
+	{:else if sidebar_num === 2}
+		<div />
+	{:else if sidebar_num === 3}
+		<div ></div>
+	{/if}
 
       <!--END OPENED SIDEBAR-->
+{/if}
 	  
 	  <!--Container for Map-->
 	<Map></Map>

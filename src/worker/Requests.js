@@ -14,11 +14,19 @@ const	_self = self,
 let loaderStatus = {};
 const getMap = (params) => {
 	
-	let url = `${serverBase}Map/GetMapProperties`;
+	let url = `${serverBase}Map/GetMapFolder`;
+	// let url = `${serverBase}Map/GetMapProperties`;
 	// const url = `${serverBase}VectorLayer/TileSender.ashx`;
-	url += '?MapName=C8612B3A77D84F3F87953BEF17026A5F';
-	
+	url += '?mapId=C8612B3A77D84F3F87953BEF17026A5F';
+	url += '&folderId=root';
+	url += '&srs=3857';
+	url += '&skipTiles=All';
+// folderId - ID папки
+// mapId - ID карты
+// srs - система координат геометрий. По умолчанию EPSG:3395
+// skipTiles 	
 	loaderStatus[url] = true;
+
 	params = params || {};
 
 	if (!params.WrapStyle) {params.WrapStyle = 'func'; params.CallbackName = '_test';}
