@@ -571,10 +571,10 @@ var app = (function () {
     }
 
     /* eslint-disable */
-    const WorkerFactory = createBase64WorkerFactory('Lyogcm9sbHVwLXBsdWdpbi13ZWItd29ya2VyLWxvYWRlciAqLwovL2h0dHA6Ly9tYXBzLmtvc21vc25pbWtpLnJ1L1RpbGVTZW5kZXIuYXNoeD9za2lwVGlsZXM9QWxsJk1hcE5hbWU9Qzg2MTJCM0E3N0Q4NEYzRjg3OTUzQkVGMTcwMjZBNUYmc3JzPTM4NTcmZnRjPW9zbSZNb2RlS2V5PW1hcA0KDQovLyBodHRwOi8vbWFwcy5rb3Ntb3NuaW1raS5ydS9UaWxlU2VuZGVyLmFzaHg/V3JhcFN0eWxlPWZ1bmMmc2tpcFRpbGVzPUFsbCZNYXBOYW1lPUM4NjEyQjNBNzdEODRGM0Y4Nzk1M0JFRjE3MDI2QTVGJnNycz0zODU3JmZ0Yz1vc20mTW9kZUtleT1tYXAma2V5PSZDYWxsYmFja05hbWU9XzENCg0KDQoNCmNvbnN0IF9zZWxmID0gc2VsZiwNCgkJc2VydmVyQmFzZSA9IF9zZWxmLnNlcnZlckJhc2UgfHwgJ2h0dHA6Ly9tYXBzLmtvc21vc25pbWtpLnJ1Lyc7DQ0KY29uc3QgZ2V0TWFwID0gKHBhcmFtcykgPT4gew0KCQ0KCWxldCB1cmwgPSBgJHtzZXJ2ZXJCYXNlfU1hcC9HZXRNYXBQcm9wZXJ0aWVzYDsNCgkvLyBjb25zdCB1cmwgPSBgJHtzZXJ2ZXJCYXNlfVZlY3RvckxheWVyL1RpbGVTZW5kZXIuYXNoeGA7DQoJdXJsICs9ICc/TWFwTmFtZT1DODYxMkIzQTc3RDg0RjNGODc5NTNCRUYxNzAyNkE1Ric7DQoJcGFyYW1zID0gcGFyYW1zIHx8IHt9Ow0KDQoJaWYgKCFwYXJhbXMuV3JhcFN0eWxlKSB7cGFyYW1zLldyYXBTdHlsZSA9ICdmdW5jJzsgcGFyYW1zLkNhbGxiYWNrTmFtZSA9ICdfdGVzdCc7fQ0KCQ0KCWlmICghcGFyYW1zLnNraXBUaWxlcykge3BhcmFtcy5za2lwVGlsZXMgPSAnQWxsJzt9DQoJaWYgKCFwYXJhbXMuc3JzKSB7cGFyYW1zLnNycyA9ICczODU3Jzt9DQoJaWYgKCFwYXJhbXMuZnRjKSB7cGFyYW1zLmZ0YyA9ICdvc20nO30NCglpZiAoIXBhcmFtcy5Nb2RlS2V5KSB7cGFyYW1zLk1vZGVLZXkgPSAnbWFwJzt9DQoJaWYgKCFwYXJhbXMuTWFwTmFtZSkge3BhcmFtcy5NYXBOYW1lID0gJ0M4NjEyQjNBNzdEODRGM0Y4Nzk1M0JFRjE3MDI2QTVGJzt9DQoJLy8gcmV0dXJuIGZldGNoKHVybCwgew0KCQkvLyBtZXRob2Q6ICdwb3N0JywNCgkJLy8gbW9kZTogJ2NvcnMnLA0KCQkvLyBjcmVkZW50aWFsczogJ2luY2x1ZGUnLA0KCQkvLyBoZWFkZXJzOiB7J0FjY2VwdCc6ICdhcHBsaWNhdGlvbi9qc29uJ30sDQoJCS8vIGJvZHk6IEpTT04uc3RyaW5naWZ5KHBhcmFtcykJLy8gVE9ETzog0YHQtdGA0LLQtdGAINC/0L7Rh9C10LzRgyDRgtC+INC90LUg0YXQvtGH0LXRgiDRgNCw0LHQvtGC0LDRgtGMINGC0LDQuiBodHRwczovL2dvb2dsZWNocm9tZS5naXRodWIuaW8vc2FtcGxlcy9mZXRjaC1hcGkvZmV0Y2gtcG9zdC5odG1sDQoJLy8gfSkNCgkJLy8gLnRoZW4ocmVzID0+IHsgZGVsZXRlIGxvYWRlclN0YXR1c1t1cmxdOyByZXR1cm4gcmVzLmpzb24oKTsgfSkNCgkJLy8gLmNhdGNoKGVyciA9PiBjb25zb2xlLndhcm4oZXJyKSk7DQoJcmV0dXJuIGZldGNoKHVybCwgew0KCQltZXRob2Q6ICdnZXQnLA0KCQltb2RlOiAnY29ycycsDQoJCWNyZWRlbnRpYWxzOiAnaW5jbHVkZScsDQoJCS8vIGhlYWRlcnM6IHsnQWNjZXB0JzogJ2FwcGxpY2F0aW9uL2pzb24nfSwNCgkJLy8gYm9keTogSlNPTi5zdHJpbmdpZnkocGFyYW1zKQkvLyBUT0RPOiDRgdC10YDQstC10YAg0L/QvtGH0LXQvNGDINGC0L4g0L3QtSDRhdC+0YfQtdGCINGA0LDQsdC+0YLQsNGC0Ywg0YLQsNC6IGh0dHBzOi8vZ29vZ2xlY2hyb21lLmdpdGh1Yi5pby9zYW1wbGVzL2ZldGNoLWFwaS9mZXRjaC1wb3N0Lmh0bWwNCgl9KQ0KCQkudGhlbihyZXMgPT4geyByZXR1cm4gcmVzLmpzb24oKTsgfSkNCgkJLmNhdGNoKGVyciA9PiBjb25zb2xlLndhcm4oZXJyKSk7DQp9Ow0KDQp2YXIgUmVxdWVzdHMgPSB7DQoJZ2V0TWFwDQp9OwoKLy8vY29uc29sZS5sb2coJ3Nzc3NzJyk7DQoNCnZhciBfc2VsZiQxID0gc2VsZjsNCihfc2VsZiQxLm9uIHx8IF9zZWxmJDEuYWRkRXZlbnRMaXN0ZW5lcikuY2FsbChfc2VsZiQxLCAnbWVzc2FnZScsIGUgPT4gew0KICAgIGNvbnN0IG1lc3NhZ2UgPSBlLmRhdGEgfHwgZTsNCmNvbnNvbGUubG9nKCdzc2ZkZiBzc3MnLCBtZXNzYWdlKTsNCglSZXF1ZXN0cy5nZXRNYXAoKS50aGVuKChqc29uKSA9PiB7DQpjb25zb2xlLmxvZygnanNvbjExMScsIGpzb24pOw0KCX0pOw0KCQ0KLyoNCiAgICBzd2l0Y2ggKG1lc3NhZ2UudHlwZSkgew0KICAgICAgICBjYXNlICdpbml0JzoNCiAgICAgICAgICAgIGlmIChtZXNzYWdlLndhc20pIHsNCiAgICAgICAgICAgICAgICBjb25zdCBtZW1vcnlTaXplID0gMTY7DQogICAgICAgICAgICAgICAgbWVtb3J5ID0gbmV3IFdlYkFzc2VtYmx5Lk1lbW9yeSh7aW5pdGlhbDogbWVtb3J5U2l6ZSwgbWF4aW11bTogbWVtb3J5U2l6ZX0pOw0KICAgICAgICAgICAgICAgIHZpZXcgPSBuZXcgRGF0YVZpZXcobWVtb3J5LmJ1ZmZlcik7DQogICAgICAgICAgICAgICAgd2FzbSA9IG5ldyBXZWJBc3NlbWJseS5JbnN0YW5jZShtZXNzYWdlLndhc20sIHsNCiAgICAgICAgICAgICAgICAgICAgZW52OiB7DQogICAgICAgICAgICAgICAgICAgICAgICBfbm93OiBfcGVyZm9ybWFuY2Uubm93LmJpbmQoX3BlcmZvcm1hbmNlKSwNCiAgICAgICAgICAgICAgICAgICAgICAgIG1lbW9yeTogbWVtb3J5LA0KICAgICAgICAgICAgICAgICAgICB9LA0KICAgICAgICAgICAgICAgIH0pOw0KICAgICAgICAgICAgICAgIHJ1bldvcmtsb2FkID0gcnVuV29ya2xvYWRXQVNNOw0KICAgICAgICAgICAgfSBlbHNlIHsNCiAgICAgICAgICAgICAgICBydW5Xb3JrbG9hZCA9IHJ1bldvcmtsb2FkSlM7DQogICAgICAgICAgICB9DQogICAgICAgICAgICBydW5Xb3JrbG9hZCgxLCAwKTsNCiAgICAgICAgICAgIF9zZWxmLnBvc3RNZXNzYWdlKCdzdWNjZXNzJyk7DQogICAgICAgICAgICBicmVhazsNCg0KICAgICAgICBjYXNlICd3b3JrbG9hZCc6IHsNCiAgICAgICAgICAgIHNldFRpbWVvdXQoKCkgPT4gew0KICAgICAgICAgICAgICAgIF9zZWxmLnBvc3RNZXNzYWdlKHJ1bldvcmtsb2FkKDEwLCBtZXNzYWdlLmlkKSk7DQogICAgICAgICAgICB9LCBtZXNzYWdlLnN0YXJ0VGltZSAtIERhdGUubm93KCkpOw0KICAgICAgICAgICAgYnJlYWs7DQogICAgICAgIH0NCg0KICAgICAgICBkZWZhdWx0Og0KICAgICAgICAgICAgYnJlYWs7DQogICAgfQ0KCSovDQp9KTsKCg==', null);
+    const WorkerFactory = createBase64WorkerFactory('Lyogcm9sbHVwLXBsdWdpbi13ZWItd29ya2VyLWxvYWRlciAqLwovL2h0dHA6Ly9tYXBzLmtvc21vc25pbWtpLnJ1L1RpbGVTZW5kZXIuYXNoeD9za2lwVGlsZXM9QWxsJk1hcE5hbWU9Qzg2MTJCM0E3N0Q4NEYzRjg3OTUzQkVGMTcwMjZBNUYmc3JzPTM4NTcmZnRjPW9zbSZNb2RlS2V5PW1hcA0KDQovLyBodHRwOi8vbWFwcy5rb3Ntb3NuaW1raS5ydS9UaWxlU2VuZGVyLmFzaHg/V3JhcFN0eWxlPWZ1bmMmc2tpcFRpbGVzPUFsbCZNYXBOYW1lPUM4NjEyQjNBNzdEODRGM0Y4Nzk1M0JFRjE3MDI2QTVGJnNycz0zODU3JmZ0Yz1vc20mTW9kZUtleT1tYXAma2V5PSZDYWxsYmFja05hbWU9XzENCg0KDQoNCmNvbnN0IF9zZWxmID0gc2VsZiwNCgkJc2VydmVyQmFzZSA9IF9zZWxmLnNlcnZlckJhc2UgfHwgJ2h0dHA6Ly9tYXBzLmtvc21vc25pbWtpLnJ1Lyc7DQ0KY29uc3QgZ2V0TWFwID0gKHBhcmFtcykgPT4gew0KCQ0KCWxldCB1cmwgPSBgJHtzZXJ2ZXJCYXNlfU1hcC9HZXRNYXBQcm9wZXJ0aWVzYDsNCgkvLyBjb25zdCB1cmwgPSBgJHtzZXJ2ZXJCYXNlfVZlY3RvckxheWVyL1RpbGVTZW5kZXIuYXNoeGA7DQoJdXJsICs9ICc/TWFwTmFtZT1DODYxMkIzQTc3RDg0RjNGODc5NTNCRUYxNzAyNkE1Ric7DQoJcGFyYW1zID0gcGFyYW1zIHx8IHt9Ow0KDQoJaWYgKCFwYXJhbXMuV3JhcFN0eWxlKSB7cGFyYW1zLldyYXBTdHlsZSA9ICdmdW5jJzsgcGFyYW1zLkNhbGxiYWNrTmFtZSA9ICdfdGVzdCc7fQ0KCQ0KCWlmICghcGFyYW1zLnNraXBUaWxlcykge3BhcmFtcy5za2lwVGlsZXMgPSAnQWxsJzt9DQoJaWYgKCFwYXJhbXMuc3JzKSB7cGFyYW1zLnNycyA9ICczODU3Jzt9DQoJaWYgKCFwYXJhbXMuZnRjKSB7cGFyYW1zLmZ0YyA9ICdvc20nO30NCglpZiAoIXBhcmFtcy5Nb2RlS2V5KSB7cGFyYW1zLk1vZGVLZXkgPSAnbWFwJzt9DQoJaWYgKCFwYXJhbXMuTWFwTmFtZSkge3BhcmFtcy5NYXBOYW1lID0gJ0M4NjEyQjNBNzdEODRGM0Y4Nzk1M0JFRjE3MDI2QTVGJzt9DQoJLy8gcmV0dXJuIGZldGNoKHVybCwgew0KCQkvLyBtZXRob2Q6ICdwb3N0JywNCgkJLy8gbW9kZTogJ2NvcnMnLA0KCQkvLyBjcmVkZW50aWFsczogJ2luY2x1ZGUnLA0KCQkvLyBoZWFkZXJzOiB7J0FjY2VwdCc6ICdhcHBsaWNhdGlvbi9qc29uJ30sDQoJCS8vIGJvZHk6IEpTT04uc3RyaW5naWZ5KHBhcmFtcykJLy8gVE9ETzog0YHQtdGA0LLQtdGAINC/0L7Rh9C10LzRgyDRgtC+INC90LUg0YXQvtGH0LXRgiDRgNCw0LHQvtGC0LDRgtGMINGC0LDQuiBodHRwczovL2dvb2dsZWNocm9tZS5naXRodWIuaW8vc2FtcGxlcy9mZXRjaC1hcGkvZmV0Y2gtcG9zdC5odG1sDQoJLy8gfSkNCgkJLy8gLnRoZW4ocmVzID0+IHsgZGVsZXRlIGxvYWRlclN0YXR1c1t1cmxdOyByZXR1cm4gcmVzLmpzb24oKTsgfSkNCgkJLy8gLmNhdGNoKGVyciA9PiBjb25zb2xlLndhcm4oZXJyKSk7DQoJcmV0dXJuIGZldGNoKHVybCwgew0KCQltZXRob2Q6ICdnZXQnLA0KCQltb2RlOiAnY29ycycsDQoJCWNyZWRlbnRpYWxzOiAnaW5jbHVkZScsDQoJCS8vIGhlYWRlcnM6IHsnQWNjZXB0JzogJ2FwcGxpY2F0aW9uL2pzb24nfSwNCgkJLy8gYm9keTogSlNPTi5zdHJpbmdpZnkocGFyYW1zKQkvLyBUT0RPOiDRgdC10YDQstC10YAg0L/QvtGH0LXQvNGDINGC0L4g0L3QtSDRhdC+0YfQtdGCINGA0LDQsdC+0YLQsNGC0Ywg0YLQsNC6IGh0dHBzOi8vZ29vZ2xlY2hyb21lLmdpdGh1Yi5pby9zYW1wbGVzL2ZldGNoLWFwaS9mZXRjaC1wb3N0Lmh0bWwNCgl9KQ0KCQkudGhlbihyZXMgPT4geyByZXR1cm4gcmVzLmpzb24oKTsgfSkNCgkJLmNhdGNoKGVyciA9PiBjb25zb2xlLndhcm4oZXJyKSk7DQp9Ow0KDQp2YXIgUmVxdWVzdHMgPSB7DQoJZ2V0TWFwDQp9OwoKLy8vY29uc29sZS5sb2coJ3Nzc3NzJyk7Cgp2YXIgX3NlbGYkMSA9IHNlbGY7Cihfc2VsZiQxLm9uIHx8IF9zZWxmJDEuYWRkRXZlbnRMaXN0ZW5lcikuY2FsbChfc2VsZiQxLCAnbWVzc2FnZScsIGUgPT4gewogICAgY29uc3QgbWVzc2FnZSA9IGUuZGF0YSB8fCBlOwpjb25zb2xlLmxvZygnc3NmZGYgc3NzJywgbWVzc2FnZSk7CglSZXF1ZXN0cy5nZXRNYXAoKS50aGVuKChqc29uKSA9PiB7CmNvbnNvbGUubG9nKCdqc29uMTExJywganNvbik7Cgl9KTsKCQovKgogICAgc3dpdGNoIChtZXNzYWdlLnR5cGUpIHsKICAgICAgICBjYXNlICdpbml0JzoKICAgICAgICAgICAgaWYgKG1lc3NhZ2Uud2FzbSkgewogICAgICAgICAgICAgICAgY29uc3QgbWVtb3J5U2l6ZSA9IDE2OwogICAgICAgICAgICAgICAgbWVtb3J5ID0gbmV3IFdlYkFzc2VtYmx5Lk1lbW9yeSh7aW5pdGlhbDogbWVtb3J5U2l6ZSwgbWF4aW11bTogbWVtb3J5U2l6ZX0pOwogICAgICAgICAgICAgICAgdmlldyA9IG5ldyBEYXRhVmlldyhtZW1vcnkuYnVmZmVyKTsKICAgICAgICAgICAgICAgIHdhc20gPSBuZXcgV2ViQXNzZW1ibHkuSW5zdGFuY2UobWVzc2FnZS53YXNtLCB7CiAgICAgICAgICAgICAgICAgICAgZW52OiB7CiAgICAgICAgICAgICAgICAgICAgICAgIF9ub3c6IF9wZXJmb3JtYW5jZS5ub3cuYmluZChfcGVyZm9ybWFuY2UpLAogICAgICAgICAgICAgICAgICAgICAgICBtZW1vcnk6IG1lbW9yeSwKICAgICAgICAgICAgICAgICAgICB9LAogICAgICAgICAgICAgICAgfSk7CiAgICAgICAgICAgICAgICBydW5Xb3JrbG9hZCA9IHJ1bldvcmtsb2FkV0FTTTsKICAgICAgICAgICAgfSBlbHNlIHsKICAgICAgICAgICAgICAgIHJ1bldvcmtsb2FkID0gcnVuV29ya2xvYWRKUzsKICAgICAgICAgICAgfQogICAgICAgICAgICBydW5Xb3JrbG9hZCgxLCAwKTsKICAgICAgICAgICAgX3NlbGYucG9zdE1lc3NhZ2UoJ3N1Y2Nlc3MnKTsKICAgICAgICAgICAgYnJlYWs7CgogICAgICAgIGNhc2UgJ3dvcmtsb2FkJzogewogICAgICAgICAgICBzZXRUaW1lb3V0KCgpID0+IHsKICAgICAgICAgICAgICAgIF9zZWxmLnBvc3RNZXNzYWdlKHJ1bldvcmtsb2FkKDEwLCBtZXNzYWdlLmlkKSk7CiAgICAgICAgICAgIH0sIG1lc3NhZ2Uuc3RhcnRUaW1lIC0gRGF0ZS5ub3coKSk7CiAgICAgICAgICAgIGJyZWFrOwogICAgICAgIH0KCiAgICAgICAgZGVmYXVsdDoKICAgICAgICAgICAgYnJlYWs7CiAgICB9CgkqLwp9KTsKCg==', null);
     /* eslint-enable */
 
-    /* src\Map\Map.svelte generated by Svelte v3.7.1 */
+    /* src/Map/Map.svelte generated by Svelte v3.7.1 */
 
     function create_fragment(ctx) {
     	var div;
@@ -711,30 +711,60 @@ var app = (function () {
     	}
     }
 
-    /* src\Controls\LayersTree\LayersTree.svelte generated by Svelte v3.7.1 */
+    /* src/Controls/LayersTree/LayersTree.svelte generated by Svelte v3.7.1 */
 
     function create_fragment$1(ctx) {
-    	var div_28;
+    	var div_89;
 
     	return {
     		c() {
-    			div_28 = element("div");
-    			div_28.innerHTML = `<div class="sidebar-opened-row1"><div class="sidebar-opened-row1-left">Название проекта/компании</div> <div class="sidebar-opened-row1-right"></div></div> <div class="sidebar-opened-row2"><input type="text" name="input1" class="header-input1"></div> <div class="sidebar-opened-row3"><div class="sidebar-opened-row3-left"><label class="control control-checkbox">
+    			div_89 = element("div");
+    			div_89.innerHTML = `<div class="sidebar-opened-row1"><div class="sidebar-opened-row1-left">Название проекта/компании</div> <div class="sidebar-opened-row1-right"></div></div> <div class="sidebar-opened-row2"><input type="text" name="input1" class="header-input1"></div> <div class="sidebar-opened-row3"><div class="sidebar-opened-row3-left"><label class="control control-checkbox">
 			               Выделить все
-			               <input type="checkbox"> <div class="control_indicator"></div></label></div> <div class="sidebar-opened-row3-right"><div class="sidebar-opened-row3-right-el1"></div> <div class="sidebar-opened-row3-right-el2"></div> <div class="sidebar-opened-row3-right-el3"></div> <div class="sidebar-opened-row3-right-el4"></div></div></div> <div class="sidebar-opened-row-el"><div class="sidebar-opened-el-left"><label class="control control-checkbox control-black control-group">
-			               Делянки
-			               <input type="checkbox" checked="checked"> <div class="control_indicator"></div></label></div> <div class="sidebar-opened-el-right"></div></div> <div class="sidebar-opened-row-el"><div class="sidebar-opened-el-left"><label class="control control-checkbox control-black control-empty">
-			               Пустой слой
-			               <input type="checkbox"> <div class="control_indicator"></div></label></div> <div class="sidebar-opened-el-right"></div></div> <div class="sidebar-opened-row-el"><div class="sidebar-opened-el-left"><label class="control control-checkbox control-black control-group">
-			               Квартальные сети
-			               <input type="checkbox" checked="checked"> <div class="control_indicator"></div></label></div> <div class="sidebar-opened-el-right"></div></div> <div class="sidebar-opened-row-el"><div class="sidebar-opened-el-left"><label class="control control-checkbox control-black control-empty">
-			               Пустой слой
-			               <input type="checkbox" checked="checked"> <div class="control_indicator"></div></label></div> <div class="sidebar-opened-el-right"></div></div>`;
-    			attr(div_28, "class", "sidebar-opened");
+			               <input type="checkbox"> <div class="control_indicator"></div></label></div> <div class="sidebar-opened-row3-right"><div class="sidebar-opened-row3-right-el1"></div> <div class="sidebar-opened-row3-right-el2"></div> <div class="sidebar-opened-row3-right-el3"></div> <div class="sidebar-opened-row3-right-el4"></div></div></div> <div class="sidebar-opened-el-container"><div class="sidebar-opened-row-el"><div class="sidebar-opened-el-left"><label class="control control-checkbox control-black control-empty-0">
+			               Корневой пустой слой
+			               <input type="checkbox"> <div class="control_indicator"></div></label></div> <div class="sidebar-opened-el-right"></div></div> <div class="sidebar-opened-row-el"><div class="sidebar-opened-el-left"><label class="control control-checkbox control-black control-1-default-0">
+			               Корневой слой 1
+			               <input type="checkbox"> <div class="control_indicator"></div></label></div> <div class="sidebar-opened-el-right"></div></div> <div class="sidebar-opened-row-el"><div class="sidebar-opened-el-left"><label class="control control-checkbox control-black control-2-default-0">
+			               Корневой слой 2
+			               <input type="checkbox"> <div class="control_indicator"></div></label></div> <div class="sidebar-opened-el-right"></div></div> <div class="sidebar-opened-row-el"><div class="sidebar-opened-el-left"><label class="control control-checkbox control-black control-3-default-0">
+			               Корневой слой 3
+			               <input type="checkbox"> <div class="control_indicator"></div></label></div> <div class="sidebar-opened-el-right"></div></div> <div class="sidebar-opened-row-el"><div class="sidebar-opened-el-left"><label class="control control-checkbox control-black control-group-1">
+			               1-й уровень вложенности
+			               <input type="checkbox" checked="checked"> <div class="control_indicator"></div></label></div> <div class="sidebar-opened-el-right"></div></div> <div class="sidebar-opened-row-el"><div class="sidebar-opened-el-left"><label class="control control-checkbox control-black control-empty-1">
+			               Вложенность 1 пустой слой
+			               <input type="checkbox" checked="checked"> <div class="control_indicator"></div></label></div> <div class="sidebar-opened-el-right"></div></div> <div class="sidebar-opened-row-el"><div class="sidebar-opened-el-left"><label class="control control-checkbox control-black control-1-default-1">
+			               Вложенность 1 слой 1
+			               <input type="checkbox"> <div class="control_indicator"></div></label></div> <div class="sidebar-opened-el-right"></div></div> <div class="sidebar-opened-row-el"><div class="sidebar-opened-el-left"><label class="control control-checkbox control-black control-2-default-1">
+			               Вложенность 1 слой 2
+			               <input type="checkbox"> <div class="control_indicator"></div></label></div> <div class="sidebar-opened-el-right"></div></div> <div class="sidebar-opened-row-el"><div class="sidebar-opened-el-left"><label class="control control-checkbox control-black control-3-default-1">
+			               Вложенность 1 слой 3
+			               <input type="checkbox"> <div class="control_indicator"></div></label></div> <div class="sidebar-opened-el-right"></div></div> <div class="sidebar-opened-row-el"><div class="sidebar-opened-el-left"><label class="control control-checkbox control-black control-group-2">
+			               2-й уровень вложенности
+			               <input type="checkbox" checked="checked"> <div class="control_indicator"></div></label></div> <div class="sidebar-opened-el-right"></div></div> <div class="sidebar-opened-row-el"><div class="sidebar-opened-el-left"><label class="control control-checkbox control-black control-empty-2">
+			               Вложенность 2 пустой слой
+			               <input type="checkbox" checked="checked"> <div class="control_indicator"></div></label></div> <div class="sidebar-opened-el-right"></div></div> <div class="sidebar-opened-row-el"><div class="sidebar-opened-el-left"><label class="control control-checkbox control-black control-1-default-2">
+			               Вложенность 2 слой 1
+			               <input type="checkbox"> <div class="control_indicator"></div></label></div> <div class="sidebar-opened-el-right"></div></div> <div class="sidebar-opened-row-el"><div class="sidebar-opened-el-left"><label class="control control-checkbox control-black control-2-default-2">
+			               Вложенность 2 слой 2
+			               <input type="checkbox"> <div class="control_indicator"></div></label></div> <div class="sidebar-opened-el-right"></div></div> <div class="sidebar-opened-row-el"><div class="sidebar-opened-el-left"><label class="control control-checkbox control-black control-3-default-2">
+			               Вложенность 2 слой 3
+			               <input type="checkbox"> <div class="control_indicator"></div></label></div> <div class="sidebar-opened-el-right"></div></div> <div class="sidebar-opened-row-el"><div class="sidebar-opened-el-left"><label class="control control-checkbox control-black control-group-3">
+			               3-й уровень вложенности
+			               <input type="checkbox" checked="checked"> <div class="control_indicator"></div></label></div> <div class="sidebar-opened-el-right"></div></div> <div class="sidebar-opened-row-el"><div class="sidebar-opened-el-left"><label class="control control-checkbox control-black control-empty-3">
+			               Вложенность 3 пустой слой
+			               <input type="checkbox" checked="checked"> <div class="control_indicator"></div></label></div> <div class="sidebar-opened-el-right"></div></div> <div class="sidebar-opened-row-el"><div class="sidebar-opened-el-left"><label class="control control-checkbox control-black control-1-default-3">
+			               Вложенность 3 слой 1
+			               <input type="checkbox"> <div class="control_indicator"></div></label></div> <div class="sidebar-opened-el-right"></div></div> <div class="sidebar-opened-row-el"><div class="sidebar-opened-el-left"><label class="control control-checkbox control-black control-2-default-3">
+			               Вложенность 3 слой 2
+			               <input type="checkbox"> <div class="control_indicator"></div></label></div> <div class="sidebar-opened-el-right"></div></div> <div class="sidebar-opened-row-el"><div class="sidebar-opened-el-left"><label class="control control-checkbox control-black control-3-default-3">
+			               Вложенность 3 слой 3
+			               <input type="checkbox"> <div class="control_indicator"></div></label></div> <div class="sidebar-opened-el-right"></div></div></div>`;
+    			attr(div_89, "class", "sidebar-opened");
     		},
 
     		m(target, anchor) {
-    			insert(target, div_28, anchor);
+    			insert(target, div_89, anchor);
     		},
 
     		p: noop,
@@ -743,7 +773,7 @@ var app = (function () {
 
     		d(detaching) {
     			if (detaching) {
-    				detach(div_28);
+    				detach(div_89);
     			}
     		}
     	};
@@ -819,7 +849,7 @@ var app = (function () {
     	}
     }
 
-    /* src\Controls\Zoom\Zoom.svelte generated by Svelte v3.7.1 */
+    /* src/Controls/Zoom/Zoom.svelte generated by Svelte v3.7.1 */
 
     function create_fragment$2(ctx) {
     	var div3, div0, t0, div1, t2, div2, dispose;
@@ -943,7 +973,7 @@ var app = (function () {
         };
     }
 
-    /* src\Controls\Base\Base.svelte generated by Svelte v3.7.1 */
+    /* src/Controls/Base/Base.svelte generated by Svelte v3.7.1 */
 
     function create_fragment$3(ctx) {
     	var div12, div11, div2, div0, t1, div1, t2, div8, div3, span0, input0, label0, t4, div4, span1, input1, label1, t6, div5, span2, input2, label2, t8, div6, span3, input3, label3, t10, div7, span4, input4, label4, t12, div10, div12_class_value, div12_intro, div12_outro, current, dispose;
@@ -1233,7 +1263,7 @@ var app = (function () {
     	}
     }
 
-    /* src\App.svelte generated by Svelte v3.7.1 */
+    /* src/App.svelte generated by Svelte v3.7.1 */
 
     function create_fragment$4(ctx) {
     	var div16, t17, div23, t21, t22, t23, div25, div24, t24, t25, t26, div26, t27, div27, current, dispose;
