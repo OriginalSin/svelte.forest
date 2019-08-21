@@ -69,7 +69,8 @@ console.log('setBase', ev);
 </script>
 
 
-            <div class="sidebar-opened">
+           <!--OPENED SIDEBAR-->
+      <div class="sidebar-opened">
          <div class="sidebar-opened-row1">
             <div class="sidebar-opened-row1-left">Название проекта/компании</div>
             <div class="sidebar-opened-row1-right"></div>
@@ -92,7 +93,7 @@ console.log('setBase', ev);
             </div>
          </div>
 
-         <div class="sidebar-opened-el-container">
+         <div class="sidebar-opened-el-container" id="style-4">
 
          
 
@@ -289,3 +290,4 @@ console.log('setBase', ev);
          </div>
       </div>
       </div>
+      <!--END OPENED SIDEBAR-->
