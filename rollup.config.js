@@ -4,7 +4,8 @@ import commonjs from 'rollup-plugin-commonjs';
 import livereload from 'rollup-plugin-livereload';
 // import { terser } from 'rollup-plugin-terser';
 
-import webWorkerLoader from 'rollup-plugin-web-worker-loader';
+// import webWorkerLoader from 'rollup-plugin-web-worker-loader';
+import webWorkerLoader from './scripts/index.js';
 
 // const path = require('path');
 // const packageJson = require('./package.json');
@@ -15,7 +16,8 @@ const ver = 'forest_1.0';
 // const outputName = `${packageJson.name}_${packageJson.version}`;
 //const JS_OUTPUT = `${outputName}.js`;
 
-export default {
+export default [
+{
 	input: 'src/main.js',
 	output: {
 		sourcemap: true,
@@ -35,10 +37,10 @@ export default {
 		}),
         webWorkerLoader({
 			// sourcemap?: boolean,        // when inlined, should a source map be included in the final output. Default: false
-			// inline?: boolean,           // should the worker code be inlined (Base64). Default: true
+			inline: false,           // should the worker code be inlined (Base64). Default: true
 			// preserveSource?: boolean,   // when inlined and this option is enabled, the full source code is included in the
 										// built file, otherwise it's embedded as a base64 string. Default: false
-			loadPath: 'src/worker'           // this options is useful when the worker scripts need to be loaded from another folder.
+			loadPath: 'public/worker'           // this options is useful when the worker scripts need to be loaded from another folder.
 										// Default: ''
 		}),
 
@@ -65,4 +67,42 @@ export default {
 	watch: {
 		clearScreen: false
 	}
-};
+ /*
+ },
+{
+    entry: 'src/worker/index.js',
+	output: {
+		// sourcemap: true,
+		// format: 'iife',
+		// name: 'app',
+		file: 'public/worker.js'
+	},
+    plugins: [ 
+        webWorkerLoader({
+			loadPath: 'src/worker'
+		})
+    ]
+	// ,
+    // format: 'esm'
+	*/
+}
+
+// {
+	// input: 'src/main.js',
+	// output: {
+		// sourcemap: true,
+		// format: 'iife',
+		// name: 'app',
+		// file: 'public/' + ver + '.js'
+	// },
+	// plugins: [
+        // webWorkerLoader({
+			// sourcemap?: boolean,        // when inlined, should a source map be included in the final output. Default: false
+			// inline?: boolean,           // should the worker code be inlined (Base64). Default: true
+			// preserveSource?: boolean,   // when inlined and this option is enabled, the full source code is included in the
+										// built file, otherwise it's embedded as a base64 string. Default: false
+			// loadPath: 'src/worker'           // this options is useful when the worker scripts need to be loaded from another folder.
+										// Default: ''
+		// })
+	// ]
+];

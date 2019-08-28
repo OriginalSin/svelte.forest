@@ -1,14 +1,15 @@
 import Requests from './Requests.js';
 
-///console.log('sssss');
-
 var _self = self;
 (_self.on || _self.addEventListener).call(_self, 'message', e => {
     const message = e.data || e;
-console.log('ssfdf sss', message);
-	Requests.getMap().then((json) => {
-console.log('json111', json);
-	});
+	if (message.cmd === 'getMap') {
+		Requests.getMapTree({mapId: message.mapID}).then((json) => {
+// console.log(message, json);
+			message.out = json;
+			_self.postMessage(message);
+		});
+	}
 	
 /*
     switch (message.type) {

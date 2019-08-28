@@ -3,7 +3,7 @@
 	import { fade, fly } from 'svelte/transition';
 
 	import { baseContVisible, leafletMap } from '../../stores.js';
-
+	
 	let base_visible = false;
 	const unsubscribe = baseContVisible.subscribe(value => {
 		base_visible = value;

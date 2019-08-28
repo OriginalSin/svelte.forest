@@ -1,39 +1,45 @@
 <script>
     import {onMount, setContext, getContext} from 'svelte';
 	
-	import { baseContVisible, leafletMap } from './stores.js';
+	import { baseContVisible } from './stores.js';
 
     import Map from './Map/Map.svelte';
     import LayersTree from './Controls/LayersTree/LayersTree.svelte';
     import Zoom from './Controls/Zoom/Zoom.svelte';
     import Base from './Controls/Base/Base.svelte';
+    import Report from './Report/Report.svelte';
 
-	let base_visible = false;
-	const unsubscribe = baseContVisible.subscribe(value => {
-console.log('sssssssss', value);
-		base_visible = value;
-	});
-	const unsubscribe1 = leafletMap.subscribe(value => {
-console.log('leafletMap', value);
-	});
+	// let base_visible = false;
+	// const unsubscribe = baseContVisible.subscribe(value => {
+// console.log('sssssssss', value);
+		// base_visible = value;
+	// });
+	// const unsubscribe1 = leafletMap.subscribe(value => {
+// console.log('leafletMap', value);
+	// });
+	
+    export let name;
+// console.log('mapID vv33333v', name); // .mapID
+
 	let toggleBase = () => {
 		baseContVisible.update(n => !n);
-console.log('leafletMap1', leafletMap);
 	};
 
 	let sidebar_num = 1;
 	let sidebar_visible = true;
 	let toggleSidebar = (ev) => {
-console.log('toggleSidebar', ev);
+// console.log('toggleSidebar', ev);
 		sidebar_visible = !sidebar_visible;
 	};
 	let openSidebar = (nm) => {
-console.log('openSidebar', sidebar_num, nm);
+// console.log('op222enSidebar', sidebar_num, nm);
+		if (sidebar_num === nm) { nm = 0; }
 		sidebar_num = nm;
-		// let target = ev.target.classList.contains()
-		// sidebar_visible = !sidebar_visible;
 	};
 
+    onMount (() => {
+// console.log('mapIDnnnnnnnnnnnnn', name); // .mapID
+	});
 
 </script>
 
@@ -92,18 +98,18 @@ console.log('openSidebar', sidebar_num, nm);
 {#if sidebar_visible}
 	  <!--OPENED SIDEBAR-->
 	{#if sidebar_num === 1}
-		<LayersTree ></LayersTree>
+		<LayersTree mapID={name}></LayersTree>
 	{:else if sidebar_num === 2}
-		<div />
-	{:else if sidebar_num === 3}
 		<div ></div>
+	{:else if sidebar_num === 3}
+		<Report mapID={name}></Report>
 	{/if}
 
       <!--END OPENED SIDEBAR-->
 {/if}
 	  
 	  <!--Container for Map-->
-	<Map></Map>
+	<Map mapID={name}></Map>
 	<div class="right-controls">
 		<div class="right-controls-2" on:click={toggleBase}></div>
 		<Zoom ></Zoom>

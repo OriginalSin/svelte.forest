@@ -6,11 +6,8 @@
 
 
 
-const	_self = self,
-		serverBase = _self.serverBase || 'http://maps.kosmosnimki.ru/',
-		serverProxy = serverBase + 'Plugins/ForestReport/proxy';
-
-let loaderStatus = {};
+const _self = self,
+		serverBase = _self.serverBase || 'http://maps.kosmosnimki.ru/';
 const getMapTree = (params) => {
 	params = params || {};
 	
@@ -20,8 +17,6 @@ const getMapTree = (params) => {
 	url += '&srs=3857';
 	url += '&skipTiles=All';
 
-	loaderStatus[url] = true;
-
 	return fetch(url, {
 		method: 'get',
 		mode: 'cors',
@@ -30,7 +25,6 @@ const getMapTree = (params) => {
 		// body: JSON.stringify(params)	// TODO: сервер почему то не хочет работать так https://googlechrome.github.io/samples/fetch-api/fetch-post.html
 	})
 		.then(res => {
-			delete loaderStatus[url];
 			return res.json();
 		})
 		.then(json => {
@@ -72,9 +66,55 @@ const parseTree = (json) => {
 	} else if (json.Result && json.Result.content) {
 		out = _iterateNodeChilds(json.Result);
 	}
- console.log('______json_out_______', out, json)
+ console.log('______json_out_______', out, json);
 	return out;
 };
-export default {
+var Requests = {
 	getMapTree
 };
+
+var _self$1 = self;
+(_self$1.on || _self$1.addEventListener).call(_self$1, 'message', e => {
+    const message = e.data || e;
+	if (message.cmd === 'getMap') {
+		Requests.getMapTree({mapId: message.mapID}).then((json) => {
+// console.log(message, json);
+			message.out = json;
+			_self$1.postMessage(message);
+		});
+	}
+	
+/*
+    switch (message.type) {
+        case 'init':
+            if (message.wasm) {
+                const memorySize = 16;
+                memory = new WebAssembly.Memory({initial: memorySize, maximum: memorySize});
+                view = new DataView(memory.buffer);
+                wasm = new WebAssembly.Instance(message.wasm, {
+                    env: {
+                        _now: _performance.now.bind(_performance),
+                        memory: memory,
+                    },
+                });
+                runWorkload = runWorkloadWASM;
+            } else {
+                runWorkload = runWorkloadJS;
+            }
+            runWorkload(1, 0);
+            _self.postMessage('success');
+            break;
+
+        case 'workload': {
+            setTimeout(() => {
+                _self.postMessage(runWorkload(10, message.id));
+            }, message.startTime - Date.now());
+            break;
+        }
+
+        default:
+            break;
+    }
+	*/
+});
+//# sourceMappingURL=web-worker-0.js.map

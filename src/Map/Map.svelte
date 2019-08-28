@@ -2,12 +2,14 @@
     import {onMount, createEventDispatcher, setContext, getContext} from 'svelte';
     // import {loadMap} from '../Map/Actions.js';
 
-	import { leafletMap } from '../stores.js';
+	import { leafletMap, mapTree, worker } from '../stores.js';
+	// import Store from '../stores.js';
 
-	import Requests from '../worker/Requests.js';
-import DataWorker from 'web-worker:../worker';
+	// import Requests from '../worker/Requests.js';
+	import DataWorker from 'web-worker:../worker';
 
-let dataWorker;
+	let dataWorker = new DataWorker();
+	worker.set(dataWorker);
 
 	let mapContainer;    
 	let map = null;
@@ -24,14 +26,17 @@ let dataWorker;
     export let distanceUnit = 'auto';
     export let squareUnit = 'auto';
     export let baseLayers = [];    
-    
+	export let mapID;
+
+// console.log('ssss', mapID, mapTree, leafletMap)
+
     const resize = () => {
         map.invalidateSize();
     };
 
 	const dispatch = createEventDispatcher();
 
-    onMount (() => {        
+    onMount (() => {
 		const data = {};
 		const {
 			DefaultLong,
@@ -64,12 +69,22 @@ let dataWorker;
 		resize();
 		leafletMap.set(map);
 
-if (!dataWorker) {
-	setTimeout(function() {
-		dataWorker = new DataWorker();
-		dataWorker.postMessage('Hello World!');		
-	}, 250);
-}
+// if (!dataWorker) {
+	// setTimeout(function() {
+		// dataWorker = new DataWorker();
+		dataWorker.onmessage = (res) => {
+			let data = res.data,
+				cmd = data.cmd,
+				json = data.out;
+
+			if (cmd === 'getMap') {
+				mapTree.set(json);
+			}
+	console.log('onmessage', json);
+		};
+		dataWorker.postMessage({cmd: 'getMap', mapID: mapID});
+	// }, 250);
+// }
 // dataWorker.postMessage('Hello World!');
 		
 		// Requests.getMap().then((json) => {
