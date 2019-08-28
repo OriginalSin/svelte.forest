@@ -89,6 +89,7 @@
 			<div class="icons-vert-top-1" on:click="{() => {openSidebar(1);}}"></div>
 			<div class="icons-vert-top-2" on:click="{() => {openSidebar(2);}}"></div>
 			<div class="icons-vert-top-3" on:click="{() => {openSidebar(3);}}"></div>
+			<div class="icons-vert-top-3" on:click="{() => {openSidebar(4);}}"></div>
 		 </div>
 		 <div class="icons-vert-bottom">
 			<div class="icons-vert-bottom-1" on:click="{toggleSidebar}"></div>
@@ -100,8 +101,10 @@
 	{#if sidebar_num === 1}
 		<LayersTree mapID={name}></LayersTree>
 	{:else if sidebar_num === 2}
-		<div ></div>
+		<div class="sidebar-opened">Вторая вкладка</div>
 	{:else if sidebar_num === 3}
+		<div class="sidebar-opened">Третья вкладка</div>
+	{:else if sidebar_num === 4}
 		<Report mapID={name}></Report>
 	{/if}
 
