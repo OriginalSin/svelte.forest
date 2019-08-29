@@ -1436,7 +1436,7 @@ label.css-label1 {
 }
 
 /*начало иконка линия*/
-.line:before {
+.linestring:before {
     content: '';
     background: url("data:image/svg+xml;charset=utf8,%3Csvg width='2' height='16' viewBox='0 0 2 16' fill='none' xmlns='http://www.w3.org/2000/svg'%3E%3Crect width='2' height='16' fill='%23C4C4C4'/%3E%3C/svg%3E");
     background-repeat: no-repeat;
@@ -1451,7 +1451,7 @@ label.css-label1 {
 }
 
 /*начало иконка пустой слой*/
-.poly:before {
+.polygon:before {
     content: '';
     background: url("data:image/svg+xml;charset=utf8,%3Csvg width='12' height='16' viewBox='0 0 12 16' fill='none' xmlns='http://www.w3.org/2000/svg'%3E%3Crect x='1' y='1' width='10' height='14' fill='%23F4F4F4' stroke='%23CCCCCC' stroke-width='2'/%3E%3C/svg%3E");
     background-repeat: no-repeat;

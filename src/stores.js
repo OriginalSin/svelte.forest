@@ -7,6 +7,7 @@ import { writable } from 'svelte/store';
 	// mapTree: writable(0)
 // };
 export const leafletMap = writable(0);
+export const mapLayers = writable(0);
 export const baseContVisible = writable(0);
 export const mapID = writable(0);
 export const mapTree = writable(0);

@@ -1,16 +1,39 @@
-//ddddddd
-
-//http://maps.kosmosnimki.ru/TileSender.ashx?skipTiles=All&MapName=C8612B3A77D84F3F87953BEF17026A5F&srs=3857&ftc=osm&ModeKey=map
-
-// http://maps.kosmosnimki.ru/TileSender.ashx?WrapStyle=func&skipTiles=All&MapName=C8612B3A77D84F3F87953BEF17026A5F&srs=3857&ftc=osm&ModeKey=map&key=&CallbackName=_1
-
-
 
 const	_self = self,
 		serverBase = _self.serverBase || 'http://maps.kosmosnimki.ru/',
 		serverProxy = serverBase + 'Plugins/ForestReport/proxy';
 
 let loaderStatus = {};
+let _sessionKeys = {};
+
+const requestSessionKey = (serverHost, apiKey) => {
+	let keys = _sessionKeys;
+	if (!(serverHost in keys)) {
+		keys[serverHost] = new Promise(function(resolve, reject) {
+			if (apiKey) {
+				utils.getJson({
+					url: '//' + serverHost + '/ApiKey.ashx',
+					params: {WrapStyle: 'None', Key: apiKey}
+				})
+					.then(function(json) {
+						let res = json.res;
+						if (res.Status === 'ok' && res.Result) {
+							resolve(res.Result.Key !== 'null' ? '' : res.Result.Key);
+						} else {
+							reject(json);
+						}
+					})
+					.catch(function() {
+						resolve('');
+					});
+			} else {
+				resolve('');
+			}
+		});
+	}
+	return keys[serverHost];
+};
+
 const getMapTree = (params) => {
 	params = params || {};
 	

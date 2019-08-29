@@ -2,7 +2,7 @@
     import {onMount, createEventDispatcher, setContext, getContext} from 'svelte';
     // import {loadMap} from '../Map/Actions.js';
 
-	import { leafletMap, mapTree, worker } from '../stores.js';
+	import { leafletMap, mapLayers, mapTree, worker } from '../stores.js';
 	// import Store from '../stores.js';
 
 	// import Requests from '../worker/Requests.js';
@@ -66,16 +66,20 @@
 			distanceUnit: 'auto',
 			squareUnit: 'auto',
 		})
-			.addControl(L.control.gmxBottom())
-			.addControl(L.control.gmxCopyright({type: 'window', position: 'gmxbottomright'}))  // default options = {position: 'bottomleft'}
-            .addControl(L.control.gmxLocation());   // default options = {position: 'bottomright'}
+			// .addControl(L.control.gmxBottom())
+			.addControl(L.control.gmxLogo({position: 'gmxbottomright'}))	// {type: 'color'}
+			.addControl(L.control.gmxCopyright({type: 'window', position: 'gmxbottomright'}))
+            .addControl(L.control.gmxLocation());
 
 		resize();
 		leafletMap.set(map);
 
-// if (!dataWorker) {
-	// setTimeout(function() {
-		// dataWorker = new DataWorker();
+		L.gmx.loadMap(mapID)
+			.then((res) => {
+	// console.log('loadMap', res);
+				mapLayers.set(res);
+			});
+
 		dataWorker.onmessage = (res) => {
 			let data = res.data,
 				cmd = data.cmd,
@@ -87,15 +91,6 @@
 	console.log('onmessage', json);
 		};
 		dataWorker.postMessage({cmd: 'getMap', mapID: mapID});
-	// }, 250);
-// }
-// dataWorker.postMessage('Hello World!');
-		
-		// Requests.getMap().then((json) => {
-	// console.log('json', json);
-		// });
-
-		// dispatch('leafletMap', leafletMap);
     });
 </script>
 
