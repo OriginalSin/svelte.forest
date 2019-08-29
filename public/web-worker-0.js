@@ -48,7 +48,9 @@ const _iterateNodeChilds = (node, level, out) => {
 			if (content.geometry) { ph.geometry = content.geometry; }
 			out.layers.push(ph);
 		} else if (type === 'group') {
-			(content.children || []).map((it) => {
+			let childs = content.children || [];
+			out.layers.push({ level: level, group: true, childsLen: childs.length, properties: props });
+			childs.map((it) => {
 				_iterateNodeChilds(it, level + 1, out);
 			});
 		}
@@ -65,6 +67,7 @@ const parseTree = (json) => {
 		out = json;
 	} else if (json.Result && json.Result.content) {
 		out = _iterateNodeChilds(json.Result);
+		out.mapAttr = out.layers.shift();
 	}
  console.log('______json_out_______', out, json);
 	return out;

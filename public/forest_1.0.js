@@ -764,7 +764,7 @@ var app = (function () {
     			div2 = element("div");
     			attr(input, "type", "checkbox");
     			attr(div0, "class", "control_indicator");
-    			attr(label, "class", label_class_value = "control control-checkbox control-black control-1-default-0 poly level-" + ctx.item.level);
+    			attr(label, "class", label_class_value = "control control-checkbox control-black " + (ctx.item.group ? 'control-group-1' : 'control-1-default-1') + " poly level-" + ctx.item.level);
     			attr(div1, "class", "sidebar-opened-el-left");
     			attr(div2, "class", "sidebar-opened-el-right");
     			attr(div3, "class", "sidebar-opened-row-el");
@@ -788,7 +788,7 @@ var app = (function () {
     				set_data(t0, t0_value);
     			}
 
-    			if ((changed.item) && label_class_value !== (label_class_value = "control control-checkbox control-black control-1-default-0 poly level-" + ctx.item.level)) {
+    			if ((changed.item) && label_class_value !== (label_class_value = "control control-checkbox control-black " + (ctx.item.group ? 'control-group-1' : 'control-1-default-1') + " poly level-" + ctx.item.level)) {
     				attr(label, "class", label_class_value);
     			}
     		},
@@ -920,7 +920,7 @@ var app = (function () {
     	return child_ctx;
     }
 
-    // (69:1) {#each layersArr as item}
+    // (71:1) {#each layersArr as item}
     function create_each_block(ctx) {
     	var current;
 
@@ -961,7 +961,7 @@ var app = (function () {
     }
 
     function create_fragment$2(ctx) {
-    	var div14, div2, t2, div3, t3, div11, t10, div13, div12, current;
+    	var div14, div2, div0, t0_value = ctx.mapAttr.properties && ctx.mapAttr.properties.title || 'Название проекта/компании', t0, t1, div1, t2, div3, t3, div11, t10, div13, div12, current;
 
     	var each_value = ctx.layersArr;
 
@@ -979,7 +979,10 @@ var app = (function () {
     		c() {
     			div14 = element("div");
     			div2 = element("div");
-    			div2.innerHTML = `<div class="sidebar-opened-row1-left">Название проекта/компании</div> <div class="sidebar-opened-row1-right"></div>`;
+    			div0 = element("div");
+    			t0 = text(t0_value);
+    			t1 = space();
+    			div1 = element("div");
     			t2 = space();
     			div3 = element("div");
     			div3.innerHTML = `<input type="text" name="input1" class="header-input1">`;
@@ -995,6 +998,8 @@ var app = (function () {
     			for (var i = 0; i < each_blocks.length; i += 1) {
     				each_blocks[i].c();
     			}
+    			attr(div0, "class", "sidebar-opened-row1-left");
+    			attr(div1, "class", "sidebar-opened-row1-right");
     			attr(div2, "class", "sidebar-opened-row1");
     			attr(div3, "class", "sidebar-opened-row2");
     			attr(div11, "class", "sidebar-opened-row3");
@@ -1007,6 +1012,10 @@ var app = (function () {
     		m(target, anchor) {
     			insert(target, div14, anchor);
     			append(div14, div2);
+    			append(div2, div0);
+    			append(div0, t0);
+    			append(div2, t1);
+    			append(div2, div1);
     			append(div14, t2);
     			append(div14, div3);
     			append(div14, t3);
@@ -1023,6 +1032,10 @@ var app = (function () {
     		},
 
     		p(changed, ctx) {
+    			if ((!current || changed.mapAttr) && t0_value !== (t0_value = ctx.mapAttr.properties && ctx.mapAttr.properties.title || 'Название проекта/компании')) {
+    				set_data(t0, t0_value);
+    			}
+
     			if (changed.layersArr) {
     				each_value = ctx.layersArr;
 
@@ -1081,21 +1094,22 @@ var app = (function () {
        // baseContVisible.update(n => !n);
        // };
         // export let mapID;
-        let { layersArr = [] } = $$props;
+        let { layersArr = [], mapAttr = {} } = $$props;
 
     // console.log('ssss', mapID, Store.mapTree, Store.leafletMap)
     	let tree = null;
     	const unsubscribe = mapTree.subscribe(value => {
     		tree = value;
     		if (tree) {
-    console.log('tree', tree);
     			if (tree.Status === 'error') {
     				console.warn('tree Error: ', tree);
     				return tree;
     			} else if (tree.layers) {
     				$$invalidate('layersArr', layersArr = tree.layers);
+    				$$invalidate('mapAttr', mapAttr = tree.mapAttr);
     			}
     			// map.addLayer(baseLayers[2]);
+    console.log('tree', mapAttr, layersArr, tree);
     		}
     	});
 
@@ -1110,15 +1124,16 @@ var app = (function () {
 
     	$$self.$set = $$props => {
     		if ('layersArr' in $$props) $$invalidate('layersArr', layersArr = $$props.layersArr);
+    		if ('mapAttr' in $$props) $$invalidate('mapAttr', mapAttr = $$props.mapAttr);
     	};
 
-    	return { layersArr };
+    	return { layersArr, mapAttr };
     }
 
     class LayersTree extends SvelteComponent {
     	constructor(options) {
     		super();
-    		init(this, options, instance$2, create_fragment$2, safe_not_equal, ["layersArr"]);
+    		init(this, options, instance$2, create_fragment$2, safe_not_equal, ["layersArr", "mapAttr"]);
     	}
     }
 

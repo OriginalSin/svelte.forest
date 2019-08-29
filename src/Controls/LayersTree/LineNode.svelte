@@ -97,7 +97,7 @@
 
 <div class="sidebar-opened-row-el">
 	<div class="sidebar-opened-el-left">
-	   <label class="control control-checkbox control-black control-1-default-0 poly level-{item.level}">
+	   <label class="control control-checkbox control-black {item.group ? 'control-group-1' : 'control-1-default-1'} poly level-{item.level}">
 	   {item.properties.title}
 	   <input type="checkbox" />
 	   <div class="control_indicator"></div>
@@ -105,5 +105,7 @@
 	<div class="sidebar-opened-el-right"></div>
 </div>
 
+
 <style>
+
 </style>

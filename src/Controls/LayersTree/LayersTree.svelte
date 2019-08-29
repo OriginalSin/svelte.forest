@@ -14,20 +14,22 @@
    // };
     // export let mapID;
     export let layersArr = [];
+    export let mapAttr = {};
 
 // console.log('ssss', mapID, Store.mapTree, Store.leafletMap)
 	let tree = null;
 	const unsubscribe = Store.mapTree.subscribe(value => {
 		tree = value;
 		if (tree) {
-console.log('tree', tree);
 			if (tree.Status === 'error') {
 				console.warn('tree Error: ', tree);
 				return tree;
 			} else if (tree.layers) {
 				layersArr = tree.layers;
+				mapAttr = tree.mapAttr;
 			}
 			// map.addLayer(baseLayers[2]);
+console.log('tree', mapAttr, layersArr, tree);
 		}
 	});
 
@@ -44,7 +46,7 @@ console.log('tree', tree);
 
 <div class="sidebar-opened">
    <div class="sidebar-opened-row1">
-      <div class="sidebar-opened-row1-left">Название проекта/компании</div>
+      <div class="sidebar-opened-row1-left">{mapAttr.properties && mapAttr.properties.title || 'Название проекта/компании'}</div>
       <div class="sidebar-opened-row1-right"></div>
    </div>
    <div class="sidebar-opened-row2">
