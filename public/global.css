@@ -1345,6 +1345,10 @@ label.css-label1 {
 	display: flex;
 	align-items: center;
 	color: #818181;
+	-webkit-user-select: none;
+    -moz-user-select: none;    
+    -ms-user-select: none;      
+     user-select: none;   
 }
 
 .control-black {
