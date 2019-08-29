@@ -792,6 +792,7 @@ input.header-input1:focus {
 		background-position: center;
 		background-repeat: no-repeat;
 		z-index: 1000;
+		display: none;
 	}
 }
 
@@ -2669,6 +2670,46 @@ input.input-left-controls-pop-add-kvartal-1:focus {
 
 /*END SCROLLBAR STYLES*/
 
+/*CUSTOM STYLES*/
+.leaflet-gmx-copyright-location-bg {
+    display: none;
+}
+
+span.leaflet-gmx-copyrights {
+    position: absolute;
+    display: block;
+    width: max-content;
+    right: 312px;
+    bottom: 0px;
+    height: max-content;
+    z-index: 10000;
+    background: rgba(255,255,255,0.6);
+    padding-left: 10px;
+    padding-right: 20px;
+    padding-bottom: 2px;
+    padding-top: 1px;
+    border-top: 1px solid #777;
+    border-left: 1px solid #777;
+}
+
+span.leaflet-gmx-copyright.leaflet-control {
+    position: initial;
+}
+
+.leaflet-gmx-location.leaflet-control {
+    background: rgba(255,255,255,0.6);
+    border-top: 1px solid #777;
+    padding-right: 10px;
+    padding-top: 3px;
+    padding-bottom: 1px;
+    position: relative;
+    top: 12px;
+    padding-left: 7px;
+    left: 9px;
+}
+
+
+/*MAP STYLES*/
 #map {
 	width: calc(100vw - 54px);
 	height: calc(100vh - 54px);

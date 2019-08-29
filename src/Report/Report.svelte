@@ -98,7 +98,7 @@ console.log('Report tree', tree);
 
          <div class="sidebar-opened-row-el">
             <div class="sidebar-opened-el-left">
-               <label class="control control-checkbox control-black inside-1 empty-layer">
+               <label class="control control-checkbox control-black inside-1 poly">
                Вложенность 1 пустой слой
                <input type="checkbox" checked="checked" />
                <div class="control_indicator"></div>
@@ -149,7 +149,7 @@ console.log('Report tree', tree);
 
           <div class="sidebar-opened-row-el">
             <div class="sidebar-opened-el-left">
-               <label class="control control-checkbox control-black inside-2 empty-layer">
+               <label class="control control-checkbox control-black inside-2 poly">
                Вложенность 2 пустой слой
                <input type="checkbox" checked="checked" />
                <div class="control_indicator"></div>
@@ -199,7 +199,7 @@ console.log('Report tree', tree);
 
          <div class="sidebar-opened-row-el">
             <div class="sidebar-opened-el-left">
-               <label class="control control-checkbox control-black inside-3 empty-layer">
+               <label class="control control-checkbox control-black inside-3 poly">
                Вложенность 3 пустой слой
                <input type="checkbox" checked="checked" />
                <div class="control_indicator"></div>
