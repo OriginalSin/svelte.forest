@@ -1,5 +1,5 @@
 const _self = self,
-		serverBase = _self.serverBase || 'http://maps.kosmosnimki.ru/';
+		serverBase = _self.serverBase || '//maps.kosmosnimki.ru/';
 
 const getMapTree = (params) => {
 	params = params || {};
@@ -7,8 +7,9 @@ const getMapTree = (params) => {
 	let url = `${serverBase}Map/GetMapFolder`;
 	url += '?mapId=' + (params.mapId || 'C8612B3A77D84F3F87953BEF17026A5F');
 	url += '&folderId=root';
-	url += '&srs=3857';
+	url += '&srs=3857'; 
 	url += '&skipTiles=All';
+	url += '&visibleItemOnly=false';
 
 	return fetch(url, {
 		method: 'get',

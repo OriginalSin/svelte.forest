@@ -782,7 +782,12 @@ var app = (function () {
     			attr(div5, "title", "Прозрачность");
     			attr(div6, "class", "sidebar-opened-el-right");
     			attr(div7, "class", "sidebar-opened-row-el");
-    			dispose = listen(input, "change", ctx.toggleLayer);
+
+    			dispose = [
+    				listen(input, "change", ctx.toggleLayer),
+    				listen(div3, "click", ctx.fitBounds),
+    				listen(div5, "click", ctx.opacityFilter)
+    			];
     		},
 
     		m(target, anchor) {
@@ -827,7 +832,7 @@ var app = (function () {
     				detach(div7);
     			}
 
-    			dispose();
+    			run_all(dispose);
     		}
     	};
     }
@@ -844,7 +849,6 @@ var app = (function () {
     	});
 
     	const toggleLayer = (ev) => {
-    console.log('toggleLayer', item, gmxMap);
     		if (gmxMap && gmxMap.layersByID) {
     			let lid = item.properties.name,
     				it = gmxMap.layersByID[lid];
@@ -858,13 +862,41 @@ var app = (function () {
     		}
     	};
 
+    	const fitBounds = (ev) => {
+    		if (gmxMap && gmxMap.layersByID) {
+    			let lid = item.properties.name,
+    				it = gmxMap.layersByID[lid];
+    			if (it) {
+    				map.fitBounds(it.getBounds());
+    			}
+    		}
+    	};
+
+    	const opacityFilter = (ev) => {
+    		if (gmxMap && gmxMap.layersByID) {
+    			let lid = item.properties.name,
+    				it = gmxMap.layersByID[lid];
+    			if (it) {
+    console.log('opacityFilter', item, gmxMap);
+    				it.setOpacity(0.5);
+    			}
+    		}
+    	};
+
     	$$self.$set = $$props => {
     		if ('item' in $$props) $$invalidate('item', item = $$props.item);
     		if ('map' in $$props) $$invalidate('map', map = $$props.map);
     		if ('gmxMap' in $$props) $$invalidate('gmxMap', gmxMap = $$props.gmxMap);
     	};
 
-    	return { item, map, gmxMap, toggleLayer };
+    	return {
+    		item,
+    		map,
+    		gmxMap,
+    		toggleLayer,
+    		fitBounds,
+    		opacityFilter
+    	};
     }
 
     class LineNode extends SvelteComponent {

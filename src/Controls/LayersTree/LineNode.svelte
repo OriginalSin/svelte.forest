@@ -14,7 +14,6 @@
 	});
 
 	const toggleLayer = (ev) => {
-console.log('toggleLayer', item, gmxMap);
 		if (gmxMap && gmxMap.layersByID) {
 			let lid = item.properties.name,
 				it = gmxMap.layersByID[lid];
@@ -24,6 +23,27 @@ console.log('toggleLayer', item, gmxMap);
 				} else {
 					map.removeLayer(it);
 				}
+			}
+		}
+	};
+
+	const fitBounds = (ev) => {
+		if (gmxMap && gmxMap.layersByID) {
+			let lid = item.properties.name,
+				it = gmxMap.layersByID[lid];
+			if (it) {
+				map.fitBounds(it.getBounds());
+			}
+		}
+	};
+
+	const opacityFilter = (ev) => {
+		if (gmxMap && gmxMap.layersByID) {
+			let lid = item.properties.name,
+				it = gmxMap.layersByID[lid];
+			if (it) {
+console.log('opacityFilter', item, gmxMap);
+				it.setOpacity(0.5);
 			}
 		}
 	};
@@ -39,9 +59,9 @@ console.log('toggleLayer', item, gmxMap);
 	</div>
 	<div class="sidebar-opened-el-right"></div>
 	<div class="sidebar-opened-el-right">
-		<div class="sidebar-opened-el-right-1" title="Центрировать"></div>
+		<div class="sidebar-opened-el-right-1" on:click={fitBounds} title="Центрировать"></div>
 		<div class="sidebar-opened-el-right-2" title="Редактор объектов"></div>
-		<div class="sidebar-opened-el-right-3 {item.properties.IsRasterCatalog ? '' : 'hidden'}" title="Прозрачность"></div>
+		<div class="sidebar-opened-el-right-3 {item.properties.IsRasterCatalog ? '' : 'hidden'}" on:click={opacityFilter} title="Прозрачность"></div>
 	</div>
 </div>
 
