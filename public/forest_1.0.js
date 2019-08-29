@@ -192,6 +192,9 @@ var app = (function () {
     function add_render_callback(fn) {
         render_callbacks.push(fn);
     }
+    function add_flush_callback(fn) {
+        flush_callbacks.push(fn);
+    }
     function flush() {
         const seen_callbacks = new Set();
         do {
@@ -400,6 +403,13 @@ var app = (function () {
                 }
             }
         };
+    }
+
+    function bind(component, name, callback) {
+        if (component.$$.props.indexOf(name) === -1)
+            return;
+        component.$$.bound[name] = callback;
+        callback(component.$$.ctx[name]);
     }
     function mount_component(component, target, anchor) {
         const { fragment, on_mount, on_destroy, after_update } = component.$$;
@@ -771,7 +781,7 @@ var app = (function () {
     			div5 = element("div");
     			attr(input, "type", "checkbox");
     			attr(div0, "class", "control_indicator");
-    			attr(label, "class", label_class_value = "control control-checkbox control-black " + (ctx.item.group ? 'group' : ctx.item.properties.GeometryType) + " inside-" + (ctx.item.level - 1));
+    			attr(label, "class", label_class_value = "control control-checkbox control-black " + (ctx.item.group ? 'group' : ctx.item.properties.GeometryType || ctx.item.properties.type) + " inside-" + (ctx.item.level - 1));
     			attr(div1, "class", "sidebar-opened-el-left");
     			attr(div2, "class", "sidebar-opened-el-right");
     			attr(div3, "class", "sidebar-opened-el-right-1");
@@ -815,7 +825,7 @@ var app = (function () {
     				set_data(t0, t0_value);
     			}
 
-    			if ((changed.item) && label_class_value !== (label_class_value = "control control-checkbox control-black " + (ctx.item.group ? 'group' : ctx.item.properties.GeometryType) + " inside-" + (ctx.item.level - 1))) {
+    			if ((changed.item) && label_class_value !== (label_class_value = "control control-checkbox control-black " + (ctx.item.group ? 'group' : ctx.item.properties.GeometryType || ctx.item.properties.type) + " inside-" + (ctx.item.level - 1))) {
     				attr(label, "class", label_class_value);
     			}
 
@@ -838,7 +848,7 @@ var app = (function () {
     }
 
     function instance$1($$self, $$props, $$invalidate) {
-    	let { item, map, gmxMap } = $$props;
+    	let { item, map, gmxMap, expanded } = $$props;
         //let is;
 
     	const unsubscribe = leafletMap.subscribe(value => {
@@ -882,17 +892,23 @@ var app = (function () {
     			}
     		}
     	};
+    	if (item.group) {
+    		$$invalidate('expanded', expanded = item.properties.expanded);
+    	}
+    console.log('expanded', expanded);
 
     	$$self.$set = $$props => {
     		if ('item' in $$props) $$invalidate('item', item = $$props.item);
     		if ('map' in $$props) $$invalidate('map', map = $$props.map);
     		if ('gmxMap' in $$props) $$invalidate('gmxMap', gmxMap = $$props.gmxMap);
+    		if ('expanded' in $$props) $$invalidate('expanded', expanded = $$props.expanded);
     	};
 
     	return {
     		item,
     		map,
     		gmxMap,
+    		expanded,
     		toggleLayer,
     		fitBounds,
     		opacityFilter
@@ -902,7 +918,7 @@ var app = (function () {
     class LineNode extends SvelteComponent {
     	constructor(options) {
     		super();
-    		init(this, options, instance$1, create_fragment$1, safe_not_equal, ["item", "map", "gmxMap"]);
+    		init(this, options, instance$1, create_fragment$1, safe_not_equal, ["item", "map", "gmxMap", "expanded"]);
     	}
     }
 
@@ -914,11 +930,23 @@ var app = (function () {
     	return child_ctx;
     }
 
-    // (70:2) {#each layersArr as item}
+    // (71:2) {#each layersArr as item}
     function create_each_block(ctx) {
-    	var current;
+    	var updating_expanded, current;
 
-    	var linenode = new LineNode({ props: { item: ctx.item } });
+    	function linenode_expanded_binding(value) {
+    		ctx.linenode_expanded_binding.call(null, value);
+    		updating_expanded = true;
+    		add_flush_callback(() => updating_expanded = false);
+    	}
+
+    	let linenode_props = { item: ctx.item };
+    	if (ctx.expanded !== void 0) {
+    		linenode_props.expanded = ctx.expanded;
+    	}
+    	var linenode = new LineNode({ props: linenode_props });
+
+    	binding_callbacks.push(() => bind(linenode, 'expanded', linenode_expanded_binding));
 
     	return {
     		c() {
@@ -933,6 +961,9 @@ var app = (function () {
     		p(changed, ctx) {
     			var linenode_changes = {};
     			if (changed.layersArr) linenode_changes.item = ctx.item;
+    			if (!updating_expanded && changed.expanded) {
+    				linenode_changes.expanded = ctx.expanded;
+    			}
     			linenode.$set(linenode_changes);
     		},
 
@@ -1027,7 +1058,7 @@ var app = (function () {
     				set_data(t0, t0_value);
     			}
 
-    			if (changed.layersArr) {
+    			if (changed.layersArr || changed.expanded) {
     				each_value = ctx.layersArr;
 
     				for (var i = 0; i < each_value.length; i += 1) {
@@ -1085,7 +1116,7 @@ var app = (function () {
        // baseContVisible.update(n => !n);
        // };
         // export let mapID;
-        let { layersArr = [], mapAttr = {} } = $$props;
+        let { layersArr = [], mapAttr = {}, expanded = true } = $$props;
 
     // console.log('ssss', mapID, Store.mapTree, Store.leafletMap)
       let tree = null;
@@ -1113,18 +1144,29 @@ var app = (function () {
         // }
       // });
 
+    	function linenode_expanded_binding(value) {
+    		expanded = value;
+    		$$invalidate('expanded', expanded);
+    	}
+
     	$$self.$set = $$props => {
     		if ('layersArr' in $$props) $$invalidate('layersArr', layersArr = $$props.layersArr);
     		if ('mapAttr' in $$props) $$invalidate('mapAttr', mapAttr = $$props.mapAttr);
+    		if ('expanded' in $$props) $$invalidate('expanded', expanded = $$props.expanded);
     	};
 
-    	return { layersArr, mapAttr };
+    	return {
+    		layersArr,
+    		mapAttr,
+    		expanded,
+    		linenode_expanded_binding
+    	};
     }
 
     class LayersTree extends SvelteComponent {
     	constructor(options) {
     		super();
-    		init(this, options, instance$2, create_fragment$2, safe_not_equal, ["layersArr", "mapAttr"]);
+    		init(this, options, instance$2, create_fragment$2, safe_not_equal, ["layersArr", "mapAttr", "expanded"]);
     	}
     }
 

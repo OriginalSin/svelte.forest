@@ -15,6 +15,7 @@
     // export let mapID;
     export let layersArr = [];
     export let mapAttr = {};
+    export let expanded = true;
 
 // console.log('ssss', mapID, Store.mapTree, Store.leafletMap)
   let tree = null;
@@ -68,7 +69,7 @@ console.log('tree', mapAttr, layersArr, tree);
    </div>
       <div class="sidebar-opened-el-container" id="style-4">
   {#each layersArr as item}
-    <LineNode item={item} />
+    <LineNode item={item} bind:expanded />
   {/each}
       </div>
 </div>

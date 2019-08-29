@@ -4,6 +4,7 @@
     export let item;
     export let map;
     export let gmxMap;
+    export let expanded;
     //let is;
 
 	const unsubscribe = leafletMap.subscribe(value => {
@@ -47,12 +48,16 @@ console.log('opacityFilter', item, gmxMap);
 			}
 		}
 	};
+	if (item.group) {
+		expanded = item.properties.expanded
+	}
+console.log('expanded', expanded);
 
 </script>
 
 <div class="sidebar-opened-row-el">
 	<div class="sidebar-opened-el-left">
-	   <label class="control control-checkbox control-black {item.group ? 'group' : item.properties.GeometryType} inside-{item.level - 1}">
+	   <label class="control control-checkbox control-black {item.group ? 'group' : item.properties.GeometryType || item.properties.type} inside-{item.level - 1}">
 	   {item.properties.title}
 	   <input type="checkbox" on:change={toggleLayer} />
 	   <div class="control_indicator"></div>
