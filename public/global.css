@@ -1450,7 +1450,7 @@ label.css-label1 {
     background-position: center;
 }
 
-/*начало иконка пустой слой*/
+/*начало иконка пустой слой или полигон*/
 .polygon:before {
     content: '';
     background: url("data:image/svg+xml;charset=utf8,%3Csvg width='12' height='16' viewBox='0 0 12 16' fill='none' xmlns='http://www.w3.org/2000/svg'%3E%3Crect x='1' y='1' width='10' height='14' fill='%23F4F4F4' stroke='%23CCCCCC' stroke-width='2'/%3E%3C/svg%3E");
@@ -1463,6 +1463,21 @@ label.css-label1 {
     margin-right: 12px;
     background-position: center;
 }
+
+/*начало иконка растр*/
+.Raster:before {
+    content: '';
+    background: url("data:image/svg+xml;charset=utf8,%3Csvg width='16' height='16' viewBox='0 0 16 16' fill='none' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath d='M9.5 0.5H6.5V3.5H9.5V0.5Z' fill='%23818181'/%3E%3Cpath d='M15.5 0.5H12.5V3.5H15.5V0.5Z' fill='%23818181'/%3E%3Cpath d='M15.5 9.5H12.5V12.5H15.5V9.5Z' fill='%23818181'/%3E%3Cpath d='M9.5 3.5V6.5H6.5V3.5H3.5V0.5H0.5V9.5H3.5V12.5H0.5V15.5H6.5V12.5H9.5V9.5H12.5V3.5H9.5Z' fill='%23818181'/%3E%3Cpath d='M12.5 12.5H9.5V15.5H12.5V12.5Z' fill='%23818181'/%3E%3C/svg%3E");
+    background-repeat: no-repeat;
+    display: block;
+    position: relative;
+    float: left;
+    width: 16px;
+    height: 16px;
+    margin-right: 12px;
+    background-position: center;
+}
+
 
 .inside-0:before {margin-left: 4px;content: '';}
 
