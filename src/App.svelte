@@ -30,6 +30,13 @@
 	let toggleSidebar = (ev) => {
 // console.log('toggleSidebar', ev);
 		sidebar_visible = !sidebar_visible;
+		let classList = ev.target.classList,
+			className = 'rotate180';
+		if (classList.contains(className)) {
+			classList.remove(className);
+		} else {
+			classList.add(className);
+		}
 	};
 	let openSidebar = (nm) => {
 // console.log('op222enSidebar', sidebar_num, nm);

@@ -65,7 +65,11 @@
 			zoomAnimation: true,
 			distanceUnit: 'auto',
 			squareUnit: 'auto',
-		});
+		})
+			.addControl(L.control.gmxBottom())
+			.addControl(L.control.gmxCopyright({type: 'window', position: 'gmxbottomright'}))  // default options = {position: 'bottomleft'}
+            .addControl(L.control.gmxLocation());   // default options = {position: 'bottomright'}
+
 		resize();
 		leafletMap.set(map);
 
