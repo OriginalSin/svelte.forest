@@ -48,7 +48,7 @@ console.log('tree', mapAttr, layersArr, tree);
 <div class="sidebar-opened">
    <div class="sidebar-opened-row1">
       <div class="sidebar-opened-row1-left">{mapAttr.properties && mapAttr.properties.title || 'Название проекта/компании'}</div>
-      <div class="sidebar-opened-row1-right"></div>
+      <div class="sidebar-opened-row1-right" title="Редактировать"></div>
    </div>
    <div class="sidebar-opened-row2">
       <input type="text" name="input1" class="header-input1">
@@ -61,10 +61,10 @@ console.log('tree', mapAttr, layersArr, tree);
          <div class="control_indicator"></div>
       </div>
       <div class="sidebar-opened-row3-right">
-         <div class="sidebar-opened-row3-right-el1"></div>
-         <div class="sidebar-opened-row3-right-el2"></div>
-         <div class="sidebar-opened-row3-right-el3"></div>
-         <div class="sidebar-opened-row3-right-el4"></div>
+        <div class="sidebar-opened-row3-right-el1" title="Создать слой"></div>
+        <div class="sidebar-opened-row3-right-el2" title="Добавить группу"></div>
+        <div class="sidebar-opened-row3-right-el3" title="Загрузить"></div>
+        <div class="sidebar-opened-row3-right-el4" title="Фильтр"></div>
       </div>
    </div>
       <div class="sidebar-opened-el-container" id="style-4">

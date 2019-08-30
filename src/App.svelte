@@ -96,7 +96,6 @@
 			<div class="icons-vert-top-1" on:click="{() => {openSidebar(1);}}" title="Менеджер слоев"></div>
 			<div class="icons-vert-top-2" on:click="{() => {openSidebar(2);}}" title="Объекты"></div>
 			<div class="icons-vert-top-3" on:click="{() => {openSidebar(3);}}" title="Отчеты"></div>
-			<div class="icons-vert-top-3" on:click="{() => {openSidebar(4);}}" title="Отчеты Тест"></div>
 		 </div>
 		 <div class="icons-vert-bottom">
 			<div class="icons-vert-bottom-1" on:click="{toggleSidebar}" title="Раскрыть / Свернуть"></div>
@@ -111,8 +110,6 @@
 		<div class="sidebar-opened">Вторая вкладка</div>
 	{:else if sidebar_num === 3}
 		<div class="sidebar-opened">Третья вкладка</div>
-	{:else if sidebar_num === 4}
-		<Report mapID={name}></Report>
 	{/if}
 
       <!--END OPENED SIDEBAR-->
