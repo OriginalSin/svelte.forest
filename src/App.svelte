@@ -107,7 +107,51 @@
 	{#if sidebar_num === 1}
 		<LayersTree mapID={name}></LayersTree>
 	{:else if sidebar_num === 2}
-		<div class="sidebar-opened">Вторая вкладка</div>
+		
+
+	      <div class="sidebar-opened">
+         <div class="sidebar-opened-row1">
+            <div class="sidebar-opened-row1-left">Название проекта/компании</div>
+            <div class="sidebar-opened-row1-right" title="Редактировать"></div>
+         </div>
+         <div class="sidebar-opened-el-container" id="style-4">
+            <div class="tabs">
+               <input id="tab1" type="radio" name="tabs" checked>
+               <label for="tab1" title="Wordpress">Делянки</label>
+               <div class="line-tabs-separator"></div>
+               <input id="tab2" type="radio" name="tabs">
+               <label for="tab2" title="Windows">Квартальные сети</label>
+               <section id="content-tab1">
+                  <div class="sidebar-opened-row1">
+                     <div class="check-50">
+                        <input type="checkbox" name="checkboxG4" id="checkboxG4" class="css-checkbox2" /><label for="checkboxG4" class="css-label2 radGroup1">Снимки Landsat-8</label>
+                     </div>
+                     <div class="check-50">
+                        <input type="checkbox" name="checkboxG5" id="checkboxG5" class="css-checkbox2" checked="checked"/><label for="checkboxG5" class="css-label2 radGroup1">Снимки Sentinel-2</label>
+                     </div>
+                  </div>
+                  <div class="sidebar-opened-row-tabs-1">
+                     <div class="tabs-input-text">Выбор слоя</div>
+                     <div class="tabs-input">
+                        <div class="styled-select-1-1">
+                           <select>
+                              <option value="0">Пустой слой 1</option>
+                              <option value="7382">Пустой слой 2</option>
+                           </select>
+                        </div>
+                     </div>
+                  </div>
+                  <div class="sidebar-opened-row-tabs-add">
+                     <div class="sidebar-opened-row-tabs-add-text">Добавить делянку</div>
+                  </div>
+               </section>
+               <section id="content-tab2">
+               </section>
+            </div>
+         </div>
+      </div>
+
+		
 	{:else if sidebar_num === 3}
 		<div class="sidebar-opened">Третья вкладка</div>
 	{/if}
