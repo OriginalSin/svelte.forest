@@ -1489,6 +1489,7 @@ label.css-label2 {
 	-moz-user-select: none;
 	-ms-user-select: none;
 	user-select: none;
+	pointer-events: none;
 }
 
 .control-black {
@@ -1668,6 +1669,7 @@ label.css-label2 {
 	background: #ffffff;
 	border: 1px solid #282828;
 	transform: scale(0.9);
+	pointer-events: auto;
 }
 
 .control-radio .control_indicator {
