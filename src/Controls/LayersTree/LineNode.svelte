@@ -43,7 +43,7 @@
 			let lid = item.properties.name,
 				it = gmxMap.layersByID[lid];
 			if (it) {
-console.log('opacityFilter', item, gmxMap);
+// console.log('opacityFilter', item, gmxMap);
 				it.setOpacity(0.5);
 			}
 		}
@@ -51,7 +51,7 @@ console.log('opacityFilter', item, gmxMap);
 	if (item.group) {
 		expanded = item.properties.expanded
 	}
-console.log('expanded', expanded);
+// console.log('expanded', expanded);
 
 </script>
 
@@ -60,7 +60,8 @@ console.log('expanded', expanded);
 	   <label class="control control-checkbox control-black {item.group ? 'group' : item.properties.GeometryType || item.properties.type} inside-{item.level - 1}">
 	   {item.properties.title}
 	   <input type="checkbox" on:change={toggleLayer} />
-	   <div class="control_indicator"></div>
+	   <div class="control_indicator" on:click={fitBounds}></div>
+	   </label>
 	</div>
 	<div class="sidebar-opened-el-right"></div>
 	<div class="sidebar-opened-el-right">

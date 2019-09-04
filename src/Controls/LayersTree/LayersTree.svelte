@@ -30,7 +30,7 @@
         mapAttr = tree.mapAttr;
       }
       // map.addLayer(baseLayers[2]);
-console.log('tree', mapAttr, layersArr, tree);
+// console.log('tree', mapAttr, layersArr, tree);
     }
   });
 

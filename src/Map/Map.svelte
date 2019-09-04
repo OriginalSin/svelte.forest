@@ -88,7 +88,7 @@
 			if (cmd === 'getMap') {
 				mapTree.set(json);
 			}
-	console.log('onmessage', json);
+	// console.log('onmessage', json);
 		};
 		dataWorker.postMessage({cmd: 'getMap', mapID: mapID});
     });

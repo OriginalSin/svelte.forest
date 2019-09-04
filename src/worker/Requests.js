@@ -99,7 +99,7 @@ const parseTree = (json) => {
 		out = _iterateNodeChilds(json.Result);
 		out.mapAttr = out.layers.shift();
 	}
- console.log('______json_out_______', out, json)
+// console.log('______json_out_______', out, json)
 	return out;
 };
 export default {

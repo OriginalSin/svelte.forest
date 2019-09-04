@@ -8,16 +8,16 @@
 	let setZoom = ((ev) => {
 		let z = leafletMap.getZoom();
 		zoom.textContent = z;
-		console.log('setZoom', leafletMap.getZoom(), ev);
+		//console.log('setZoom', leafletMap.getZoom(), ev);
 	});
 	let zoomIn = (() => {
 		let z = parseInt(zoom.textContent);
-		console.log('zoomIn', leafletMap.getZoom(), zoom);
+//		console.log('zoomIn', leafletMap.getZoom(), zoom);
 		leafletMap.setZoom(z + 1);
 	});
 	let zoomOut = (() => {
 		let z = parseInt(zoom.textContent);
-		console.log('zoomOut', leafletMap.getZoom());
+		//console.log('zoomOut', leafletMap.getZoom());
 		leafletMap.setZoom(z - 1);
 	});
 	// let leafletMap = getContext('leafletMap');
@@ -28,7 +28,7 @@
 	});
 
 	beforeUpdate(() => {
-		console.log('the component is about to update', leafletMap);
+		//console.log('the component is about to update', leafletMap);
 	});
 </script>
 

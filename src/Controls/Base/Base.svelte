@@ -43,13 +43,13 @@
 	const unsubscribe1 = leafletMap.subscribe(value => {
 		map = value;
 		if (map) {
-console.log('map', map);
+// console.log('map', map);
 			map.addLayer(baseLayers[2]);
 
 		}
 	});
 	let setBase = (ev) => {
-console.log('setBase', ev);
+// console.log('setBase', ev);
 		let target = ev.target,
 			cont = target.parentNode.parentNode.parentNode,
 			arr = cont.getElementsByTagName('input');
