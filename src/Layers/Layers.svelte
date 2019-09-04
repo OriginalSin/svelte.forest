@@ -101,7 +101,7 @@ const changeKvartal = (ev) => {
 
 {#if addDelynkaFlag === 1}
          <!--НАЧАЛО ПОП-АП ДОБАВЛЕНИЕ ДЕЛЯНКИ-1-->
-         <div class="left-controls-pop-add-main-cont">
+         
             <div class="left-controls-pop-add-kvartal">
                <div class="left-controls-pop-add-kvartal-r1">
                   <div class="left-controls-pop-add-kvartal-r1-text">Добавление делянки</div>
@@ -169,11 +169,11 @@ const changeKvartal = (ev) => {
                   <div class="left-controls-pop-add-kvartal-r-bot2-right" on:click={addDelynka2}>Далее</div>
                </div>
             </div>
-         </div>
+         
          <!--КОНЕЦ ПОП-АП ДОБАВЛЕНИЕ ДЕЛЯНКИ-1-->
 {:else if addDelynkaFlag === 2}
          <!--НАЧАЛО ПОП-АП ДОБАВЛЕНИЕ ДЕЛЯНКИ-2-->
-         <div class="left-controls-pop-add-main-cont">
+         
             <div class="left-controls-pop-add-kvartal">
                <div class="left-controls-pop-add-kvartal-r1">
                   <div class="left-controls-pop-add-kvartal-r1-text">Добавление делянки</div>
@@ -211,7 +211,7 @@ const changeKvartal = (ev) => {
                   <div class="left-controls-pop-add-kvartal-r-bot2-right">Сохранить</div>
                </div>
             </div>
-         </div>
+         
          <!--КОНЕЦ ПОП-АП ДОБАВЛЕНИЕ ДЕЛЯНКИ-2-->
 {/if}
 

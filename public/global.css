@@ -1960,6 +1960,9 @@ label.css-label2 {
 	align-items: flex-start;
 	z-index: 1000;
 	margin-right: 15px;
+	position: absolute;
+    left: 493px;
+    top: 220px;
 }
 
 .left-controls-pop-add-kvartal-r1 {
