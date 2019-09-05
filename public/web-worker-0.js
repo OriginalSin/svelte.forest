@@ -66,19 +66,55 @@ const parseTree = (json) => {
 // console.log('______json_out_______', out, json)
 	return out;
 };
+const getReq = url => {
+	return fetch(url, {
+			method: 'get',
+			mode: 'cors',
+			credentials: 'include'
+		// headers: {'Accept': 'application/json'},
+		// body: JSON.stringify(params)	// TODO: сервер почему то не хочет работать так https://googlechrome.github.io/samples/fetch-api/fetch-post.html
+		})
+		.then(res => res.json())
+		.catch(err => console.warn(err));
+};
+
+const getLayerItems = (params) => {
+	params = params || {};
+
+	let url = `${serverBase}VectorLayer/Search.ashx`;
+	url += '?layer=' + params.layerID;
+	if (params.id) { '&query=gmx_id=' + params.id; }
+
+	url += '&out_cs=EPSG:4326';
+	url += '&geometry=true';
+	return getReq(url);
+};
+
 var Requests = {
-	getMapTree
+	getMapTree,
+	getLayerItems
 };
 
 var _self$1 = self;
 (_self$1.on || _self$1.addEventListener).call(_self$1, 'message', e => {
     const message = e.data || e;
-	if (message.cmd === 'getMap') {
-		Requests.getMapTree({mapId: message.mapID}).then((json) => {
-// console.log(message, json);
-			message.out = json;
-			_self$1.postMessage(message);
-		});
+console.log('message getLayerItems', e);
+    switch (message.cmd) {
+		case 'getLayerItems':
+			Requests.getLayerItems({layerID: message.layerID}).then((json) => {
+				message.out = json;
+				_self$1.postMessage(message);
+			});
+			break;
+		case 'getMap':
+			Requests.getMapTree({mapId: message.mapID}).then((json) => {
+				message.out = json;
+				_self$1.postMessage(message);
+			});
+			break;
+		default:
+			console.warn('Неизвестная команда:', message.cmd);
+			break;
 	}
 	
 /*

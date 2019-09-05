@@ -102,6 +102,31 @@ const parseTree = (json) => {
 // console.log('______json_out_______', out, json)
 	return out;
 };
+const getReq = url => {
+	return fetch(url, {
+			method: 'get',
+			mode: 'cors',
+			credentials: 'include'
+		// headers: {'Accept': 'application/json'},
+		// body: JSON.stringify(params)	// TODO: сервер почему то не хочет работать так https://googlechrome.github.io/samples/fetch-api/fetch-post.html
+		})
+		.then(res => res.json())
+		.catch(err => console.warn(err));
+};
+
+const getLayerItems = (params) => {
+	params = params || {};
+
+	let url = `${serverBase}VectorLayer/Search.ashx`;
+	url += '?layer=' + params.layerID;
+	if (params.id) { '&query=gmx_id=' + params.id; }
+
+	url += '&out_cs=EPSG:4326';
+	url += '&geometry=true';
+	return getReq(url);
+};
+
 export default {
-	getMapTree
+	getMapTree,
+	getLayerItems
 };

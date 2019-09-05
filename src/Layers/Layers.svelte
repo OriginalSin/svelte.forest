@@ -15,29 +15,82 @@ const unsubscribe1 = Store.leafletMap.subscribe(value => {
 	map = value;
 });
 
+let kvData = null;
+Store.kvItems.subscribe(value => {
+	if (value) {
+		kvData = value;
+		let kv = -1;
+		kvData.fields.find((c, i) => {
+			if (c === 'kv') {
+				kv = i;
+				return true
+			}
+			return false;
+		});
+		kvData.optionsField = kv;
+	}
+console.log('kvData', kvData)
+});
+
 let addDelynkaFlag = null;
 const addDelynka0 = () => { addDelynkaFlag = 0; };
 const addDelynka1 = () => { addDelynkaFlag = 1; };
 const addDelynka2 = () => { addDelynkaFlag = 2; };
 
-const setLayer = (id) => {
+let delynkaLayer = null;
+let kvartalLayer = null;
+const _setLayer = (id) => {
 	let it = gmxMap.layersByID[id],
 		bbox = it.getBounds();
-	map.fitBounds(bbox);
+	// if (addDelynkaFlag !== 1) {
+		map.fitBounds(bbox);
+	// }
 	map.addLayer(it);
+	return it;
 };
 const changeDelynka = (ev) => {
 	let id = ev.target.selectedOptions[0].value;
-	setLayer(id);
+	delynkaLayer = _setLayer(id);
+	Utils.getLayerItems(delynkaLayer)
 	console.log('changeDelynka', id);
 };
 
 const changeKvartal = (ev) => {
 	let id = ev.target.selectedOptions[0].value;
-	setLayer(id);
+	kvartalLayer = _setLayer(id);
+	Utils.getLayerItems(kvartalLayer)
 	console.log('changeKvartal', id);
 };
 
+const getOptionsData = (pt, subVal, cnt) => {
+	let nm = pt.optionsField;
+	return '<option value="' + Object.keys(pt.values.reduce((p, c) => {
+		if (!subVal || c.indexOf(subVal) !== -1) {
+			let out = c[nm];
+			p[out] = true;
+		}
+		return p;
+	}, {})).slice(0, cnt || 50).join('" /><option value="') + ' />';
+};
+
+const getOptions = (pt, name) => {
+	return getOptionsData(pt, name && document.body.getElementsByClassName(name)[0].value);
+};
+
+let latlng = null;
+let latlngStr = '';
+const setKvartal = (ev) => {
+	let kv = ev.target.value,
+		nm = kvData.optionsField;
+	let pt = kvData.values.find((c) => c[nm] == kv);
+	if (pt) {
+		let bbox = L.gmxUtil.getGeometryBounds(pt[pt.length - 1]);
+		latlng = bbox.getCenter();
+		latlngStr = L.gmxUtil.latLonFormatCoordinates2(latlng[0], latlng[1]);
+		map.fitBounds(L.latLngBounds([[bbox.min.y, bbox.min.x], [bbox.max.y, bbox.max.x]]));
+	// console.log('setKvartal', latlng, pt);
+	}
+};
 </script>
 
 <div class="sidebar-opened">
@@ -66,6 +119,7 @@ const changeKvartal = (ev) => {
                      <div class="tabs-input">
                         <div class="styled-select-1-1">
                            <select on:change={changeDelynka}>
+							<option value="" />
   {#each gmxMap.layers as item}
 	{#if Utils.isDelynkaLayer(item)}
 	  <option value="{item.options.layerID}">{item._gmx.rawProperties.title}</option>
@@ -85,6 +139,7 @@ const changeKvartal = (ev) => {
                      <div class="tabs-input">
                         <div class="styled-select-1-1">
                            <select on:change={changeKvartal}>
+							<option value="" />
   {#each gmxMap.layers as item}
 	{#if Utils.isKvartalLayer(item)}
 	  <option value="{item.options.layerID}">{item._gmx.rawProperties.title}</option>
@@ -115,28 +170,35 @@ const changeKvartal = (ev) => {
                   <div class="input-kv-1-el2-2-3">
                      <div class="kv-1-1">Слой квартальной сети</div>
                      <div class="styled-select-1-1">
-                        <select>
-                           <option value="0">Сеть1 </option>
-                           <option value="7382">Сеть2 </option>
+                        <select on:change={changeKvartal}>
+							<option value="" />
+  {#each gmxMap.layers as item}
+	{#if Utils.isKvartalLayer(item)}
+	  <option value="{item.options.layerID}">{item._gmx.rawProperties.title}</option>
+	{/if}
+  {/each}
                         </select>
                      </div>
                   </div>
                   <div class="input-kv inp-icon-before">
                      <div class="kv">Квартал</div>
-                     <input type="text" name="" class="input-left-controls-pop-add-kvartal">
+                     <input on:change={setKvartal} type="text" list="kvartal" name="kvartal" class="kvartal input-left-controls-pop-add-kvartal">
+					 <datalist id="kvartal">
+						{@html kvData && getOptions(kvData, 'kvartal')}
+					 </datalist>
                   </div>
                   <div class="input-kv-1 margin-top--7">
                      <div class="input-kv-1-el1">
                         <div class="kv-1">Координаты опорной точки</div>
-                        <input type="text" name="" class="input-left-controls-pop-add-kvartal-1" placeholder="lat">
+                        <input value="{latlng && latlng[1]}" type="text" name="lat" class="input-left-controls-pop-add-kvartal-1" placeholder="lat">
                      </div>
                      <div class="input-kv-1-el2">
                         <div class="kv-1"></div>
-                        <input type="text" name="" class="input-left-controls-pop-add-kvartal-1 right-inp" placeholder="long">
+                        <input value="{latlng && latlng[0]}" type="text" name="lon" class="input-left-controls-pop-add-kvartal-1 right-inp" placeholder="long">
                      </div>
                   </div>
                   <div class="left-controls-pop-lat-long-output">
-                     <div class="left-controls-pop-lat-long-output-text">00'00'07.2'' N, 00'00'00'' W</div>
+                     <div class="left-controls-pop-lat-long-output-text">{latlngStr}</div>
                   </div>
                   <div class="input-kv-1 margin-top--7">
                      <div class="input-kv-1-el1">

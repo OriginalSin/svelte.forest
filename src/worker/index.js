@@ -3,12 +3,23 @@ import Requests from './Requests.js';
 var _self = self;
 (_self.on || _self.addEventListener).call(_self, 'message', e => {
     const message = e.data || e;
-	if (message.cmd === 'getMap') {
-		Requests.getMapTree({mapId: message.mapID}).then((json) => {
-// console.log(message, json);
-			message.out = json;
-			_self.postMessage(message);
-		});
+console.log('message getLayerItems', e);
+    switch (message.cmd) {
+		case 'getLayerItems':
+			Requests.getLayerItems({layerID: message.layerID}).then((json) => {
+				message.out = json;
+				_self.postMessage(message);
+			});
+			break;
+		case 'getMap':
+			Requests.getMapTree({mapId: message.mapID}).then((json) => {
+				message.out = json;
+				_self.postMessage(message);
+			});
+			break;
+		default:
+			console.warn('Неизвестная команда:', message.cmd);
+			break;
 	}
 	
 /*

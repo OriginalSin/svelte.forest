@@ -63,7 +63,6 @@
 	   <div class="control_indicator" on:click={fitBounds}></div>
 	   </label>
 	</div>
-	<div class="sidebar-opened-el-right"></div>
 	<div class="sidebar-opened-el-right">
 		<div class="sidebar-opened-el-right-1" on:click={fitBounds} title="Центрировать"></div>
 		<div class="sidebar-opened-el-right-2" title="Редактор объектов"></div>
