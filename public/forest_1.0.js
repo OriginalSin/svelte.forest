@@ -2078,13 +2078,15 @@ var app = (function () {
 
     function get_each_context$1(ctx, list, i) {
     	const child_ctx = Object_1.create(ctx);
-    	child_ctx.item = list[i];
+    	child_ctx.it = list[i];
+    	child_ctx.i = i;
     	return child_ctx;
     }
 
     function get_each_context_1(ctx, list, i) {
     	const child_ctx = Object_1.create(ctx);
-    	child_ctx.item = list[i];
+    	child_ctx.it = list[i];
+    	child_ctx.i = i;
     	return child_ctx;
     }
 
@@ -2094,8 +2096,20 @@ var app = (function () {
     	return child_ctx;
     }
 
-    // (125:1) {#if Utils.isDelynkaLayer(item)}
-    function create_if_block_4(ctx) {
+    function get_each_context_3(ctx, list, i) {
+    	const child_ctx = Object_1.create(ctx);
+    	child_ctx.item = list[i];
+    	return child_ctx;
+    }
+
+    function get_each_context_4(ctx, list, i) {
+    	const child_ctx = Object_1.create(ctx);
+    	child_ctx.item = list[i];
+    	return child_ctx;
+    }
+
+    // (150:1) {#if Utils.isDelynkaLayer(item)}
+    function create_if_block_6(ctx) {
     	var option, t_value = ctx.item._gmx.rawProperties.title, t, option_value_value;
 
     	return {
@@ -2131,11 +2145,11 @@ var app = (function () {
     	};
     }
 
-    // (124:2) {#each gmxMap.layers as item}
-    function create_each_block_2(ctx) {
+    // (149:2) {#each gmxMap.layers as item}
+    function create_each_block_4(ctx) {
     	var if_block_anchor;
 
-    	var if_block = (Utils.isDelynkaLayer(ctx.item)) && create_if_block_4(ctx);
+    	var if_block = (Utils.isDelynkaLayer(ctx.item)) && create_if_block_6(ctx);
 
     	return {
     		c() {
@@ -2153,7 +2167,7 @@ var app = (function () {
     				if (if_block) {
     					if_block.p(changed, ctx);
     				} else {
-    					if_block = create_if_block_4(ctx);
+    					if_block = create_if_block_6(ctx);
     					if_block.c();
     					if_block.m(if_block_anchor.parentNode, if_block_anchor);
     				}
@@ -2173,8 +2187,8 @@ var app = (function () {
     	};
     }
 
-    // (145:1) {#if Utils.isKvartalLayer(item)}
-    function create_if_block_3(ctx) {
+    // (170:1) {#if Utils.isKvartalLayer(item)}
+    function create_if_block_5(ctx) {
     	var option, t_value = ctx.item._gmx.rawProperties.title, t, option_value_value;
 
     	return {
@@ -2210,11 +2224,11 @@ var app = (function () {
     	};
     }
 
-    // (144:2) {#each gmxMap.layers as item}
-    function create_each_block_1(ctx) {
+    // (169:2) {#each gmxMap.layers as item}
+    function create_each_block_3(ctx) {
     	var if_block_anchor;
 
-    	var if_block = (Utils.isKvartalLayer(ctx.item)) && create_if_block_3(ctx);
+    	var if_block = (Utils.isKvartalLayer(ctx.item)) && create_if_block_5(ctx);
 
     	return {
     		c() {
@@ -2232,7 +2246,7 @@ var app = (function () {
     				if (if_block) {
     					if_block.p(changed, ctx);
     				} else {
-    					if_block = create_if_block_3(ctx);
+    					if_block = create_if_block_5(ctx);
     					if_block.c();
     					if_block.m(if_block_anchor.parentNode, if_block_anchor);
     				}
@@ -2252,8 +2266,8 @@ var app = (function () {
     	};
     }
 
-    // (237:31) 
-    function create_if_block_2(ctx) {
+    // (271:31) 
+    function create_if_block_4(ctx) {
     	var div21, div2, div0, t1, div1, t2, div3, t3, div16, t20, div17, t21, div20, div18, t23, div19, dispose;
 
     	return {
@@ -2327,11 +2341,27 @@ var app = (function () {
     	};
     }
 
-    // (158:0) {#if addDelynkaFlag === 1}
+    // (183:0) {#if addDelynkaFlag === 1}
     function create_if_block(ctx) {
-    	var div37, div2, div0, t1, div1, t2, div3, t3, div32, div5, t5, div8, div6, t7, div7, select, option, t8, div10, div9, t10, input0, t11, datalist, raw_value = ctx.kvData && ctx.getOptions(ctx.kvData, 'kvartal'), t12, div15, div12, div11, t14, input1, input1_value_value, t15, div14, div13, t16, input2, input2_value_value, t17, div17, div16, t18, t19, div24, t26, div31, t33, div33, t34, div36, div34, t36, div35, dispose;
+    	var div23, div2, div0, t1, div1, t2, div3, t3, div18, div5, t5, div8, div6, t7, div7, select, option, t8, div10, div9, t10, input0, t11, datalist, raw_value = ctx.kvData && ctx.getOptions(ctx.kvData, 'kvartal'), t12, div15, div12, div11, t14, input1, input1_value_value, t15, div14, div13, t16, input2, input2_value_value, t17, div17, div16, t18, t19, t20, t21, div19, t22, div22, div20, t24, div21, dispose;
 
-    	var each_value = ctx.gmxMap.layers;
+    	var each_value_2 = ctx.gmxMap.layers;
+
+    	var each_blocks_2 = [];
+
+    	for (var i = 0; i < each_value_2.length; i += 1) {
+    		each_blocks_2[i] = create_each_block_2(get_each_context_2(ctx, each_value_2, i));
+    	}
+
+    	var each_value_1 = ctx.snap.snap;
+
+    	var each_blocks_1 = [];
+
+    	for (var i = 0; i < each_value_1.length; i += 1) {
+    		each_blocks_1[i] = create_each_block_1(get_each_context_1(ctx, each_value_1, i));
+    	}
+
+    	var each_value = ctx.snap.ring;
 
     	var each_blocks = [];
 
@@ -2341,7 +2371,7 @@ var app = (function () {
 
     	return {
     		c() {
-    			div37 = element("div");
+    			div23 = element("div");
     			div2 = element("div");
     			div0 = element("div");
     			div0.textContent = "Добавление делянки";
@@ -2350,7 +2380,7 @@ var app = (function () {
     			t2 = space();
     			div3 = element("div");
     			t3 = space();
-    			div32 = element("div");
+    			div18 = element("div");
     			div5 = element("div");
     			div5.innerHTML = `<div class="popup-title">Шаг 1. Контур делянки</div>`;
     			t5 = space();
@@ -2362,8 +2392,8 @@ var app = (function () {
     			select = element("select");
     			option = element("option");
 
-    			for (var i = 0; i < each_blocks.length; i += 1) {
-    				each_blocks[i].c();
+    			for (var i = 0; i < each_blocks_2.length; i += 1) {
+    				each_blocks_2[i].c();
     			}
 
     			t8 = space();
@@ -2391,20 +2421,26 @@ var app = (function () {
     			div16 = element("div");
     			t18 = text(ctx.latlngStr);
     			t19 = space();
-    			div24 = element("div");
-    			div24.innerHTML = `<div class="input-kv-1-el1"><div class="kv-1">Привязочный ход</div> <input type="text" name="" class="input-left-controls-pop-add-kvartal-1 hod1" placeholder="192500"></div> <div class="input-kv-1-el2"><div class="kv-1"></div> <input type="text" name="" class="input-left-controls-pop-add-kvartal-1 hod2" placeholder="192500"></div> <div class="input-kv-1-el4"></div> <div class="input-kv-1-el3"></div>`;
-    			t26 = space();
-    			div31 = element("div");
-    			div31.innerHTML = `<div class="input-kv-1-el1"><div class="kv-1">Контур делянки    </div> <input type="text" name="" class="input-left-controls-pop-add-kvartal-1 hod1" placeholder="192500"></div> <div class="input-kv-1-el2"><div class="kv-1"></div> <input type="text" name="" class="input-left-controls-pop-add-kvartal-1 hod2" placeholder="192500"></div> <div class="input-kv-1-el4"></div> <div class="input-kv-1-el3"></div>`;
-    			t33 = space();
-    			div33 = element("div");
-    			t34 = space();
-    			div36 = element("div");
-    			div34 = element("div");
-    			div34.textContent = "Отмена";
-    			t36 = space();
-    			div35 = element("div");
-    			div35.textContent = "Далее";
+
+    			for (var i = 0; i < each_blocks_1.length; i += 1) {
+    				each_blocks_1[i].c();
+    			}
+
+    			t20 = space();
+
+    			for (var i = 0; i < each_blocks.length; i += 1) {
+    				each_blocks[i].c();
+    			}
+
+    			t21 = space();
+    			div19 = element("div");
+    			t22 = space();
+    			div22 = element("div");
+    			div20 = element("div");
+    			div20.textContent = "Отмена";
+    			t24 = space();
+    			div21 = element("div");
+    			div21.textContent = "Далее";
     			attr(div0, "class", "left-controls-pop-add-kvartal-r1-text");
     			attr(div1, "class", "left-controls-pop-add-kvartal-r1-close");
     			attr(div2, "class", "left-controls-pop-add-kvartal-r1");
@@ -2439,58 +2475,56 @@ var app = (function () {
     			attr(div15, "class", "input-kv-1 margin-top--7");
     			attr(div16, "class", "left-controls-pop-lat-long-output-text");
     			attr(div17, "class", "left-controls-pop-lat-long-output");
-    			attr(div24, "class", "input-kv-1 margin-top--7");
-    			attr(div31, "class", "input-kv-1 margin-top--7");
-    			attr(div32, "class", "left-controls-pop-add-kvartal-scroll");
-    			attr(div32, "id", "style-4");
-    			attr(div33, "class", "left-controls-pop-add-kvartal-r1-bottom");
-    			attr(div34, "class", "left-controls-pop-add-kvartal-r-bot2-left");
-    			attr(div35, "class", "left-controls-pop-add-kvartal-r-bot2-right");
-    			attr(div36, "class", "left-controls-pop-add-kvartal-r-bot2");
-    			attr(div37, "class", "left-controls-pop-add-kvartal");
+    			attr(div18, "class", "left-controls-pop-add-kvartal-scroll");
+    			attr(div18, "id", "style-4");
+    			attr(div19, "class", "left-controls-pop-add-kvartal-r1-bottom");
+    			attr(div20, "class", "left-controls-pop-add-kvartal-r-bot2-left");
+    			attr(div21, "class", "left-controls-pop-add-kvartal-r-bot2-right");
+    			attr(div22, "class", "left-controls-pop-add-kvartal-r-bot2");
+    			attr(div23, "class", "left-controls-pop-add-kvartal");
 
     			dispose = [
     				listen(div1, "click", ctx.addDelynka0),
     				listen(select, "change", ctx.changeKvartal),
     				listen(input0, "change", ctx.setKvartal),
-    				listen(div34, "click", ctx.addDelynka0),
-    				listen(div35, "click", ctx.addDelynka2)
+    				listen(div20, "click", ctx.addDelynka0),
+    				listen(div21, "click", ctx.addDelynka2)
     			];
     		},
 
     		m(target, anchor) {
-    			insert(target, div37, anchor);
-    			append(div37, div2);
+    			insert(target, div23, anchor);
+    			append(div23, div2);
     			append(div2, div0);
     			append(div2, t1);
     			append(div2, div1);
-    			append(div37, t2);
-    			append(div37, div3);
-    			append(div37, t3);
-    			append(div37, div32);
-    			append(div32, div5);
-    			append(div32, t5);
-    			append(div32, div8);
+    			append(div23, t2);
+    			append(div23, div3);
+    			append(div23, t3);
+    			append(div23, div18);
+    			append(div18, div5);
+    			append(div18, t5);
+    			append(div18, div8);
     			append(div8, div6);
     			append(div8, t7);
     			append(div8, div7);
     			append(div7, select);
     			append(select, option);
 
-    			for (var i = 0; i < each_blocks.length; i += 1) {
-    				each_blocks[i].m(select, null);
+    			for (var i = 0; i < each_blocks_2.length; i += 1) {
+    				each_blocks_2[i].m(select, null);
     			}
 
-    			append(div32, t8);
-    			append(div32, div10);
+    			append(div18, t8);
+    			append(div18, div10);
     			append(div10, div9);
     			append(div10, t10);
     			append(div10, input0);
     			append(div10, t11);
     			append(div10, datalist);
     			datalist.innerHTML = raw_value;
-    			append(div32, t12);
-    			append(div32, div15);
+    			append(div18, t12);
+    			append(div18, div15);
     			append(div15, div12);
     			append(div12, div11);
     			append(div12, t14);
@@ -2500,43 +2534,51 @@ var app = (function () {
     			append(div14, div13);
     			append(div14, t16);
     			append(div14, input2);
-    			append(div32, t17);
-    			append(div32, div17);
+    			append(div18, t17);
+    			append(div18, div17);
     			append(div17, div16);
     			append(div16, t18);
-    			append(div32, t19);
-    			append(div32, div24);
-    			append(div32, t26);
-    			append(div32, div31);
-    			append(div37, t33);
-    			append(div37, div33);
-    			append(div37, t34);
-    			append(div37, div36);
-    			append(div36, div34);
-    			append(div36, t36);
-    			append(div36, div35);
+    			append(div18, t19);
+
+    			for (var i = 0; i < each_blocks_1.length; i += 1) {
+    				each_blocks_1[i].m(div18, null);
+    			}
+
+    			append(div18, t20);
+
+    			for (var i = 0; i < each_blocks.length; i += 1) {
+    				each_blocks[i].m(div18, null);
+    			}
+
+    			append(div23, t21);
+    			append(div23, div19);
+    			append(div23, t22);
+    			append(div23, div22);
+    			append(div22, div20);
+    			append(div22, t24);
+    			append(div22, div21);
     		},
 
     		p(changed, ctx) {
     			if (changed.Utils || changed.gmxMap) {
-    				each_value = ctx.gmxMap.layers;
+    				each_value_2 = ctx.gmxMap.layers;
 
-    				for (var i = 0; i < each_value.length; i += 1) {
-    					const child_ctx = get_each_context$1(ctx, each_value, i);
+    				for (var i = 0; i < each_value_2.length; i += 1) {
+    					const child_ctx = get_each_context_2(ctx, each_value_2, i);
 
-    					if (each_blocks[i]) {
-    						each_blocks[i].p(changed, child_ctx);
+    					if (each_blocks_2[i]) {
+    						each_blocks_2[i].p(changed, child_ctx);
     					} else {
-    						each_blocks[i] = create_each_block$1(child_ctx);
-    						each_blocks[i].c();
-    						each_blocks[i].m(select, null);
+    						each_blocks_2[i] = create_each_block_2(child_ctx);
+    						each_blocks_2[i].c();
+    						each_blocks_2[i].m(select, null);
     					}
     				}
 
-    				for (; i < each_blocks.length; i += 1) {
-    					each_blocks[i].d(1);
+    				for (; i < each_blocks_2.length; i += 1) {
+    					each_blocks_2[i].d(1);
     				}
-    				each_blocks.length = each_value.length;
+    				each_blocks_2.length = each_value_2.length;
     			}
 
     			if ((changed.kvData) && raw_value !== (raw_value = ctx.kvData && ctx.getOptions(ctx.kvData, 'kvartal'))) {
@@ -2554,12 +2596,58 @@ var app = (function () {
     			if (changed.latlngStr) {
     				set_data(t18, ctx.latlngStr);
     			}
+
+    			if (changed.snap) {
+    				each_value_1 = ctx.snap.snap;
+
+    				for (var i = 0; i < each_value_1.length; i += 1) {
+    					const child_ctx = get_each_context_1(ctx, each_value_1, i);
+
+    					if (each_blocks_1[i]) {
+    						each_blocks_1[i].p(changed, child_ctx);
+    					} else {
+    						each_blocks_1[i] = create_each_block_1(child_ctx);
+    						each_blocks_1[i].c();
+    						each_blocks_1[i].m(div18, t20);
+    					}
+    				}
+
+    				for (; i < each_blocks_1.length; i += 1) {
+    					each_blocks_1[i].d(1);
+    				}
+    				each_blocks_1.length = each_value_1.length;
+    			}
+
+    			if (changed.snap) {
+    				each_value = ctx.snap.ring;
+
+    				for (var i = 0; i < each_value.length; i += 1) {
+    					const child_ctx = get_each_context$1(ctx, each_value, i);
+
+    					if (each_blocks[i]) {
+    						each_blocks[i].p(changed, child_ctx);
+    					} else {
+    						each_blocks[i] = create_each_block$1(child_ctx);
+    						each_blocks[i].c();
+    						each_blocks[i].m(div18, null);
+    					}
+    				}
+
+    				for (; i < each_blocks.length; i += 1) {
+    					each_blocks[i].d(1);
+    				}
+    				each_blocks.length = each_value.length;
+    			}
     		},
 
     		d(detaching) {
     			if (detaching) {
-    				detach(div37);
+    				detach(div23);
     			}
+
+    			destroy_each(each_blocks_2, detaching);
+
+    			destroy_each(each_blocks_1, detaching);
 
     			destroy_each(each_blocks, detaching);
 
@@ -2568,8 +2656,8 @@ var app = (function () {
     	};
     }
 
-    // (177:1) {#if Utils.isKvartalLayer(item)}
-    function create_if_block_1(ctx) {
+    // (202:1) {#if Utils.isKvartalLayer(item)}
+    function create_if_block_3(ctx) {
     	var option, t_value = ctx.item._gmx.rawProperties.title, t, option_value_value;
 
     	return {
@@ -2605,11 +2693,11 @@ var app = (function () {
     	};
     }
 
-    // (176:2) {#each gmxMap.layers as item}
-    function create_each_block$1(ctx) {
+    // (201:2) {#each gmxMap.layers as item}
+    function create_each_block_2(ctx) {
     	var if_block_anchor;
 
-    	var if_block = (Utils.isKvartalLayer(ctx.item)) && create_if_block_1(ctx);
+    	var if_block = (Utils.isKvartalLayer(ctx.item)) && create_if_block_3(ctx);
 
     	return {
     		c() {
@@ -2627,7 +2715,7 @@ var app = (function () {
     				if (if_block) {
     					if_block.p(changed, ctx);
     				} else {
-    					if_block = create_if_block_1(ctx);
+    					if_block = create_if_block_3(ctx);
     					if_block.c();
     					if_block.m(if_block_anchor.parentNode, if_block_anchor);
     				}
@@ -2647,28 +2735,270 @@ var app = (function () {
     	};
     }
 
+    // (232:1) {#if !i}
+    function create_if_block_2(ctx) {
+    	var div;
+
+    	return {
+    		c() {
+    			div = element("div");
+    			div.textContent = "Привязочный ход";
+    			attr(div, "class", "kv-1");
+    		},
+
+    		m(target, anchor) {
+    			insert(target, div, anchor);
+    		},
+
+    		d(detaching) {
+    			if (detaching) {
+    				detach(div);
+    			}
+    		}
+    	};
+    }
+
+    // (229:0) {#each snap.snap as it, i}
+    function create_each_block_1(ctx) {
+    	var div5, div0, t0, input0, input0_value_value, t1, div2, div1, t2, input1, input1_value_value, t3, div3, t4, div4, dispose;
+
+    	var if_block = (!ctx.i) && create_if_block_2();
+
+    	return {
+    		c() {
+    			div5 = element("div");
+    			div0 = element("div");
+    			if (if_block) if_block.c();
+    			t0 = space();
+    			input0 = element("input");
+    			t1 = space();
+    			div2 = element("div");
+    			div1 = element("div");
+    			t2 = space();
+    			input1 = element("input");
+    			t3 = space();
+    			div3 = element("div");
+    			t4 = space();
+    			div4 = element("div");
+    			attr(input0, "type", "text");
+    			input0.value = input0_value_value = (ctx.it[2] || ctx.it[0]) !== undefined ? ctx.it[2] || ctx.it[0] : '';
+    			attr(input0, "name", "snap" + ctx.i + "_a");
+    			attr(input0, "class", "input-left-controls-pop-add-kvartal-1 hod1");
+    			attr(input0, "placeholder", "Angle");
+    			attr(div0, "class", "input-kv-1-el1");
+    			attr(div1, "class", "kv-1");
+    			attr(input1, "type", "text");
+    			input1.value = input1_value_value = ctx.it[1] !== undefined ? Math.round(ctx.it[1]) : '';
+    			attr(input1, "name", "snap" + ctx.i + "_d");
+    			attr(input1, "class", "input-left-controls-pop-add-kvartal-1 hod2");
+    			attr(input1, "placeholder", "Distance");
+    			attr(div2, "class", "input-kv-1-el2");
+    			attr(div3, "class", "input-kv-1-el4");
+    			attr(div4, "class", "input-kv-1-el3");
+    			attr(div5, "class", "input-kv-1 margin-top--7");
+
+    			dispose = [
+    				listen(input0, "keyup", ctx.onKeyUp),
+    				listen(input0, "input", ctx.setPoint),
+    				listen(input1, "keyup", ctx.onKeyUp),
+    				listen(input1, "input", ctx.setPoint),
+    				listen(div3, "click", ctx.addDelynka0),
+    				listen(div4, "click", ctx.addDelynka0)
+    			];
+    		},
+
+    		m(target, anchor) {
+    			insert(target, div5, anchor);
+    			append(div5, div0);
+    			if (if_block) if_block.m(div0, null);
+    			append(div0, t0);
+    			append(div0, input0);
+    			append(div5, t1);
+    			append(div5, div2);
+    			append(div2, div1);
+    			append(div2, t2);
+    			append(div2, input1);
+    			append(div5, t3);
+    			append(div5, div3);
+    			append(div5, t4);
+    			append(div5, div4);
+    		},
+
+    		p(changed, ctx) {
+    			if (!ctx.i) {
+    				if (!if_block) {
+    					if_block = create_if_block_2();
+    					if_block.c();
+    					if_block.m(div0, t0);
+    				}
+    			} else if (if_block) {
+    				if_block.d(1);
+    				if_block = null;
+    			}
+
+    			if ((changed.snap) && input0_value_value !== (input0_value_value = (ctx.it[2] || ctx.it[0]) !== undefined ? ctx.it[2] || ctx.it[0] : '')) {
+    				input0.value = input0_value_value;
+    			}
+
+    			if ((changed.snap) && input1_value_value !== (input1_value_value = ctx.it[1] !== undefined ? Math.round(ctx.it[1]) : '')) {
+    				input1.value = input1_value_value;
+    			}
+    		},
+
+    		d(detaching) {
+    			if (detaching) {
+    				detach(div5);
+    			}
+
+    			if (if_block) if_block.d();
+    			run_all(dispose);
+    		}
+    	};
+    }
+
+    // (249:1) {#if !i}
+    function create_if_block_1(ctx) {
+    	var div;
+
+    	return {
+    		c() {
+    			div = element("div");
+    			div.textContent = "Контур делянки    ";
+    			attr(div, "class", "kv-1");
+    		},
+
+    		m(target, anchor) {
+    			insert(target, div, anchor);
+    		},
+
+    		d(detaching) {
+    			if (detaching) {
+    				detach(div);
+    			}
+    		}
+    	};
+    }
+
+    // (246:0) {#each snap.ring as it, i}
+    function create_each_block$1(ctx) {
+    	var div5, div0, t0, input0, input0_value_value, t1, div2, div1, t2, input1, input1_value_value, t3, div3, t4, div4, t5, dispose;
+
+    	var if_block = (!ctx.i) && create_if_block_1();
+
+    	return {
+    		c() {
+    			div5 = element("div");
+    			div0 = element("div");
+    			if (if_block) if_block.c();
+    			t0 = space();
+    			input0 = element("input");
+    			t1 = space();
+    			div2 = element("div");
+    			div1 = element("div");
+    			t2 = space();
+    			input1 = element("input");
+    			t3 = space();
+    			div3 = element("div");
+    			t4 = space();
+    			div4 = element("div");
+    			t5 = space();
+    			attr(input0, "type", "text");
+    			input0.value = input0_value_value = (ctx.it[2] || ctx.it[0]) !== undefined ? ctx.it[2] || ctx.it[0] : '';
+    			attr(input0, "name", "ring" + ctx.i + "_a");
+    			attr(input0, "class", "input-left-controls-pop-add-kvartal-1 hod1");
+    			attr(input0, "placeholder", "Angle");
+    			attr(div0, "class", "input-kv-1-el1");
+    			attr(div1, "class", "kv-1");
+    			attr(input1, "type", "text");
+    			input1.value = input1_value_value = ctx.it[1] !== undefined ? Math.round(ctx.it[1]) : '';
+    			attr(input1, "name", "ring" + ctx.i + "_d");
+    			attr(input1, "class", "input-left-controls-pop-add-kvartal-1 hod2");
+    			attr(input1, "placeholder", "Distance");
+    			attr(div2, "class", "input-kv-1-el2");
+    			attr(div3, "class", "input-kv-1-el4");
+    			attr(div4, "class", "input-kv-1-el3");
+    			attr(div5, "class", "input-kv-1 margin-top--7");
+
+    			dispose = [
+    				listen(input0, "keyup", ctx.onKeyUp),
+    				listen(input0, "input", ctx.setPoint),
+    				listen(input1, "keyup", ctx.onKeyUp),
+    				listen(input1, "input", ctx.setPoint)
+    			];
+    		},
+
+    		m(target, anchor) {
+    			insert(target, div5, anchor);
+    			append(div5, div0);
+    			if (if_block) if_block.m(div0, null);
+    			append(div0, t0);
+    			append(div0, input0);
+    			append(div5, t1);
+    			append(div5, div2);
+    			append(div2, div1);
+    			append(div2, t2);
+    			append(div2, input1);
+    			append(div5, t3);
+    			append(div5, div3);
+    			append(div5, t4);
+    			append(div5, div4);
+    			append(div5, t5);
+    		},
+
+    		p(changed, ctx) {
+    			if (!ctx.i) {
+    				if (!if_block) {
+    					if_block = create_if_block_1();
+    					if_block.c();
+    					if_block.m(div0, t0);
+    				}
+    			} else if (if_block) {
+    				if_block.d(1);
+    				if_block = null;
+    			}
+
+    			if ((changed.snap) && input0_value_value !== (input0_value_value = (ctx.it[2] || ctx.it[0]) !== undefined ? ctx.it[2] || ctx.it[0] : '')) {
+    				input0.value = input0_value_value;
+    			}
+
+    			if ((changed.snap) && input1_value_value !== (input1_value_value = ctx.it[1] !== undefined ? Math.round(ctx.it[1]) : '')) {
+    				input1.value = input1_value_value;
+    			}
+    		},
+
+    		d(detaching) {
+    			if (detaching) {
+    				detach(div5);
+    			}
+
+    			if (if_block) if_block.d();
+    			run_all(dispose);
+    		}
+    	};
+    }
+
     function create_fragment$5(ctx) {
     	var div19, div2, div0, t0_value = ctx.gmxMap.properties && ctx.gmxMap.properties.title || 'Название проекта/компании', t0, t1, div1, t2, div18, div17, input0, t3, label0, t5, div3, t6, input1, t7, label1, t9, section0, div6, t13, div10, div7, t15, div9, div8, select0, option0, t16, div12, div11, t18, section1, div16, div13, t20, div15, div14, select1, option1, t21, if_block_anchor, dispose;
 
-    	var each_value_2 = ctx.gmxMap.layers;
+    	var each_value_4 = ctx.gmxMap.layers;
 
     	var each_blocks_1 = [];
 
-    	for (var i = 0; i < each_value_2.length; i += 1) {
-    		each_blocks_1[i] = create_each_block_2(get_each_context_2(ctx, each_value_2, i));
+    	for (var i = 0; i < each_value_4.length; i += 1) {
+    		each_blocks_1[i] = create_each_block_4(get_each_context_4(ctx, each_value_4, i));
     	}
 
-    	var each_value_1 = ctx.gmxMap.layers;
+    	var each_value_3 = ctx.gmxMap.layers;
 
     	var each_blocks = [];
 
-    	for (var i = 0; i < each_value_1.length; i += 1) {
-    		each_blocks[i] = create_each_block_1(get_each_context_1(ctx, each_value_1, i));
+    	for (var i = 0; i < each_value_3.length; i += 1) {
+    		each_blocks[i] = create_each_block_3(get_each_context_3(ctx, each_value_3, i));
     	}
 
     	function select_block_type(ctx) {
     		if (ctx.addDelynkaFlag === 1) return create_if_block;
-    		if (ctx.addDelynkaFlag === 2) return create_if_block_2;
+    		if (ctx.addDelynkaFlag === 2) return create_if_block_4;
     	}
 
     	var current_block_type = select_block_type(ctx);
@@ -2844,15 +3174,15 @@ var app = (function () {
     			}
 
     			if (changed.Utils || changed.gmxMap) {
-    				each_value_2 = ctx.gmxMap.layers;
+    				each_value_4 = ctx.gmxMap.layers;
 
-    				for (var i = 0; i < each_value_2.length; i += 1) {
-    					const child_ctx = get_each_context_2(ctx, each_value_2, i);
+    				for (var i = 0; i < each_value_4.length; i += 1) {
+    					const child_ctx = get_each_context_4(ctx, each_value_4, i);
 
     					if (each_blocks_1[i]) {
     						each_blocks_1[i].p(changed, child_ctx);
     					} else {
-    						each_blocks_1[i] = create_each_block_2(child_ctx);
+    						each_blocks_1[i] = create_each_block_4(child_ctx);
     						each_blocks_1[i].c();
     						each_blocks_1[i].m(select0, null);
     					}
@@ -2861,19 +3191,19 @@ var app = (function () {
     				for (; i < each_blocks_1.length; i += 1) {
     					each_blocks_1[i].d(1);
     				}
-    				each_blocks_1.length = each_value_2.length;
+    				each_blocks_1.length = each_value_4.length;
     			}
 
     			if (changed.Utils || changed.gmxMap) {
-    				each_value_1 = ctx.gmxMap.layers;
+    				each_value_3 = ctx.gmxMap.layers;
 
-    				for (var i = 0; i < each_value_1.length; i += 1) {
-    					const child_ctx = get_each_context_1(ctx, each_value_1, i);
+    				for (var i = 0; i < each_value_3.length; i += 1) {
+    					const child_ctx = get_each_context_3(ctx, each_value_3, i);
 
     					if (each_blocks[i]) {
     						each_blocks[i].p(changed, child_ctx);
     					} else {
-    						each_blocks[i] = create_each_block_1(child_ctx);
+    						each_blocks[i] = create_each_block_3(child_ctx);
     						each_blocks[i].c();
     						each_blocks[i].m(select1, null);
     					}
@@ -2882,7 +3212,7 @@ var app = (function () {
     				for (; i < each_blocks.length; i += 1) {
     					each_blocks[i].d(1);
     				}
-    				each_blocks.length = each_value_1.length;
+    				each_blocks.length = each_value_3.length;
     			}
 
     			if (current_block_type === (current_block_type = select_block_type(ctx)) && if_block) {
@@ -3000,6 +3330,10 @@ var app = (function () {
     	return getOptionsData(pt, node && node.value);
     };
 
+    let snap = {
+    	snap: [[]],
+    	ring: [[]]
+    };
     let latlng = null;
     let latlngStr = '';
     const setKvartal = (ev) => {
@@ -3011,7 +3345,26 @@ var app = (function () {
     		$$invalidate('latlng', latlng = bbox.getCenter());
     		$$invalidate('latlngStr', latlngStr = L.gmxUtil.latLonFormatCoordinates2(latlng[0], latlng[1]));
     		map.fitBounds(L.latLngBounds([[bbox.min.y, bbox.min.x], [bbox.max.y, bbox.max.x]]));
+    		snap.latlng = latlng; $$invalidate('snap', snap);
     	// console.log('setKvartal', latlng, pt);
+    	}
+    };
+
+    const nextPoint = (node) => {
+    };
+
+    const onKeyUp = (ev) => {
+    	if (ev.key === 'Enter') {
+    		nextPoint(ev.target);
+    	}
+    };
+
+    const setPoint = (ev) => {
+    	let node = ev.target,
+    		key = ev.data;
+
+    	if (node.value === '') {
+    		return;
     	}
     };
 
@@ -3025,9 +3378,12 @@ var app = (function () {
     		changeDelynka,
     		changeKvartal,
     		getOptions,
+    		snap,
     		latlng,
     		latlngStr,
-    		setKvartal
+    		setKvartal,
+    		onKeyUp,
+    		setPoint
     	};
     }
 

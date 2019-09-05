@@ -78,6 +78,10 @@ const getOptions = (pt, name) => {
 	return getOptionsData(pt, node && node.value);
 };
 
+let snap = {
+	snap: [[]],
+	ring: [[]]
+};
 let latlng = null;
 let latlngStr = '';
 const setKvartal = (ev) => {
@@ -89,9 +93,30 @@ const setKvartal = (ev) => {
 		latlng = bbox.getCenter();
 		latlngStr = L.gmxUtil.latLonFormatCoordinates2(latlng[0], latlng[1]);
 		map.fitBounds(L.latLngBounds([[bbox.min.y, bbox.min.x], [bbox.max.y, bbox.max.x]]));
+		snap.latlng = latlng;
 	// console.log('setKvartal', latlng, pt);
 	}
 };
+
+const nextPoint = (node) => {
+};
+
+const onKeyUp = (ev) => {
+	if (ev.key === 'Enter') {
+		nextPoint(ev.target, true);
+	}
+};
+
+const setPoint = (ev) => {
+	let node = ev.target,
+		key = ev.data,
+		_focus = null;
+
+	if (node.value === '') {
+		return;
+	}
+};
+
 </script>
 
 <div class="sidebar-opened">
@@ -201,30 +226,39 @@ const setKvartal = (ev) => {
                   <div class="left-controls-pop-lat-long-output">
                      <div class="left-controls-pop-lat-long-output-text">{latlngStr}</div>
                   </div>
+{#each snap.snap as it, i}
                   <div class="input-kv-1 margin-top--7">
-                     <div class="input-kv-1-el1">
+					 <div class="input-kv-1-el1">
+	{#if !i}
                         <div class="kv-1">Привязочный ход</div>
-                        <input type="text" name="" class="input-left-controls-pop-add-kvartal-1 hod1" placeholder="192500">
+	{/if}
+                        <input type="text" value="{(it[2] || it[0]) !== undefined ? it[2] || it[0] : ''}" name="snap{i}_a" on:keyup={onKeyUp} on:input={setPoint} class="input-left-controls-pop-add-kvartal-1 hod1" placeholder="Angle">
                      </div>
                      <div class="input-kv-1-el2">
                         <div class="kv-1"></div>
-                        <input type="text" name="" class="input-left-controls-pop-add-kvartal-1 hod2" placeholder="192500">
+                        <input type="text" value="{it[1] !== undefined ? Math.round(it[1]) : ''}" name="snap{i}_d" on:keyup={onKeyUp} on:input={setPoint} class="input-left-controls-pop-add-kvartal-1 hod2" placeholder="Distance">
                      </div>
-                     <div class="input-kv-1-el4"></div>
-                     <div class="input-kv-1-el3"></div>
+                     <div class="input-kv-1-el4" on:click={addDelynka0}></div>
+                     <div class="input-kv-1-el3" on:click={addDelynka0}></div>
                   </div>
+{/each}
+
+{#each snap.ring as it, i}
                   <div class="input-kv-1 margin-top--7">
                      <div class="input-kv-1-el1">
+	{#if !i}
                         <div class="kv-1">Контур делянки&nbsp;&nbsp;&nbsp;&nbsp;</div>
-                        <input type="text" name="" class="input-left-controls-pop-add-kvartal-1 hod1" placeholder="192500">
+	{/if}
+                        <input type="text" value="{(it[2] || it[0]) !== undefined ? it[2] || it[0] : ''}" name="ring{i}_a" on:keyup={onKeyUp} on:input={setPoint} class="input-left-controls-pop-add-kvartal-1 hod1" placeholder="Angle">
                      </div>
                      <div class="input-kv-1-el2">
                         <div class="kv-1"></div>
-                        <input type="text" name="" class="input-left-controls-pop-add-kvartal-1 hod2" placeholder="192500">
+                        <input type="text" value="{it[1] !== undefined ? Math.round(it[1]) : ''}" name="ring{i}_d" on:keyup={onKeyUp} on:input={setPoint} class="input-left-controls-pop-add-kvartal-1 hod2" placeholder="Distance">
                      </div>
                      <div class="input-kv-1-el4"></div>
                      <div class="input-kv-1-el3"></div>
                   </div>
+{/each}
                </div>
                <div class="left-controls-pop-add-kvartal-r1-bottom"></div>
                <div class="left-controls-pop-add-kvartal-r-bot2">
