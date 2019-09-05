@@ -74,7 +74,8 @@ const getOptionsData = (pt, subVal, cnt) => {
 };
 
 const getOptions = (pt, name) => {
-	return getOptionsData(pt, name && document.body.getElementsByClassName(name)[0].value);
+	let node = name ? document.body.getElementsByClassName(name)[0] : null;
+	return getOptionsData(pt, node && node.value);
 };
 
 let latlng = null;
