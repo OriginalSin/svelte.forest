@@ -111,7 +111,50 @@
 	{:else if sidebar_num === 2}
 		<Layers mapID={name}></Layers>
 	{:else if sidebar_num === 3}
-		      <!--OPENED SIDEBAR-->
+	  <!--НАЧАЛО ЭТОТ БЛОК ДОЛЖЕН ОТОБРАЖАТЬСЯ КОГДА ТАБЛИЦА ПУСТАЯ-->
+
+	  <!--<div class="sidebar-opened">
+         <div class="sidebar-opened-row1">
+            <div class="sidebar-opened-row1-left">Название проекта/компании</div>
+            <div class="sidebar-opened-row1-right" title="Редактировать"></div>
+         </div>
+         <div class="sidebar-opened-row1">
+            <div class="sidebar-opened-row1-left">Отчеты</div>
+         </div>
+         <div class="sidebar-opened-row1">
+            <div class="check-50">
+               <input type="checkbox" name="checkboxG4" id="checkboxG4" class="css-checkbox2" /><label for="checkboxG4" class="css-label2 radGroup1">Снимки Landsat-8</label>
+            </div>
+            <div class="check-50">
+               <input type="checkbox" name="checkboxG5" id="checkboxG5" class="css-checkbox2" /><label for="checkboxG5" class="css-label2 radGroup1">Снимки Sentinel-2</label>
+            </div>
+         </div>
+         <div class="sidebar-opened-row-tabs-1">
+            <div class="tabs-input-text">Выбор слоя</div>
+            <div class="tabs-input">
+               <div class="styled-select-1-1">
+                  <select>
+                     <option value="0">Пустой слой 1</option>
+                     <option value="7382">Пустой слой 2</option>
+                  </select>
+               </div>
+            </div>
+         </div>
+         <div class="sidebar-opened-row-tabs-add">
+            <div class="sidebar-opened-row-tabs-add-text">Создать отчет</div>
+            <div class="left-controls-pop-add-kvartal-r-bot1-right icon-report"></div>
+         </div>
+         <div class="sidebar-opened-el-container" id="style-4">
+            <div class="report-line-empty">
+               <div class="report-line-empty-text">
+                  Для создания отчетов вам необходимо выбрать слой в выпадающем списке. В случае отсутствия слоев в проекте, вам необходимо <span>Создать слой</span> в дереве слоев
+               </div>
+            </div>
+         </div>
+      </div>-->
+		 
+	  <!--КОНЕЦ ЭТОТ БЛОК ДОЛЖЕН ОТОБРАЖАТЬСЯ КОГДА ТАБЛИЦА ПУСТАЯ-->
+
       <div class="sidebar-opened">
          <div class="sidebar-opened-row1">
             <div class="sidebar-opened-row1-left">Название проекта/компании</div>
@@ -187,7 +230,7 @@
          </div>
          </div>
       </div>
-      <!--END OPENED SIDEBAR-->
+      
 	{/if}
       <!--END OPENED SIDEBAR-->
 {/if}
