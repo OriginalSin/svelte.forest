@@ -230,6 +230,109 @@
          </div>
          </div>
       </div>
+      <!--НАЧАЛО ПОП-АПА СОЗДАНИЯ ОТЧЕТОВ-->
+         <div class="popup-map">
+         <div class="popup-map-row1">
+            <div class="popup-map-row1-left">Создание отчетов</div>
+            <div class="ques-map"></div>
+            <div class="restore-icon-ot" title="Восстановить значения из ранее созданного отчета"></div>
+         </div>
+         <div class="popup-map-row2">
+            <div class="popup-map-row2-left">Очистить поля ввода</div>
+         </div>
+         <div class="sidebar-opened-el-container margin-bot-50" id="style-4">
+            <div class="input-kv-1-el2-1-popup-map">
+               <div class="kv-1-1">Масштаб</div>
+               <div class="styled-select-1-1">
+                  <select>
+                     <option value="0">100%</option>
+                     <option value="7382">90%</option>
+                  </select>
+               </div>
+            </div>
+            <div class="popup-map-row3">
+               <div class="popup-map-row3-left">Тип отчета</div>
+            </div>
+            <div class="popup-map-row-check-1">
+               <div class="radio-arr popup-mapping"><span class="spacer"><input type="radio" name="radiog_dark" id="radio1" class="css-checkbox" /><label for="radio1" class="css-label radGroup1 radGroup2 control-black">Об использовании лесов</label></div>
+               <div class="radio-arr popup-mapping"><span class="spacer"><input type="radio" name="radiog_dark" id="radio2" class="css-checkbox" checked="checked"/><label for="radio2" class="css-label radGroup1 radGroup2 control-black">О воспроизведении лесов</label></div>
+            </div>
+            <div class="popup-map-row3">
+               <div class="popup-map-row3-left">Организация</div>
+            </div>
+            <div class="input-kv-map">
+               <div class="kv">Наименование организации</div>
+               <input type="text" name="" class="input-left-controls-pop-add-kvartal-popmap">
+               <div class="icon-restore tit" ></div>
+            </div>
+            <div class="input-kv-map">
+               <div class="kv">ИНН</div>
+               <input type="text" name="" class="input-left-controls-pop-add-kvartal-popmap">
+               <div class="icon-restore tit" ></div>
+            </div>
+            <div class="popup-map-row3">
+               <div class="popup-map-row3-left">Расположение объекта</div>
+            </div>
+            <div class="input-kv-map">
+               <div class="kv">Субъект РФ</div>
+               <input type="text" name="" class="input-left-controls-pop-add-kvartal-popmap">
+               <div class="icon-restore tit" ></div>
+            </div>
+            <div class="input-kv-map">
+               <div class="kv">Лесничество</div>
+               <input type="text" name="" class="input-left-controls-pop-add-kvartal-popmap">
+               <div class="icon-restore tit" ></div>
+            </div>
+            <div class="input-kv-map">
+               <div class="kv">Участковое лесничество</div>
+               <input type="text" name="" class="input-left-controls-pop-add-kvartal-popmap">
+               <div class="icon-restore tit" ></div>
+            </div>
+            <div class="input-kv-map">
+               <div class="kv">Дача/Урочище</div>
+               <input type="text" name="" class="input-left-controls-pop-add-kvartal-popmap">
+               <div class="icon-restore tit" ></div>
+            </div>
+            <div class="input-kv-map">
+               <div class="kv">Квартал</div>
+               <input type="text" name="" class="input-left-controls-pop-add-kvartal-popmap">
+               <div class="icon-restore tit" ></div>
+            </div>
+            <div class="input-kv-map">
+               <div class="kv">Выдел</div>
+               <input type="text" name="" class="input-left-controls-pop-add-kvartal-popmap">
+               <div class="icon-restore tit" ></div>
+            </div>
+            <div class="input-kv-map">
+               <div class="kv">Делянка</div>
+               <input type="text" name="" class="input-left-controls-pop-add-kvartal-popmap">
+               <div class="icon-restore tit" ></div>
+            </div>
+            <div class="input-kv-map">
+               <div class="kv">Площадь</div>
+               <input type="text" name="" class="input-left-controls-pop-add-kvartal-popmap">
+               <div class="icon-restore tit" ></div>
+            </div>
+            <div class="popup-map-row3">
+               <div class="popup-map-row3-left">Хозмероприятия</div>
+            </div>
+            <div class="input-kv-map">
+               <div class="kv">Форма рубки</div>
+               <input type="text" name="" class="input-left-controls-pop-add-kvartal-popmap">
+               <div class="icon-restore tit" ></div>
+            </div>
+            <div class="input-kv-map">
+               <div class="kv">Тип рубки</div>
+               <input type="text" name="" class="input-left-controls-pop-add-kvartal-popmap">
+               <div class="icon-restore tit" ></div>
+            </div>
+         </div>
+         <div class="popup-map-bottom">
+            <div class="popup-map-bottom-left">Отмена</div>
+            <div class="popup-map-bottom-right">Создать отчет</div>
+         </div>
+      </div>
+      <!--КОНЕЦ ПОП-АПА СОЗДАНИЯ ОТЧЕТОВ-->
       
 	{/if}
       <!--END OPENED SIDEBAR-->
