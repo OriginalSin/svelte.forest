@@ -57,7 +57,7 @@
 
 <div class="sidebar-opened-row-el">
 	<div class="sidebar-opened-el-left">
-	   <label class="control control-checkbox control-black {item.group ? 'group' : item.properties.GeometryType || item.properties.type} inside-{item.level - 1}">
+	   <label class="control control-checkbox control-black {item.group ? 'group' : item.properties.GeometryType || item.properties.type} {item.group && item.properties.expanded ? 'group-opened' : ''} inside-{item.level - 1}">
 	   {item.properties.title}
 	   <input type="checkbox" on:change={toggleLayer} />
 	   <div class="control_indicator" on:click={fitBounds}></div>

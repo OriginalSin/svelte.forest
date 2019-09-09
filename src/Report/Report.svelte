@@ -64,6 +64,16 @@ const openReport = (ev) => {
 };
 const closeReport = (ev) => { reportIsOpen = null; };
 
+const showHint = (nm, hide) => {
+	let name = 'notice-create-report' + (nm ? nm : ''),
+		node = document.getElementsByClassName(name)[0];
+	if (hide) {
+		node.classList.add('hidden');
+	} else {
+		node.classList.remove('hidden');
+	}
+};
+
 const createReport = (ev) => {
 	if (delynkaLayer) {
 		//reportIsOpen = true;
@@ -105,8 +115,8 @@ const createReport = (ev) => {
             </div>
          </div>
          <div class="sidebar-opened-row-tabs-add">
-            <div class="sidebar-opened-row-tabs-add-text {delynkaLayer ? 'active' : ''}" on:click="{openReport}">Создать отчет</div>
-            <div class="left-controls-pop-add-kvartal-r-bot1-right icon-report"></div>
+            <div class="sidebar-opened-row-tabs-add-text {delynkaLayer ? '' : 'text-slack'}" on:click="{openReport}">Создать отчет</div>
+            <div class="left-controls-pop-add-kvartal-r-bot1-right icon-report" on:click="{() => { showHint(0); }}"></div>
          </div>
 {#if !delynkaLayer}
          <div class="sidebar-opened-el-container" id="style-4">
@@ -132,7 +142,7 @@ const createReport = (ev) => {
          
 			 <div class="sidebar-opened-row-el">
 				 <div class="sidebar-opened-el-left">
-					 <label class="control control-checkbox control-black inside-0 delyanka">
+					 <label class="control control-checkbox control-black inside-0 delyanka {item[14] ? 'delyanka-opened' : ''}">
 					 Делянка {item[16]}
 					 <input type="checkbox" class="selectDelyanka" />
 					 <div class="control_indicator"></div>
@@ -175,7 +185,7 @@ const createReport = (ev) => {
          <div class="popup-map">
          <div class="popup-map-row1">
             <div class="popup-map-row1-left">Создание отчетов</div>
-            <div class="ques-map"></div>
+            <div class="ques-map" on:click="{() => { showHint(1); }}"></div>
             <div class="restore-icon-ot" title="Восстановить значения из ранее созданного отчета"></div>
          </div>
          <div class="popup-map-row2">
@@ -276,7 +286,7 @@ const createReport = (ev) => {
       <!--КОНЕЦ ПОП-АПА СОЗДАНИЯ ОТЧЕТОВ-->
 {/if}
 
-<div class="left-controls-pop-add-kvartal-notice notice-create-report">
+<div class="left-controls-pop-add-kvartal-notice notice-create-report hidden">
          <div class="left-controls-pop-add-kvartal-notice-r1">
          <div class="left-controls-pop-add-kvartal-notice-r1-text ">Создание отчетов</div>
          <div class="left-controls-pop-add-kvartal-notice-r1-right "></div>
@@ -286,7 +296,7 @@ const createReport = (ev) => {
          </div>
 </div>
 
-<div class="left-controls-pop-add-kvartal-notice notice-create-report1">
+<div class="left-controls-pop-add-kvartal-notice notice-create-report1 hidden">
          <div class="left-controls-pop-add-kvartal-notice-r1">
          <div class="left-controls-pop-add-kvartal-notice-r1-text ">Создание отчетов</div>
          <div class="left-controls-pop-add-kvartal-notice-r1-right "></div>
