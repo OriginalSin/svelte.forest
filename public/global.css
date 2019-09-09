@@ -1565,6 +1565,20 @@ label.css-label2 {
 
 .group:before {
 	content: '';
+	background: url("data:image/svg+xml;charset=utf8,%3Csvg width='37' height='16' viewBox='0 0 37 16' fill='none' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath d='M5 13L11 8L5 3L5 13Z' fill='%23282828'/%3E%3Cpath d='M21 8V15C21 15.6 21.4 16 22 16H36C36.6 16 37 15.6 37 15V8H21Z' fill='%23818181'/%3E%3Cpath d='M37 6V4C37 3.4 36.6 3 36 3H29.4L26.7 0.3C26.5 0.1 26.3 0 26 0H22C21.4 0 21 0.4 21 1V6H37Z' fill='%23818181'/%3E%3C/svg%3E");
+	background-repeat: no-repeat;
+	display: block;
+	position: relative;
+	float: left;
+	width: 37px;
+	height: 16px;
+	margin-right: 8px;
+	right: 3px;
+	background-position: center;
+}
+
+.group-opened:before {
+	content: '';
 	background: url("data:image/svg+xml;charset=utf8,%3Csvg width='37' height='16' viewBox='0 0 37 16' fill='none' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath d='M3 5L8 11L13 5H3Z' fill='%23282828'/%3E%3Cpath d='M21 8V15C21 15.6 21.4 16 22 16H36C36.6 16 37 15.6 37 15V8H21Z' fill='%23818181'/%3E%3Cpath d='M37 6V4C37 3.4 36.6 3 36 3H29.4L26.7 0.3C26.5 0.1 26.3 0 26 0H22C21.4 0 21 0.4 21 1V6H37Z' fill='%23818181'/%3E%3C/svg%3E");
 	background-repeat: no-repeat;
 	display: block;
@@ -1738,7 +1752,7 @@ label.css-label2 {
 
 /*END CHECKBOXES STYLES*/
 
-.hidden {
+body .hidden {
 	display: none;
 }
 
@@ -3260,6 +3274,20 @@ input.input-left-controls-pop-add-kvartal-1.hod2 {
 
 .delyanka:before {
 	content: '';
+	background: url("data:image/svg+xml;charset=utf8,%3Csvg width='37' height='16' viewBox='0 0 37 16' fill='none' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath d='M5 13L11 8L5 3L5 13Z' fill='%23282828'/%3E%3Cpath d='M29 13.4002L23.1 9.7002L21 11.0002L29 16.0002L37 11.0002L34.9 9.7002L29 13.4002Z' fill='%23818181'/%3E%3Cpath d='M21 6L29 1L37 6L29 11L21 6Z' fill='%23818181'/%3E%3C/svg%3E");
+	background-repeat: no-repeat;
+	display: block;
+	position: relative;
+	float: left;
+	width: 37px;
+	height: 16px;
+	margin-right: 8px;
+	right: 3px;
+	background-position: center;
+}
+
+.delyanka-opened:before {
+	content: '';
 	background: url("data:image/svg+xml;charset=utf8,%3Csvg width='37' height='16' viewBox='0 0 37 16' fill='none' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath d='M3 5L8 11L13 5H3Z' fill='%23282828'/%3E%3Cpath d='M29 13.4002L23.1 9.7002L21 11.0002L29 16.0002L37 11.0002L34.9 9.7002L29 13.4002Z' fill='%23818181'/%3E%3Cpath d='M21 6L29 1L37 6L29 11L21 6Z' fill='%23818181'/%3E%3C/svg%3E");
 	background-repeat: no-repeat;
 	display: block;
@@ -3655,4 +3683,8 @@ input.input-left-controls-pop-add-kvartal-popmap:focus {
 	margin-right: 27px;
 	background-position: center;
 	cursor: pointer;
+}
+
+.text-slack {
+    opacity: 0.5;
 }
