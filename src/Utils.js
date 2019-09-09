@@ -21,18 +21,23 @@ const Utils = {
 		}
 		return out;
 	},
-	getLayerItems: (it) => {
+	getLayerItems: (it, opt) => {
 		dataWorker.onmessage = (res) => {
 			let data = res.data,
 				cmd = data.cmd,
-				json = data.out;
+				json = data.out,
+				type = opt && opt.type || 'delynka';
 
 			if (cmd === 'getLayerItems') {
-				kvItems.set(json.Result);
+				if (type === 'delynka') {
+					delItems.set(json.Result);
+				} else {
+					kvItems.set(json.Result);
+				}
 			}
-	// console.log('onmessage', res);
+	console.log('onmessage', res);
 		};
-		dataWorker.postMessage({cmd: 'getLayerItems', layerID: it.options.layerID});
+		dataWorker.postMessage({cmd: 'getLayerItems', layerID: it.options.layerID, opt: opt});
 	}
 };
 
