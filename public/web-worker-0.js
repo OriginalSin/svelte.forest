@@ -1,5 +1,6 @@
-const _self = self,
-		serverBase = _self.serverBase || '//maps.kosmosnimki.ru/';
+const	_self = self,
+		serverBase = _self.serverBase || '//maps.kosmosnimki.ru/',
+		serverProxy = serverBase + 'Plugins/ForestReport/proxy';
 
 const getMapTree = (params) => {
 	params = params || {};
@@ -89,20 +90,27 @@ const getLayerItems = (params) => {
 	url += '&geometry=true';
 	return getReq(url);
 };
+const getReportsCount = () => {
+	return getReq(serverProxy + '?path=/rest/v1/get-current-user-info');
+};
 
 var Requests = {
 	getMapTree,
+	getReportsCount,
 	getLayerItems
 };
 
 var _self$1 = self;
 (_self$1.on || _self$1.addEventListener).call(_self$1, 'message', e => {
     const message = e.data || e;
-console.log('message getLayerItems', e);
+console.log('message ', e);
     switch (message.cmd) {
 		case 'getLayerItems':
 			Requests.getLayerItems({layerID: message.layerID}).then((json) => {
 				message.out = json;
+				let pt = {};
+				json.Result.fields.forEach((name, i) => { pt[name] = i; });
+				json.Result.fieldKeys = pt;
 				_self$1.postMessage(message);
 			});
 			break;
@@ -112,42 +120,15 @@ console.log('message getLayerItems', e);
 				_self$1.postMessage(message);
 			});
 			break;
+		case 'getReportsCount':
+			Requests.getReportsCount().then((json) => {
+				message.out = json;
+				_self$1.postMessage(message);
+			});
+			break;
 		default:
 			console.warn('Неизвестная команда:', message.cmd);
 			break;
 	}
-	
-/*
-    switch (message.type) {
-        case 'init':
-            if (message.wasm) {
-                const memorySize = 16;
-                memory = new WebAssembly.Memory({initial: memorySize, maximum: memorySize});
-                view = new DataView(memory.buffer);
-                wasm = new WebAssembly.Instance(message.wasm, {
-                    env: {
-                        _now: _performance.now.bind(_performance),
-                        memory: memory,
-                    },
-                });
-                runWorkload = runWorkloadWASM;
-            } else {
-                runWorkload = runWorkloadJS;
-            }
-            runWorkload(1, 0);
-            _self.postMessage('success');
-            break;
-
-        case 'workload': {
-            setTimeout(() => {
-                _self.postMessage(runWorkload(10, message.id));
-            }, message.startTime - Date.now());
-            break;
-        }
-
-        default:
-            break;
-    }
-	*/
 });
 //# sourceMappingURL=web-worker-0.js.map

@@ -125,8 +125,12 @@ const getLayerItems = (params) => {
 	url += '&geometry=true';
 	return getReq(url);
 };
+const getReportsCount = () => {
+	return getReq(serverProxy + '?path=/rest/v1/get-current-user-info');
+};
 
 export default {
 	getMapTree,
+	getReportsCount,
 	getLayerItems
 };

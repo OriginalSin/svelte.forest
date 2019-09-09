@@ -11,6 +11,13 @@ const unsubscribe = Store.mapLayers.subscribe(value => {
 });
 let map = null; Store.leafletMap.subscribe(value => { map = value; });
 
+
+let reportCounts = 0; Store.reportsCount.subscribe(json => {
+	let count = json.limit - json.used;
+	reportCounts = count > 0 ? count : 0;
+});
+Utils.getReportsCount()
+
 let delynkaLayer = null;
 let kvartalLayer = null;
 const _setLayer = (id) => {
@@ -31,10 +38,20 @@ Store.delItems.subscribe(value => {
 });
 
 const changeDelynka = (ev) => {
-	let id = ev.target.selectedOptions[0].value;
-	delynkaLayer = _setLayer(id);
-	Utils.getLayerItems(delynkaLayer, {type: 'delynka'})
-	//console.log('changeDelynka', id);
+	let id = ev ? ev.target.selectedOptions[0].value : null;
+	if (id) {
+		delynkaLayer = _setLayer(id);
+		Utils.getLayerItems(delynkaLayer, {type: 'delynka'})
+	} else {
+		delynkaLayer = null;
+		delItems = null;
+		reportIsOpen = null;
+		let name = 'notice-create-report',
+			node = document.getElementsByClassName(name)[0];
+		node.classList.add('hidden');
+		node = document.getElementsByClassName(name + '1')[0];
+		node.classList.add('hidden');
+	}
 };
 const fitBounds = (nm) => {
 	let arr = delItems.values[nm],
@@ -64,13 +81,14 @@ const openReport = (ev) => {
 };
 const closeReport = (ev) => { reportIsOpen = null; };
 
-const showHint = (nm, hide) => {
-	let name = 'notice-create-report' + (nm ? nm : ''),
+const toggleHint = (ev) => {
+	let target = ev.target,
+		name = 'notice-create-report' + (target.classList.contains('icon-report') ? '' : '1'),
 		node = document.getElementsByClassName(name)[0];
-	if (hide) {
-		node.classList.add('hidden');
-	} else {
+	if (node.classList.contains('hidden')) {
 		node.classList.remove('hidden');
+	} else {
+		node.classList.add('hidden');
 	}
 };
 
@@ -89,7 +107,7 @@ const createReport = (ev) => {
          </div>
          <div class="sidebar-opened-row1">
             <div class="sidebar-opened-row1-left">Отчеты</div>
-            <div class="sidebar-opened-row1-left">Лимит:<div class="spacer-7"></div>123456</div>
+            <div class="sidebar-opened-row1-left">Лимит:<div class="spacer-7"></div>{reportCounts}</div>
          </div>
          <div class="sidebar-opened-row1">
             <div class="check-50">
@@ -116,7 +134,7 @@ const createReport = (ev) => {
          </div>
          <div class="sidebar-opened-row-tabs-add">
             <div class="sidebar-opened-row-tabs-add-text {delynkaLayer ? '' : 'text-slack'}" on:click="{openReport}">Создать отчет</div>
-            <div class="left-controls-pop-add-kvartal-r-bot1-right icon-report" on:click="{() => { showHint(0); }}"></div>
+            <div class="left-controls-pop-add-kvartal-r-bot1-right icon-report" on:click="{toggleHint}"></div>
          </div>
 {#if !delynkaLayer}
          <div class="sidebar-opened-el-container" id="style-4">
@@ -142,8 +160,8 @@ const createReport = (ev) => {
          
 			 <div class="sidebar-opened-row-el">
 				 <div class="sidebar-opened-el-left">
-					 <label class="control control-checkbox control-black inside-0 delyanka {item[14] ? 'delyanka-opened' : ''}">
-					 Делянка {item[16]}
+					 <label class="control control-checkbox control-black inside-0 delyanka {item[delItems.fieldKeys.FRSTAT] ? 'delyanka-opened' : ''}">
+					 Делянка {item[delItems.fieldKeys.gmx_id]}
 					 <input type="checkbox" class="selectDelyanka" />
 					 <div class="control_indicator"></div>
 				 </div>
@@ -185,7 +203,7 @@ const createReport = (ev) => {
          <div class="popup-map">
          <div class="popup-map-row1">
             <div class="popup-map-row1-left">Создание отчетов</div>
-            <div class="ques-map" on:click="{() => { showHint(1); }}"></div>
+            <div class="ques-map" on:click="{toggleHint}"></div>
             <div class="restore-icon-ot" title="Восстановить значения из ранее созданного отчета"></div>
          </div>
          <div class="popup-map-row2">

@@ -1,5 +1,5 @@
 import * as Config from './Config.js';
-import { worker, kvItems, delItems } from './stores.js';
+import { worker, kvItems, delItems, reportsCount } from './stores.js';
 
 let dataWorker = null;
 worker.subscribe(value => { dataWorker = value; });
@@ -35,9 +35,21 @@ const Utils = {
 					kvItems.set(json.Result);
 				}
 			}
-	console.log('onmessage', res);
+			// console.log('onmessage', res);
 		};
 		dataWorker.postMessage({cmd: 'getLayerItems', layerID: it.options.layerID, opt: opt});
+	},
+	getReportsCount: (opt) => {
+		dataWorker.onmessage = (res) => {
+			let data = res.data,
+				cmd = data.cmd,
+				json = data.out;
+
+			if (cmd === 'getReportsCount') {
+				reportsCount.set(json);
+			}
+		};
+		dataWorker.postMessage({cmd: 'getReportsCount', opt: opt});
 	}
 };
 
