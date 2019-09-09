@@ -1330,6 +1330,12 @@ label.css-label {
 	display: block;
 }
 
+.spacer-7 {
+	width: 7px;
+	height: auto;
+	display: inline;
+}
+
 
 /*END RADIOBUTTONS STYLES*/
 
@@ -3326,7 +3332,15 @@ input.input-left-controls-pop-add-kvartal-1.hod2 {
 }
 
 .left-controls-pop-add-kvartal-notice.notice-create-report {
-    top: 0;
+    top: 267px;
+    left: 493px;
+    height: 189px;
+    width: 249px;
+}
+
+.left-controls-pop-add-kvartal-notice.notice-create-report1 {
+    top: -127px;
+    left: 680px;
     height: 189px;
     width: 249px;
 }

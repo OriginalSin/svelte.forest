@@ -79,6 +79,7 @@ const createReport = (ev) => {
          </div>
          <div class="sidebar-opened-row1">
             <div class="sidebar-opened-row1-left">Отчеты</div>
+            <div class="sidebar-opened-row1-left">Лимит:<div class="spacer-7"></div>123456</div>
          </div>
          <div class="sidebar-opened-row1">
             <div class="check-50">
@@ -126,8 +127,9 @@ const createReport = (ev) => {
             <div class="sidebar-opened-row3-right">
             </div>
          </div>
-{#each delItems.values as item, i}
          <div class="sidebar-opened-el-container" id="style-4">
+{#each delItems.values as item, i}
+         
 			 <div class="sidebar-opened-row-el">
 				 <div class="sidebar-opened-el-left">
 					 <label class="control control-checkbox control-black inside-0 delyanka">
@@ -161,8 +163,9 @@ const createReport = (ev) => {
 			 <div class="sidebar-opened-row-report-text-right">23:23</div>
 			 </div>
 </div>
-         </div>
+         
 {/each}
+</div>
 {/if}
       </div>
 
@@ -272,3 +275,23 @@ const createReport = (ev) => {
       </div>
       <!--КОНЕЦ ПОП-АПА СОЗДАНИЯ ОТЧЕТОВ-->
 {/if}
+
+<div class="left-controls-pop-add-kvartal-notice notice-create-report">
+         <div class="left-controls-pop-add-kvartal-notice-r1">
+         <div class="left-controls-pop-add-kvartal-notice-r1-text ">Создание отчетов</div>
+         <div class="left-controls-pop-add-kvartal-notice-r1-right "></div>
+         </div>
+         <div class="left-controls-pop-add-kvartal-notice-r2">
+         Создать новый отчет можно по нескольким делянкам или по одной. Для этого вам необходимо выбрать слой, после чего выделить нужные делянки с помощью чекбоксов
+         </div>
+</div>
+
+<div class="left-controls-pop-add-kvartal-notice notice-create-report1">
+         <div class="left-controls-pop-add-kvartal-notice-r1">
+         <div class="left-controls-pop-add-kvartal-notice-r1-text ">Создание отчетов</div>
+         <div class="left-controls-pop-add-kvartal-notice-r1-right "></div>
+         </div>
+         <div class="left-controls-pop-add-kvartal-notice-r2">
+         Создать новый отчет можно по нескольким делянкам или по одной. Для этого вам необходимо выбрать слой, после чего выделить нужные делянки с помощью чекбоксов
+         </div>
+</div>
