@@ -5,6 +5,15 @@ let dataWorker = null;
 worker.subscribe(value => { dataWorker = value; });
 
 const Utils = {
+	saveState: (data, key) => {
+		key = key || 'Forest_';
+		window.localStorage.setItem(key, JSON.stringify(data));
+	},
+	getState: key => {
+		key = key || 'Forest_';
+		return JSON.parse(window.localStorage.getItem(key)) || {};
+	},
+
 	isDelynkaLayer: (it) => {
 		let out = false;
 		if (it._gmx) {

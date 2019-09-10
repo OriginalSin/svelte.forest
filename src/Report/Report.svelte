@@ -6,6 +6,7 @@
 	import Utils from '../Utils.js';
 	import SelectInput from './SelectInput.svelte';
 
+const stateStorage = Utils.getState();
 let changedParams = {test: 23};
 let gmxMap = null;
 const unsubscribe = Store.mapLayers.subscribe(value => {
@@ -13,7 +14,6 @@ const unsubscribe = Store.mapLayers.subscribe(value => {
 	// console.log('gmxMap', Utils, gmxMap);
 });
 let map = null; Store.leafletMap.subscribe(value => { map = value; });
-
 
 let reportCounts = 0; Store.reportsCount.subscribe(json => {
 	let count = json.limit - json.used;
@@ -105,10 +105,39 @@ const toggleHint = (ev) => {
 	}
 };
 
+const _checkForm = (tag, pk) => {
+	let form = document.getElementsByClassName('report-form')[0];
+	/*,
+		arr = prnt.getElementsByTagName(tag || 'input'),
+		i, len, key;
+*/
+	return Object.keys(Config.fields).reduce((p, c) => {
+		let el = form[c];
+		if (el) {
+			p[c] = el.value;
+		} else {
+			p[c] = '';
+		}
+		console.log(c, p);
+		return p;
+	}, {})
+	/*
+	for (i = 0, len = form.elements.length; i < len; i++) {
+		let node = form.elements[i],
+			key = node.name;
+		if ()
+		pk[key] = tag === 'input' ? {value: node.value, field: ''} : {value: '', field: node.selectedOptions[0].value};
+	}
+	return pk;*/
+};
+
 const createReport = (ev) => {
 	if (delynkaLayer) {
-		//reportIsOpen = true;
-	console.log('createReport', delynkaLayer);
+		changedParams = _checkForm('input', changedParams);
+		//_checkForm('select', changedParams);
+
+		//Utils.saveState(changedParams);
+	console.log('createReport', stateStorage, changedParams);
 	}
 };
 </script>
@@ -214,6 +243,7 @@ const createReport = (ev) => {
 	  
       <!--НАЧАЛО ПОП-АПА СОЗДАНИЯ ОТЧЕТОВ-->
          <div class="popup-map">
+ <form class="report-form">
          <div class="popup-map-row1">
             <div class="popup-map-row1-left">Создание отчетов</div>
             <div class="ques-map" on:click="{toggleHint}"></div>
@@ -237,8 +267,8 @@ const createReport = (ev) => {
                <div class="popup-map-row3-left">Тип отчета</div>
             </div>
             <div class="popup-map-row-check-1">
-               <div class="radio-arr popup-mapping"><span class="spacer"><input type="radio" name="report_t" id="radio1" class="css-checkbox" /><label for="radio1" class="css-label radGroup1 radGroup2 control-black">Об использовании лесов</label></div>
-               <div class="radio-arr popup-mapping"><span class="spacer"><input type="radio" name="report_t" id="radio2" class="css-checkbox" checked="checked"/><label for="radio2" class="css-label radGroup1 radGroup2 control-black">О воспроизведении лесов</label></div>
+               <div class="radio-arr popup-mapping"><span class="spacer"><input value="ИЛ" type="radio" name="report_t" id="radio1" class="css-checkbox" /><label for="radio1" class="css-label radGroup1 radGroup2 control-black">Об использовании лесов</label></div>
+               <div class="radio-arr popup-mapping"><span class="spacer"><input value="ВЛ" type="radio" name="report_t" id="radio2" class="css-checkbox" checked="checked"/><label for="radio2" class="css-label radGroup1 radGroup2 control-black">О воспроизведении лесов</label></div>
             </div>
             <div class="popup-map-row3">
                <div class="popup-map-row3-left">Организация</div>
@@ -250,11 +280,6 @@ const createReport = (ev) => {
             </div>
 			<SelectInput key="inn" bind:delItems={delItems} bind:changedParams={changedParams} />
 
-            <div class="input-kv-map">
-               <div class="kv">ИНН</div>
-               <input type="text" name="inn" class="input-left-controls-pop-add-kvartal-popmap">
-               <div class="icon-restore tit" ></div>
-            </div>
             <div class="popup-map-row3">
                <div class="popup-map-row3-left">Расположение объекта</div>
             </div>
@@ -316,6 +341,7 @@ const createReport = (ev) => {
             <div class="popup-map-bottom-left" on:click="{closeReport}">Отмена</div>
             <div class="popup-map-bottom-right" on:click="{createReport}">Создать отчет</div>
          </div>
+</form>
       </div>
       <!--КОНЕЦ ПОП-АПА СОЗДАНИЯ ОТЧЕТОВ-->
 {/if}
