@@ -3701,7 +3701,7 @@ input.input-left-controls-pop-add-kvartal-popmap:focus {
 	border: 1px solid #818181;
 	display: inline-block;
 	position: relative;
-	top: 4px;
+	top: 0;
 }
 
 .styled-select-1-1-pop select {
@@ -3743,4 +3743,21 @@ input.input-left-controls-pop-add-kvartal-popmap:focus {
 .input-kv-map-pop {
     margin: 17px 15px 17px 15px;
     position: relative;
+}
+
+.icon-restore-1 {
+	background: url("data:image/svg+xml;charset=utf8,%3Csvg width='16' height='16' viewBox='0 0 16 16' fill='none' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath d='M6 0H1C0.4 0 0 0.4 0 1V6C0 6.6 0.4 7 1 7H6C6.6 7 7 6.6 7 6V1C7 0.4 6.6 0 6 0Z' fill='%23282828'/%3E%3Cpath d='M6 9H1C0.4 9 0 9.4 0 10V15C0 15.6 0.4 16 1 16H6C6.6 16 7 15.6 7 15V10C7 9.4 6.6 9 6 9Z' fill='%23282828'/%3E%3Cpath d='M16 1H9V3H16V1Z' fill='%23282828'/%3E%3Cpath d='M16 4H9V6H16V4Z' fill='%23282828'/%3E%3Cpath d='M16 10H9V12H16V10Z' fill='%23282828'/%3E%3Cpath d='M16 13H9V15H16V13Z' fill='%23282828'/%3E%3C/svg%3E");
+	background-repeat: no-repeat;
+	background-color: #FFF;
+	display: block;
+	width: 40px;
+	height: 40px;
+	margin-right: 3px;
+	background-position: center;
+	cursor: pointer;
+	border: 1px solid #818181;
+	box-sizing: border-box;
+	position: relative;
+    right: 59px;
+    float: right;
 }

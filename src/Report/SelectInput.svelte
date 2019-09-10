@@ -121,7 +121,7 @@ const setInput = (ev) => {
 		</datalist>
 	{/if}   
 {/if}
-	<div class="icon-restore tit" on:click="{toggleFieldFlag}"></div>
+	<div class="icon-restore-1 tit" on:click="{toggleFieldFlag}"></div>
 </div>
 
 <style>
