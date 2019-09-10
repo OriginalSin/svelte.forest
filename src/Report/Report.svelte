@@ -1,9 +1,12 @@
 <script>
    import {onMount, beforeUpdate, setContext, getContext} from 'svelte';
    
-  import * as Store from '../stores.js';
-  import Utils from '../Utils.js';
+	import * as Config from '../Config.js';
+	import * as Store from '../stores.js';
+	import Utils from '../Utils.js';
+	import SelectInput from './SelectInput.svelte';
 
+let changedParams = {test: 23};
 let gmxMap = null;
 const unsubscribe = Store.mapLayers.subscribe(value => {
 	gmxMap = value;
@@ -37,6 +40,19 @@ Store.delItems.subscribe(value => {
 
 });
 
+const _closeNotice = (nm) => {
+	let name = 'notice-create-report',
+		node;
+	if (!nm || nm === 0) {
+		node = document.getElementsByClassName(name)[0];
+		if (node) { node.classList.add('hidden'); }
+	}
+	if (!nm || nm > 0) {
+		node = document.getElementsByClassName(name + nm)[0];
+		if (node) { node.classList.add('hidden'); }
+	}
+};
+
 const changeDelynka = (ev) => {
 	let id = ev ? ev.target.selectedOptions[0].value : null;
 	if (id) {
@@ -46,11 +62,7 @@ const changeDelynka = (ev) => {
 		delynkaLayer = null;
 		delItems = null;
 		reportIsOpen = null;
-		let name = 'notice-create-report',
-			node = document.getElementsByClassName(name)[0];
-		node.classList.add('hidden');
-		node = document.getElementsByClassName(name + '1')[0];
-		node.classList.add('hidden');
+		_closeNotice();
 	}
 };
 const fitBounds = (nm) => {
@@ -76,7 +88,8 @@ let reportIsOpen = null;
 const openReport = (ev) => {
 	if (delynkaLayer) {
 		reportIsOpen = true;
-	console.log('openReport', delynkaLayer);
+		_closeNotice();
+		// console.log('openReport', delynkaLayer);
 	}
 };
 const closeReport = (ev) => { reportIsOpen = null; };
@@ -213,9 +226,10 @@ const createReport = (ev) => {
             <div class="input-kv-1-el2-1-popup-map">
                <div class="kv-1-1">Масштаб</div>
                <div class="styled-select-1-1">
-                  <select>
-                     <option value="0">100%</option>
-                     <option value="7382">90%</option>
+                  <select name="scale">
+{#each Config.scales as item}
+	<option value="{item.value}">{item.title}</option>
+{/each}
                   </select>
                </div>
             </div>
@@ -223,20 +237,22 @@ const createReport = (ev) => {
                <div class="popup-map-row3-left">Тип отчета</div>
             </div>
             <div class="popup-map-row-check-1">
-               <div class="radio-arr popup-mapping"><span class="spacer"><input type="radio" name="radiog_dark" id="radio1" class="css-checkbox" /><label for="radio1" class="css-label radGroup1 radGroup2 control-black">Об использовании лесов</label></div>
-               <div class="radio-arr popup-mapping"><span class="spacer"><input type="radio" name="radiog_dark" id="radio2" class="css-checkbox" checked="checked"/><label for="radio2" class="css-label radGroup1 radGroup2 control-black">О воспроизведении лесов</label></div>
+               <div class="radio-arr popup-mapping"><span class="spacer"><input type="radio" name="report_t" id="radio1" class="css-checkbox" /><label for="radio1" class="css-label radGroup1 radGroup2 control-black">Об использовании лесов</label></div>
+               <div class="radio-arr popup-mapping"><span class="spacer"><input type="radio" name="report_t" id="radio2" class="css-checkbox" checked="checked"/><label for="radio2" class="css-label radGroup1 radGroup2 control-black">О воспроизведении лесов</label></div>
             </div>
             <div class="popup-map-row3">
                <div class="popup-map-row3-left">Организация</div>
             </div>
             <div class="input-kv-map">
                <div class="kv">Наименование организации</div>
-               <input type="text" name="" class="input-left-controls-pop-add-kvartal-popmap">
+               <input type="text" name="company" class="input-left-controls-pop-add-kvartal-popmap">
                <div class="icon-restore tit" ></div>
             </div>
+			<SelectInput key="inn" bind:delItems={delItems} bind:changedParams={changedParams} />
+
             <div class="input-kv-map">
                <div class="kv">ИНН</div>
-               <input type="text" name="" class="input-left-controls-pop-add-kvartal-popmap">
+               <input type="text" name="inn" class="input-left-controls-pop-add-kvartal-popmap">
                <div class="icon-restore tit" ></div>
             </div>
             <div class="popup-map-row3">
@@ -244,42 +260,42 @@ const createReport = (ev) => {
             </div>
             <div class="input-kv-map">
                <div class="kv">Субъект РФ</div>
-               <input type="text" name="" class="input-left-controls-pop-add-kvartal-popmap">
+               <input type="text" name="region" class="input-left-controls-pop-add-kvartal-popmap">
                <div class="icon-restore tit" ></div>
             </div>
             <div class="input-kv-map">
                <div class="kv">Лесничество</div>
-               <input type="text" name="" class="input-left-controls-pop-add-kvartal-popmap">
+               <input type="text" name="forestr" class="input-left-controls-pop-add-kvartal-popmap">
                <div class="icon-restore tit" ></div>
             </div>
             <div class="input-kv-map">
                <div class="kv">Участковое лесничество</div>
-               <input type="text" name="" class="input-left-controls-pop-add-kvartal-popmap">
+               <input type="text" name="subforest" class="input-left-controls-pop-add-kvartal-popmap">
                <div class="icon-restore tit" ></div>
             </div>
             <div class="input-kv-map">
                <div class="kv">Дача/Урочище</div>
-               <input type="text" name="" class="input-left-controls-pop-add-kvartal-popmap">
+               <input type="text" name="dacha" class="input-left-controls-pop-add-kvartal-popmap">
                <div class="icon-restore tit" ></div>
             </div>
             <div class="input-kv-map">
                <div class="kv">Квартал</div>
-               <input type="text" name="" class="input-left-controls-pop-add-kvartal-popmap">
+               <input type="text" name="kvartal" class="input-left-controls-pop-add-kvartal-popmap">
                <div class="icon-restore tit" ></div>
             </div>
             <div class="input-kv-map">
                <div class="kv">Выдел</div>
-               <input type="text" name="" class="input-left-controls-pop-add-kvartal-popmap">
+               <input type="text" name="vydel" class="input-left-controls-pop-add-kvartal-popmap">
                <div class="icon-restore tit" ></div>
             </div>
             <div class="input-kv-map">
                <div class="kv">Делянка</div>
-               <input type="text" name="" class="input-left-controls-pop-add-kvartal-popmap">
+               <input type="text" name="delyanka" class="input-left-controls-pop-add-kvartal-popmap">
                <div class="icon-restore tit" ></div>
             </div>
             <div class="input-kv-map">
                <div class="kv">Площадь</div>
-               <input type="text" name="" class="input-left-controls-pop-add-kvartal-popmap">
+               <input type="text" name="area" class="input-left-controls-pop-add-kvartal-popmap">
                <div class="icon-restore tit" ></div>
             </div>
             <div class="popup-map-row3">
@@ -287,12 +303,12 @@ const createReport = (ev) => {
             </div>
             <div class="input-kv-map">
                <div class="kv">Форма рубки</div>
-               <input type="text" name="" class="input-left-controls-pop-add-kvartal-popmap">
+               <input type="text" name="form_rub" class="input-left-controls-pop-add-kvartal-popmap">
                <div class="icon-restore tit" ></div>
             </div>
             <div class="input-kv-map">
                <div class="kv">Тип рубки</div>
-               <input type="text" name="" class="input-left-controls-pop-add-kvartal-popmap">
+               <input type="text" name="type_rub" class="input-left-controls-pop-add-kvartal-popmap">
                <div class="icon-restore tit" ></div>
             </div>
          </div>

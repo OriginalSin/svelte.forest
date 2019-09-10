@@ -1,5 +1,18 @@
 const	serverBase = window.serverBase || '//maps.kosmosnimki.ru/',
 		serverProxy = serverBase + 'Plugins/ForestReport/proxy',
+		scales = [
+			{value: 5000, title: '1:5000'},
+			{value: 10000, title: '1:10000'},
+			{value: 15000, title: '1:15000'},
+			{value: 20000, title: '1:20000'},
+			{value: 25000, title: '1:25000'},
+			{value: 30000, title: '1:30000'},
+			{value: 35000, title: '1:35000'},
+			{value: 40000, title: '1:40000'},
+			{value: 45000, title: '1:45000'},
+			{value: 50000, title: '1:50000'},
+			{value: '', title: 'Авто'}
+		],
 		fields = {
 			report_t:	{ Name: 'report_t', ColumnSimpleType: 'String', title: 'Тип отчета', save: true, onValue: {
 				'ИЛ':	{ show: ['form_rub', 'type_rub'], hide: ['reforest_t'], title: 'об использовании лесов', value: 'ИЛ' },
@@ -19,50 +32,10 @@ const	serverBase = window.serverBase || '//maps.kosmosnimki.ru/',
 			year:			{ Name: 'year', ColumnSimpleType: 'String', save: true, title: 'Год'},
 			area:			{ Name: 'area', ColumnSimpleType: 'String', title: 'Площадь'},
 			FRSTAT:			{ Name: 'FRSTAT', ColumnSimpleType: 'Integer', title: 'Признак отчета'},
-			snap:			{ Name: 'snap', ColumnSimpleType: 'String', title: 'Привязочный ход'}
+			snap:			{ Name: 'snap', ColumnSimpleType: 'String', title: 'Привязочный ход'},
+
+			inn:			{ value: '', title: 'ИНН'}
 		};
-// fields = {
-// report_t:	{ Name: 'report_type', ColumnSimpleType: 'String', title: 'Тип отчета', onValue: { reportType
-// 'об использовании лесов':	{ show: ['form_rub', 'type_rub'], hide: ['reforest_type'], value: 'ИЛ' },
-// 'о воспроизводстве лесов':	{ hide: ['form_rub', 'type_rub'], show: ['reforest_type'], value: 'ВЛ' }
-// }},
-// company:	{ Name: 'company', ColumnSimpleType: 'String', title: 'Наименование организации'},
-// region:	{ Name: 'region', ColumnSimpleType: 'String', title: 'Субъект Российской Федерации'},
-// forest:	{ Name: 'forestry', ColumnSimpleType: 'String', title: 'Лесничество'}, fprestry
-// subforest:	{ Name: 'subforestry', ColumnSimpleType: 'String', title: 'Участковое Лесничество'}, subforestry
-// dacha:	{ Name: 'dacha', ColumnSimpleType: 'String', title: 'Дача'},
-// kvartal:	{ Name: 'kvartal', ColumnSimpleType: 'Integer', title: 'Квартал'},
-// vydel:	{ Name: 'vydel', ColumnSimpleType: 'String', title: 'Выделы'},
-// delyanka:	{ Name: 'delyanka', ColumnSimpleType: 'String', title: 'Делянка'},
-// form_rub:	{ Name: 'form_rub', ColumnSimpleType: 'String', title: 'Форма рубки'}, fellingForm
-// type_rub:	{ Name: 'type_rub', ColumnSimpleType: 'String', title: 'Тип рубки'}, fellingType
-// reforest_t:	{ Name: 'reforest_type', ColumnSimpleType: 'String', title: 'Тип лесовосстановления'}, reforestType
-// year:	{ Name: 'year', ColumnSimpleType: 'String', title: 'Год'},
-// area:	{ Name: 'area', ColumnSimpleType: 'Float', title: 'Площадь'},
-// FRSTAT:	{ Name: 'FRSTAT', ColumnSimpleType: 'Integer', title: 'Признак отчета'},
-// snap:	{ Name: 'snap', ColumnSimpleType: 'String', title: 'Привязочный ход'}
-// };
-		// fields = {
-			// report_type:	{ Name: 'report_type', ColumnSimpleType: 'String', title: 'Тип отчета', onValue: {
-				// 'об использовании лесов':	{ show: ['form_rub', 'type_rub'], hide: ['reforest_type'], value: 'ИЛ' },
-				// 'о воспроизводстве лесов':	{ hide: ['form_rub', 'type_rub'], show: ['reforest_type'], value: 'ВЛ' }
-			// }},
-			// company:		{ Name: 'company', ColumnSimpleType: 'String', title: 'Наименование организации'},
-			// region:			{ Name: 'region', ColumnSimpleType: 'String', title: 'Субъект Российской Федерации'},
-			// forestry:		{ Name: 'forestry', ColumnSimpleType: 'String', title: 'Лесничество'},
-			// subforestry:	{ Name: 'subforestry', ColumnSimpleType: 'String', title: 'Участковое Лесничество'},
-			// dacha:			{ Name: 'dacha', ColumnSimpleType: 'String', title: 'Дача'},
-			// kvartal:		{ Name: 'kvartal', ColumnSimpleType: 'Integer', title: 'Квартал'},
-			// vydel:			{ Name: 'vydel', ColumnSimpleType: 'String', title: 'Выделы'},
-			// delyanka:		{ Name: 'delyanka', ColumnSimpleType: 'String', title: 'Делянка'},
-			// form_rub:		{ Name: 'form_rub', ColumnSimpleType: 'String', title: 'Форма рубки'},
-			// type_rub:		{ Name: 'type_rub', ColumnSimpleType: 'String', title: 'Тип рубки'},
-			// reforest_type:	{ Name: 'reforest_type', ColumnSimpleType: 'String', title: 'Тип лесовосстановления'},
-			// year:			{ Name: 'year', ColumnSimpleType: 'String', title: 'Год'},
-			// area:			{ Name: 'area', ColumnSimpleType: 'Float', title: 'Площадь'},
-			// FRSTAT:			{ Name: 'FRSTAT', ColumnSimpleType: 'Integer', title: 'Признак отчета'},
-			// snap:			{ Name: 'snap', ColumnSimpleType: 'String', title: 'Привязочный ход'}
-		// };
 
 const fieldsConf = fields;
 const colsToHash = arr => {
@@ -528,6 +501,7 @@ export {
 	serverProxy,
 	fields,
 	fieldsConf,
+	scales,
 	colsToHash,
 	geoMag
 };
