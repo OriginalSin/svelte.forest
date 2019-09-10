@@ -1622,7 +1622,8 @@ var app = (function () {
     			FRSTAT:			{ Name: 'FRSTAT', ColumnSimpleType: 'Integer', title: 'Признак отчета'},
     			snap:			{ Name: 'snap', ColumnSimpleType: 'String', title: 'Привязочный ход'},
 
-    			inn:			{ value: '', title: 'ИНН'}
+    			scale:			{value: 10000, title: 'Масштаб'},
+    			inn:			{value: '', title: 'ИНН'}
     		};
 
     const fieldsConf = fields;
@@ -4247,7 +4248,7 @@ var app = (function () {
 
     // (242:0) {#if reportIsOpen}
     function create_if_block$2(ctx) {
-    	var div57, form, div3, div0, t1, div1, t2, div2, t3, div5, t5, div53, div8, div6, t7, div7, select, t8, div10, t10, div13, t14, div15, t16, div18, t20, updating_delItems, updating_changedParams, t21, div20, t23, div23, t27, div26, t31, div29, t35, div32, t39, div35, t43, div38, t47, div41, t51, div44, t55, div46, t57, div49, t61, div52, t65, div56, div54, t67, div55, current, dispose;
+    	var div57, div3, div0, t1, div1, t2, div2, t3, div5, t5, div53, form, div8, div6, t7, div7, select, t8, div10, t10, div13, t14, div15, t16, div18, t20, updating_delItems, updating_changedParams, t21, div20, t23, div23, t27, div26, t31, div29, t35, div32, t39, div35, t43, div38, t47, div41, t51, div44, t55, div46, t57, div49, t61, div52, t65, div56, div54, t67, div55, current, dispose;
 
     	var each_value = scales;
 
@@ -4284,7 +4285,6 @@ var app = (function () {
     	return {
     		c() {
     			div57 = element("div");
-    			form = element("form");
     			div3 = element("div");
     			div0 = element("div");
     			div0.textContent = "Создание отчетов";
@@ -4297,6 +4297,7 @@ var app = (function () {
     			div5.innerHTML = `<div class="popup-map-row2-left">Очистить поля ввода</div>`;
     			t5 = space();
     			div53 = element("div");
+    			form = element("form");
     			div8 = element("div");
     			div6 = element("div");
     			div6.textContent = "Масштаб";
@@ -4391,12 +4392,12 @@ var app = (function () {
     			attr(div46, "class", "popup-map-row3");
     			attr(div49, "class", "input-kv-map");
     			attr(div52, "class", "input-kv-map");
+    			attr(form, "class", "report-form");
     			attr(div53, "class", "sidebar-opened-el-container margin-bot-50");
     			attr(div53, "id", "style-4");
     			attr(div54, "class", "popup-map-bottom-left");
     			attr(div55, "class", "popup-map-bottom-right");
     			attr(div56, "class", "popup-map-bottom");
-    			attr(form, "class", "report-form");
     			attr(div57, "class", "popup-map");
 
     			dispose = [
@@ -4408,18 +4409,18 @@ var app = (function () {
 
     		m(target, anchor) {
     			insert(target, div57, anchor);
-    			append(div57, form);
-    			append(form, div3);
+    			append(div57, div3);
     			append(div3, div0);
     			append(div3, t1);
     			append(div3, div1);
     			append(div3, t2);
     			append(div3, div2);
-    			append(form, t3);
-    			append(form, div5);
-    			append(form, t5);
-    			append(form, div53);
-    			append(div53, div8);
+    			append(div57, t3);
+    			append(div57, div5);
+    			append(div57, t5);
+    			append(div57, div53);
+    			append(div53, form);
+    			append(form, div8);
     			append(div8, div6);
     			append(div8, t7);
     			append(div8, div7);
@@ -4429,42 +4430,42 @@ var app = (function () {
     				each_blocks[i].m(select, null);
     			}
 
-    			append(div53, t8);
-    			append(div53, div10);
-    			append(div53, t10);
-    			append(div53, div13);
-    			append(div53, t14);
-    			append(div53, div15);
-    			append(div53, t16);
-    			append(div53, div18);
-    			append(div53, t20);
-    			mount_component(selectinput, div53, null);
-    			append(div53, t21);
-    			append(div53, div20);
-    			append(div53, t23);
-    			append(div53, div23);
-    			append(div53, t27);
-    			append(div53, div26);
-    			append(div53, t31);
-    			append(div53, div29);
-    			append(div53, t35);
-    			append(div53, div32);
-    			append(div53, t39);
-    			append(div53, div35);
-    			append(div53, t43);
-    			append(div53, div38);
-    			append(div53, t47);
-    			append(div53, div41);
-    			append(div53, t51);
-    			append(div53, div44);
-    			append(div53, t55);
-    			append(div53, div46);
-    			append(div53, t57);
-    			append(div53, div49);
-    			append(div53, t61);
-    			append(div53, div52);
-    			append(form, t65);
-    			append(form, div56);
+    			append(form, t8);
+    			append(form, div10);
+    			append(form, t10);
+    			append(form, div13);
+    			append(form, t14);
+    			append(form, div15);
+    			append(form, t16);
+    			append(form, div18);
+    			append(form, t20);
+    			mount_component(selectinput, form, null);
+    			append(form, t21);
+    			append(form, div20);
+    			append(form, t23);
+    			append(form, div23);
+    			append(form, t27);
+    			append(form, div26);
+    			append(form, t31);
+    			append(form, div29);
+    			append(form, t35);
+    			append(form, div32);
+    			append(form, t39);
+    			append(form, div35);
+    			append(form, t43);
+    			append(form, div38);
+    			append(form, t47);
+    			append(form, div41);
+    			append(form, t51);
+    			append(form, div44);
+    			append(form, t55);
+    			append(form, div46);
+    			append(form, t57);
+    			append(form, div49);
+    			append(form, t61);
+    			append(form, div52);
+    			append(div57, t65);
+    			append(div57, div56);
     			append(div56, div54);
     			append(div56, t67);
     			append(div56, div55);

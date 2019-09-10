@@ -243,7 +243,6 @@ const createReport = (ev) => {
 	  
       <!--НАЧАЛО ПОП-АПА СОЗДАНИЯ ОТЧЕТОВ-->
          <div class="popup-map">
- <form class="report-form">
          <div class="popup-map-row1">
             <div class="popup-map-row1-left">Создание отчетов</div>
             <div class="ques-map" on:click="{toggleHint}"></div>
@@ -253,6 +252,7 @@ const createReport = (ev) => {
             <div class="popup-map-row2-left">Очистить поля ввода</div>
          </div>
          <div class="sidebar-opened-el-container margin-bot-50" id="style-4">
+ <form class="report-form">
             <div class="input-kv-1-el2-1-popup-map">
                <div class="kv-1-1">Масштаб</div>
                <div class="styled-select-1-1">
@@ -336,12 +336,12 @@ const createReport = (ev) => {
                <input type="text" name="type_rub" class="input-left-controls-pop-add-kvartal-popmap">
                <div class="icon-restore tit" ></div>
             </div>
+</form>
          </div>
          <div class="popup-map-bottom">
             <div class="popup-map-bottom-left" on:click="{closeReport}">Отмена</div>
             <div class="popup-map-bottom-right" on:click="{createReport}">Создать отчет</div>
          </div>
-</form>
       </div>
       <!--КОНЕЦ ПОП-АПА СОЗДАНИЯ ОТЧЕТОВ-->
 {/if}

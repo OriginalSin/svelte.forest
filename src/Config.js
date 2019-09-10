@@ -34,7 +34,8 @@ const	serverBase = window.serverBase || '//maps.kosmosnimki.ru/',
 			FRSTAT:			{ Name: 'FRSTAT', ColumnSimpleType: 'Integer', title: 'Признак отчета'},
 			snap:			{ Name: 'snap', ColumnSimpleType: 'String', title: 'Привязочный ход'},
 
-			inn:			{ value: '', title: 'ИНН'}
+			scale:			{value: 10000, title: 'Масштаб'},
+			inn:			{value: '', title: 'ИНН'}
 		};
 
 const fieldsConf = fields;
