@@ -93,9 +93,10 @@ console.log(`___ setSelection ______`, colName);
 
 
 let list = ['ddd', 'ssdsd'];
-const setAttr = (ev) => {
+const setInput = (ev) => {
 	let target = ev.target;
-	console.log('setAttr', ev, target.parentNode);
+	changedParams[key] = {value: target.value, field: ''};
+	console.log('setInput', key, changedParams[key]);
 };
 
 </script>
@@ -111,7 +112,7 @@ const setAttr = (ev) => {
 	</select>
 	</div>
 {:else}
-	<input name="{key}" list="{key}" class="input-left-controls-pop-add-kvartal-popmap" type="text">
+	<input on:change="{setInput}" name="{key}" list="{key}" class="input-left-controls-pop-add-kvartal-popmap" type="text">
 	{#if list}
 		<datalist id="{key}">
 		{#each list as it}

@@ -3489,9 +3489,9 @@ var app = (function () {
     	return child_ctx;
     }
 
-    // (113:0) {:else}
+    // (114:0) {:else}
     function create_else_block(ctx) {
-    	var input, t, if_block_anchor;
+    	var input, t, if_block_anchor, dispose;
 
     	var if_block = (ctx.list) && create_if_block_1$1(ctx);
 
@@ -3505,6 +3505,7 @@ var app = (function () {
     			attr(input, "list", ctx.key);
     			attr(input, "class", "input-left-controls-pop-add-kvartal-popmap");
     			attr(input, "type", "text");
+    			dispose = listen(input, "change", ctx.setInput);
     		},
 
     		m(target, anchor) {
@@ -3545,11 +3546,13 @@ var app = (function () {
     			if (detaching) {
     				detach(if_block_anchor);
     			}
+
+    			dispose();
     		}
     	};
     }
 
-    // (105:0) {#if isClicked}
+    // (106:0) {#if isClicked}
     function create_if_block$1(ctx) {
     	var div, select, dispose;
 
@@ -3623,7 +3626,7 @@ var app = (function () {
     	};
     }
 
-    // (115:1) {#if list}
+    // (116:1) {#if list}
     function create_if_block_1$1(ctx) {
     	var datalist;
 
@@ -3690,7 +3693,7 @@ var app = (function () {
     	};
     }
 
-    // (117:2) {#each list as it}
+    // (118:2) {#each list as it}
     function create_each_block_1$1(ctx) {
     	var option, option_value_value;
 
@@ -3717,7 +3720,7 @@ var app = (function () {
     	};
     }
 
-    // (108:2) {#each delItems.fields as it}
+    // (109:2) {#each delItems.fields as it}
     function create_each_block$2(ctx) {
     	var option, t_value = ctx.it, t, option_value_value, option_selected_value;
 
@@ -3918,6 +3921,11 @@ var app = (function () {
 
 
     let list = ['ddd', 'ssdsd'];
+    const setInput = (ev) => {
+    	let target = ev.target;
+    	changedParams[key] = {value: target.value, field: ''}; $$invalidate('changedParams', changedParams);
+    	console.log('setInput', key, changedParams[key]);
+    };
 
     	$$self.$set = $$props => {
     		if ('key' in $$props) $$invalidate('key', key = $$props.key);
@@ -3933,7 +3941,8 @@ var app = (function () {
     		colName,
     		toggleFieldFlag,
     		setSelection,
-    		list
+    		list,
+    		setInput
     	};
     }
 
@@ -4248,7 +4257,7 @@ var app = (function () {
 
     // (242:0) {#if reportIsOpen}
     function create_if_block$2(ctx) {
-    	var div57, div3, div0, t1, div1, t2, div2, t3, div5, t5, div53, form, div8, div6, t7, div7, select, t8, div10, t10, div13, t14, div15, t16, div18, t20, updating_delItems, updating_changedParams, t21, div20, t23, div23, t27, div26, t31, div29, t35, div32, t39, div35, t43, div38, t47, div41, t51, div44, t55, div46, t57, div49, t61, div52, t65, div56, div54, t67, div55, current, dispose;
+    	var div57, div3, div0, t1, div1, t2, div2, t3, div5, t5, div53, form, div8, div6, t7, div7, select, t8, div10, t10, div13, t14, div15, t16, div18, t20, updating_delItems, updating_changedParams, t21, updating_delItems_1, updating_changedParams_1, t22, div20, t24, div23, t28, div26, t32, div29, t36, div32, t40, div35, t44, div38, t48, div41, t52, div44, t56, div46, t58, div49, t62, div52, t66, div56, div54, t68, div55, current, dispose;
 
     	var each_value = scales;
 
@@ -4258,29 +4267,53 @@ var app = (function () {
     		each_blocks[i] = create_each_block$3(get_each_context$3(ctx, each_value, i));
     	}
 
-    	function selectinput_delItems_binding(value) {
-    		ctx.selectinput_delItems_binding.call(null, value);
+    	function selectinput0_delItems_binding(value) {
+    		ctx.selectinput0_delItems_binding.call(null, value);
     		updating_delItems = true;
     		add_flush_callback(() => updating_delItems = false);
     	}
 
-    	function selectinput_changedParams_binding(value_1) {
-    		ctx.selectinput_changedParams_binding.call(null, value_1);
+    	function selectinput0_changedParams_binding(value_1) {
+    		ctx.selectinput0_changedParams_binding.call(null, value_1);
     		updating_changedParams = true;
     		add_flush_callback(() => updating_changedParams = false);
     	}
 
-    	let selectinput_props = { key: "inn" };
+    	let selectinput0_props = { key: "company" };
     	if (ctx.delItems !== void 0) {
-    		selectinput_props.delItems = ctx.delItems;
+    		selectinput0_props.delItems = ctx.delItems;
     	}
     	if (ctx.changedParams !== void 0) {
-    		selectinput_props.changedParams = ctx.changedParams;
+    		selectinput0_props.changedParams = ctx.changedParams;
     	}
-    	var selectinput = new SelectInput({ props: selectinput_props });
+    	var selectinput0 = new SelectInput({ props: selectinput0_props });
 
-    	binding_callbacks.push(() => bind(selectinput, 'delItems', selectinput_delItems_binding));
-    	binding_callbacks.push(() => bind(selectinput, 'changedParams', selectinput_changedParams_binding));
+    	binding_callbacks.push(() => bind(selectinput0, 'delItems', selectinput0_delItems_binding));
+    	binding_callbacks.push(() => bind(selectinput0, 'changedParams', selectinput0_changedParams_binding));
+
+    	function selectinput1_delItems_binding(value_2) {
+    		ctx.selectinput1_delItems_binding.call(null, value_2);
+    		updating_delItems_1 = true;
+    		add_flush_callback(() => updating_delItems_1 = false);
+    	}
+
+    	function selectinput1_changedParams_binding(value_3) {
+    		ctx.selectinput1_changedParams_binding.call(null, value_3);
+    		updating_changedParams_1 = true;
+    		add_flush_callback(() => updating_changedParams_1 = false);
+    	}
+
+    	let selectinput1_props = { key: "inn" };
+    	if (ctx.delItems !== void 0) {
+    		selectinput1_props.delItems = ctx.delItems;
+    	}
+    	if (ctx.changedParams !== void 0) {
+    		selectinput1_props.changedParams = ctx.changedParams;
+    	}
+    	var selectinput1 = new SelectInput({ props: selectinput1_props });
+
+    	binding_callbacks.push(() => bind(selectinput1, 'delItems', selectinput1_delItems_binding));
+    	binding_callbacks.push(() => bind(selectinput1, 'changedParams', selectinput1_changedParams_binding));
 
     	return {
     		c() {
@@ -4322,48 +4355,50 @@ var app = (function () {
     			div18 = element("div");
     			div18.innerHTML = `<div class="kv">Наименование организации</div> <input type="text" name="company" class="input-left-controls-pop-add-kvartal-popmap"> <div class="icon-restore tit"></div>`;
     			t20 = space();
-    			selectinput.$$.fragment.c();
+    			selectinput0.$$.fragment.c();
     			t21 = space();
+    			selectinput1.$$.fragment.c();
+    			t22 = space();
     			div20 = element("div");
     			div20.innerHTML = `<div class="popup-map-row3-left">Расположение объекта</div>`;
-    			t23 = space();
+    			t24 = space();
     			div23 = element("div");
     			div23.innerHTML = `<div class="kv">Субъект РФ</div> <input type="text" name="region" class="input-left-controls-pop-add-kvartal-popmap"> <div class="icon-restore tit"></div>`;
-    			t27 = space();
+    			t28 = space();
     			div26 = element("div");
     			div26.innerHTML = `<div class="kv">Лесничество</div> <input type="text" name="forestr" class="input-left-controls-pop-add-kvartal-popmap"> <div class="icon-restore tit"></div>`;
-    			t31 = space();
+    			t32 = space();
     			div29 = element("div");
     			div29.innerHTML = `<div class="kv">Участковое лесничество</div> <input type="text" name="subforest" class="input-left-controls-pop-add-kvartal-popmap"> <div class="icon-restore tit"></div>`;
-    			t35 = space();
+    			t36 = space();
     			div32 = element("div");
     			div32.innerHTML = `<div class="kv">Дача/Урочище</div> <input type="text" name="dacha" class="input-left-controls-pop-add-kvartal-popmap"> <div class="icon-restore tit"></div>`;
-    			t39 = space();
+    			t40 = space();
     			div35 = element("div");
     			div35.innerHTML = `<div class="kv">Квартал</div> <input type="text" name="kvartal" class="input-left-controls-pop-add-kvartal-popmap"> <div class="icon-restore tit"></div>`;
-    			t43 = space();
+    			t44 = space();
     			div38 = element("div");
     			div38.innerHTML = `<div class="kv">Выдел</div> <input type="text" name="vydel" class="input-left-controls-pop-add-kvartal-popmap"> <div class="icon-restore tit"></div>`;
-    			t47 = space();
+    			t48 = space();
     			div41 = element("div");
     			div41.innerHTML = `<div class="kv">Делянка</div> <input type="text" name="delyanka" class="input-left-controls-pop-add-kvartal-popmap"> <div class="icon-restore tit"></div>`;
-    			t51 = space();
+    			t52 = space();
     			div44 = element("div");
     			div44.innerHTML = `<div class="kv">Площадь</div> <input type="text" name="area" class="input-left-controls-pop-add-kvartal-popmap"> <div class="icon-restore tit"></div>`;
-    			t55 = space();
+    			t56 = space();
     			div46 = element("div");
     			div46.innerHTML = `<div class="popup-map-row3-left">Хозмероприятия</div>`;
-    			t57 = space();
+    			t58 = space();
     			div49 = element("div");
     			div49.innerHTML = `<div class="kv">Форма рубки</div> <input type="text" name="form_rub" class="input-left-controls-pop-add-kvartal-popmap"> <div class="icon-restore tit"></div>`;
-    			t61 = space();
+    			t62 = space();
     			div52 = element("div");
     			div52.innerHTML = `<div class="kv">Тип рубки</div> <input type="text" name="type_rub" class="input-left-controls-pop-add-kvartal-popmap"> <div class="icon-restore tit"></div>`;
-    			t65 = space();
+    			t66 = space();
     			div56 = element("div");
     			div54 = element("div");
     			div54.textContent = "Отмена";
-    			t67 = space();
+    			t68 = space();
     			div55 = element("div");
     			div55.textContent = "Создать отчет";
     			attr(div0, "class", "popup-map-row1-left");
@@ -4439,35 +4474,37 @@ var app = (function () {
     			append(form, t16);
     			append(form, div18);
     			append(form, t20);
-    			mount_component(selectinput, form, null);
+    			mount_component(selectinput0, form, null);
     			append(form, t21);
+    			mount_component(selectinput1, form, null);
+    			append(form, t22);
     			append(form, div20);
-    			append(form, t23);
+    			append(form, t24);
     			append(form, div23);
-    			append(form, t27);
+    			append(form, t28);
     			append(form, div26);
-    			append(form, t31);
+    			append(form, t32);
     			append(form, div29);
-    			append(form, t35);
+    			append(form, t36);
     			append(form, div32);
-    			append(form, t39);
+    			append(form, t40);
     			append(form, div35);
-    			append(form, t43);
+    			append(form, t44);
     			append(form, div38);
-    			append(form, t47);
+    			append(form, t48);
     			append(form, div41);
-    			append(form, t51);
+    			append(form, t52);
     			append(form, div44);
-    			append(form, t55);
+    			append(form, t56);
     			append(form, div46);
-    			append(form, t57);
+    			append(form, t58);
     			append(form, div49);
-    			append(form, t61);
+    			append(form, t62);
     			append(form, div52);
-    			append(div57, t65);
+    			append(div57, t66);
     			append(div57, div56);
     			append(div56, div54);
-    			append(div56, t67);
+    			append(div56, t68);
     			append(div56, div55);
     			current = true;
     		},
@@ -4494,25 +4531,37 @@ var app = (function () {
     				each_blocks.length = each_value.length;
     			}
 
-    			var selectinput_changes = {};
+    			var selectinput0_changes = {};
     			if (!updating_delItems && changed.delItems) {
-    				selectinput_changes.delItems = ctx.delItems;
+    				selectinput0_changes.delItems = ctx.delItems;
     			}
     			if (!updating_changedParams && changed.changedParams) {
-    				selectinput_changes.changedParams = ctx.changedParams;
+    				selectinput0_changes.changedParams = ctx.changedParams;
     			}
-    			selectinput.$set(selectinput_changes);
+    			selectinput0.$set(selectinput0_changes);
+
+    			var selectinput1_changes = {};
+    			if (!updating_delItems_1 && changed.delItems) {
+    				selectinput1_changes.delItems = ctx.delItems;
+    			}
+    			if (!updating_changedParams_1 && changed.changedParams) {
+    				selectinput1_changes.changedParams = ctx.changedParams;
+    			}
+    			selectinput1.$set(selectinput1_changes);
     		},
 
     		i(local) {
     			if (current) return;
-    			transition_in(selectinput.$$.fragment, local);
+    			transition_in(selectinput0.$$.fragment, local);
+
+    			transition_in(selectinput1.$$.fragment, local);
 
     			current = true;
     		},
 
     		o(local) {
-    			transition_out(selectinput.$$.fragment, local);
+    			transition_out(selectinput0.$$.fragment, local);
+    			transition_out(selectinput1.$$.fragment, local);
     			current = false;
     		},
 
@@ -4523,7 +4572,9 @@ var app = (function () {
 
     			destroy_each(each_blocks, detaching);
 
-    			destroy_component(selectinput);
+    			destroy_component(selectinput0);
+
+    			destroy_component(selectinput1);
 
     			run_all(dispose);
     		}
@@ -4951,13 +5002,23 @@ var app = (function () {
 
     	function click_handler({ i }) { fitBounds(i); }
 
-    	function selectinput_delItems_binding(value) {
+    	function selectinput0_delItems_binding(value) {
     		delItems$1 = value;
     		$$invalidate('delItems', delItems$1);
     	}
 
-    	function selectinput_changedParams_binding(value_1) {
+    	function selectinput0_changedParams_binding(value_1) {
     		changedParams = value_1;
+    		$$invalidate('changedParams', changedParams);
+    	}
+
+    	function selectinput1_delItems_binding(value_2) {
+    		delItems$1 = value_2;
+    		$$invalidate('delItems', delItems$1);
+    	}
+
+    	function selectinput1_changedParams_binding(value_3) {
+    		changedParams = value_3;
     		$$invalidate('changedParams', changedParams);
     	}
 
@@ -4976,8 +5037,10 @@ var app = (function () {
     		toggleHint,
     		createReport,
     		click_handler,
-    		selectinput_delItems_binding,
-    		selectinput_changedParams_binding
+    		selectinput0_delItems_binding,
+    		selectinput0_changedParams_binding,
+    		selectinput1_delItems_binding,
+    		selectinput1_changedParams_binding
     	};
     }
 

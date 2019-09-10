@@ -278,6 +278,7 @@ const createReport = (ev) => {
                <input type="text" name="company" class="input-left-controls-pop-add-kvartal-popmap">
                <div class="icon-restore tit" ></div>
             </div>
+			<SelectInput key="company" bind:delItems={delItems} bind:changedParams={changedParams} />
 			<SelectInput key="inn" bind:delItems={delItems} bind:changedParams={changedParams} />
 
             <div class="popup-map-row3">
