@@ -273,17 +273,14 @@ const createReport = (ev) => {
             <div class="popup-map-row3">
                <div class="popup-map-row3-left">Организация</div>
             </div>
-            <div class="input-kv-map">
-               <div class="kv">Наименование организации</div>
-               <input type="text" name="company" class="input-left-controls-pop-add-kvartal-popmap">
-               <div class="icon-restore tit" ></div>
-            </div>
 			<SelectInput key="company" bind:delItems={delItems} bind:changedParams={changedParams} />
 			<SelectInput key="inn" bind:delItems={delItems} bind:changedParams={changedParams} />
 
             <div class="popup-map-row3">
                <div class="popup-map-row3-left">Расположение объекта</div>
             </div>
+			<SelectInput key="region" bind:delItems={delItems} bind:changedParams={changedParams} />
+			<SelectInput key="forestr" bind:delItems={delItems} bind:changedParams={changedParams} />
             <div class="input-kv-map">
                <div class="kv">Субъект РФ</div>
                <input type="text" name="region" class="input-left-controls-pop-add-kvartal-popmap">
