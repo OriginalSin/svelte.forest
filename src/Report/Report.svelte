@@ -271,7 +271,7 @@ const createReport = (ev) => {
                <div class="radio-arr popup-mapping"><span class="spacer"><input value="ВЛ" type="radio" name="report_t" id="radio2" class="css-checkbox" checked="checked"/><label for="radio2" class="css-label radGroup1 radGroup2 control-black">О воспроизведении лесов</label></div>
             </div>
             <div class="popup-map-row3">
-               <div class="popup-map-row3-left">Организация</div>
+               <div class="popup-map-row3-left">Организация1   </div>
             </div>
 			<SelectInput key="company" bind:delItems={delItems} bind:changedParams={changedParams} />
 			<SelectInput key="inn" bind:delItems={delItems} bind:changedParams={changedParams} />
