@@ -502,42 +502,6 @@ var app = (function () {
         }
         set_current_component(parent_component);
     }
-    let SvelteElement;
-    if (typeof HTMLElement !== 'undefined') {
-        SvelteElement = class extends HTMLElement {
-            constructor() {
-                super();
-                this.attachShadow({ mode: 'open' });
-            }
-            connectedCallback() {
-                // @ts-ignore todo: improve typings
-                for (const key in this.$$.slotted) {
-                    // @ts-ignore todo: improve typings
-                    this.appendChild(this.$$.slotted[key]);
-                }
-            }
-            attributeChangedCallback(attr, _oldValue, newValue) {
-                this[attr] = newValue;
-            }
-            $destroy() {
-                destroy_component(this, 1);
-                this.$destroy = noop;
-            }
-            $on(type, callback) {
-                // TODO should this delegate to addEventListener?
-                const callbacks = (this.$$.callbacks[type] || (this.$$.callbacks[type] = []));
-                callbacks.push(callback);
-                return () => {
-                    const index = callbacks.indexOf(callback);
-                    if (index !== -1)
-                        callbacks.splice(index, 1);
-                };
-            }
-            $set() {
-                // overridden by instance, if it has props
-            }
-        };
-    }
     class SvelteComponent {
         $destroy() {
             destroy_component(this, 1);
@@ -624,6 +588,126 @@ var app = (function () {
     const delItems = writable(0);
     const reportsCount = writable(0);
 
+    const	_self = self || window,
+    		serverBase = _self.serverBase || '//maps.kosmosnimki.ru/',
+    		serverProxy = serverBase + 'Plugins/ForestReport/proxy';
+
+    const parseURLParams = (str) => {
+    	let sp = new URLSearchParams(str || location.search),
+    		out = {},
+    		arr = [];
+    	for (let p of sp) {
+    		let k = p[0], z = p[1];
+    		if (z) {
+    			if (!out[k]) {out[k] = [];}
+    			out[k].push(z);
+    		} else {
+    			arr.push(k);
+    		}
+    	}
+    	return {main: arr, keys: out};
+    };
+
+    const getMapTree = (params) => {
+    	params = params || {};
+    console.log('parseURLParams', parseURLParams(params.search));
+
+    	let url = `${serverBase}Map/GetMapFolder`;
+    	url += '?mapId=' + (params.mapId || 'C8612B3A77D84F3F87953BEF17026A5F');
+    	url += '&folderId=root';
+    	url += '&srs=3857'; 
+    	url += '&skipTiles=All';
+    	url += '&visibleItemOnly=false';
+
+    	return fetch(url, {
+    		method: 'get',
+    		mode: 'cors',
+    		credentials: 'include',
+    		// headers: {'Accept': 'application/json'},
+    		// body: JSON.stringify(params)	// TODO: сервер почему то не хочет работать так https://googlechrome.github.io/samples/fetch-api/fetch-post.html
+    	})
+    		.then(res => {
+    			return res.json();
+    		})
+    		.then(json => {
+    			return parseTree(json);
+    		})
+    		.catch(err => console.warn(err));
+    };
+
+    const _iterateNodeChilds = (node, level, out) => {
+    	level = level || 0;
+    	out = out || {
+    		layers: []
+    	};
+    	
+    	if (node) {
+    		let type = node.type,
+    			content = node.content,
+    			props = content.properties;
+    		if (type === 'layer') {
+    			let ph = { level: level, properties: props };
+    			if (content.geometry) { ph.geometry = content.geometry; }
+    			out.layers.push(ph);
+    		} else if (type === 'group') {
+    			let childs = content.children || [];
+    			out.layers.push({ level: level, group: true, childsLen: childs.length, properties: props });
+    			childs.map((it) => {
+    				_iterateNodeChilds(it, level + 1, out);
+    			});
+    		}
+    		
+    	} else {
+    		return out;
+    	}
+    	return out;
+    };
+
+    const parseTree = (json) => {
+    	let out = {};
+    	if (json.Status === 'error') {
+    		out = json;
+    	} else if (json.Result && json.Result.content) {
+    		out = _iterateNodeChilds(json.Result);
+    		out.mapAttr = out.layers.shift();
+    	}
+    // console.log('______json_out_______', out, json)
+    	return out;
+    };
+    const getReq = url => {
+    	return fetch(url, {
+    			method: 'get',
+    			mode: 'cors',
+    			credentials: 'include'
+    		// headers: {'Accept': 'application/json'},
+    		// body: JSON.stringify(params)	// TODO: сервер почему то не хочет работать так https://googlechrome.github.io/samples/fetch-api/fetch-post.html
+    		})
+    		.then(res => res.json())
+    		.catch(err => console.warn(err));
+    };
+
+    const getLayerItems = (params) => {
+    	params = params || {};
+
+    	let url = `${serverBase}VectorLayer/Search.ashx`;
+    	url += '?layer=' + params.layerID;
+    	if (params.id) { '&query=gmx_id=' + params.id; }
+
+    	url += '&out_cs=EPSG:4326';
+    	url += '&geometry=true';
+    	return getReq(url);
+    };
+    const getReportsCount = () => {
+    	return getReq(serverProxy + '?path=/rest/v1/get-current-user-info');
+    };
+
+    var Requests = {
+    	parseURLParams,
+    	getMapTree,
+    	getReportsCount,
+    	getLayerItems
+    };
+
     const kIsNodeJS = Object.prototype.toString.call(typeof process !== 'undefined' ? process : 0) === '[object process]';
     const kRequire = kIsNodeJS ? module.require : null; // eslint-disable-line
 
@@ -646,7 +730,7 @@ var app = (function () {
     const WorkerFactory = createURLWorkerFactory('web-worker-0.js');
     /* eslint-enable */
 
-    /* src/Map/Map.svelte generated by Svelte v3.10.0 */
+    /* src\Map\Map.svelte generated by Svelte v3.7.1 */
 
     function create_fragment(ctx) {
     	var div;
@@ -747,7 +831,8 @@ var app = (function () {
     				mapTree.set(json);
     			}
     	// console.log('onmessage', json);
-    		};		dataWorker.postMessage({cmd: 'getMap', mapID: mapID});
+    		};		let pars = Requests.parseURLParams(location.search);
+    		dataWorker.postMessage({cmd: 'getMap', mapID: pars.main.length ? pars.main[0] : mapID, search: location.search});
         });
 
     	function div_binding($$value) {
@@ -796,10 +881,10 @@ var app = (function () {
     	}
     }
 
-    /* src/Controls/LayersTree/LineNode.svelte generated by Svelte v3.10.0 */
+    /* src\Controls\LayersTree\LineNode.svelte generated by Svelte v3.7.1 */
 
     function create_fragment$1(ctx) {
-    	var div6, div1, label, t0_value = ctx.item.properties.title + "", t0, t1, input, t2, div0, label_class_value, t3, div5, div2, t4, div3, t5, div4, div4_class_value, dispose;
+    	var div6, div1, label, t0_value = ctx.item.properties.title, t0, t1, input, t2, div0, label_class_value, t3, div5, div2, t4, div3, t5, div4, div4_class_value, dispose;
 
     	return {
     		c() {
@@ -858,7 +943,7 @@ var app = (function () {
     		},
 
     		p(changed, ctx) {
-    			if ((changed.item) && t0_value !== (t0_value = ctx.item.properties.title + "")) {
+    			if ((changed.item) && t0_value !== (t0_value = ctx.item.properties.title)) {
     				set_data(t0, t0_value);
     			}
 
@@ -959,7 +1044,7 @@ var app = (function () {
     	}
     }
 
-    /* src/Controls/LayersTree/LayersTree.svelte generated by Svelte v3.10.0 */
+    /* src\Controls\LayersTree\LayersTree.svelte generated by Svelte v3.7.1 */
 
     function get_each_context(ctx, list, i) {
     	const child_ctx = Object.create(ctx);
@@ -1023,13 +1108,13 @@ var app = (function () {
     }
 
     function create_fragment$2(ctx) {
-    	var div13, div2, div0, t0_value = ctx.mapAttr.properties && ctx.mapAttr.properties.title || 'Название проекта/компании' + "", t0, t1, div1, t2, div3, t3, div11, t10, div12, current;
+    	var div13, div2, div0, t0_value = ctx.mapAttr.properties && ctx.mapAttr.properties.title || 'Название проекта/компании', t0, t1, div1, t2, div3, t3, div11, t10, div12, current;
 
-    	let each_value = ctx.layersArr;
+    	var each_value = ctx.layersArr;
 
-    	let each_blocks = [];
+    	var each_blocks = [];
 
-    	for (let i = 0; i < each_value.length; i += 1) {
+    	for (var i = 0; i < each_value.length; i += 1) {
     		each_blocks[i] = create_each_block(get_each_context(ctx, each_value, i));
     	}
 
@@ -1056,7 +1141,7 @@ var app = (function () {
     			t10 = space();
     			div12 = element("div");
 
-    			for (let i = 0; i < each_blocks.length; i += 1) {
+    			for (var i = 0; i < each_blocks.length; i += 1) {
     				each_blocks[i].c();
     			}
     			attr(div0, "class", "sidebar-opened-row1-left");
@@ -1084,7 +1169,7 @@ var app = (function () {
     			append(div13, t10);
     			append(div13, div12);
 
-    			for (let i = 0; i < each_blocks.length; i += 1) {
+    			for (var i = 0; i < each_blocks.length; i += 1) {
     				each_blocks[i].m(div12, null);
     			}
 
@@ -1092,15 +1177,14 @@ var app = (function () {
     		},
 
     		p(changed, ctx) {
-    			if ((!current || changed.mapAttr) && t0_value !== (t0_value = ctx.mapAttr.properties && ctx.mapAttr.properties.title || 'Название проекта/компании' + "")) {
+    			if ((!current || changed.mapAttr) && t0_value !== (t0_value = ctx.mapAttr.properties && ctx.mapAttr.properties.title || 'Название проекта/компании')) {
     				set_data(t0, t0_value);
     			}
 
     			if (changed.layersArr || changed.expanded) {
     				each_value = ctx.layersArr;
 
-    				let i;
-    				for (i = 0; i < each_value.length; i += 1) {
+    				for (var i = 0; i < each_value.length; i += 1) {
     					const child_ctx = get_each_context(ctx, each_value, i);
 
     					if (each_blocks[i]) {
@@ -1115,27 +1199,21 @@ var app = (function () {
     				}
 
     				group_outros();
-    				for (i = each_value.length; i < each_blocks.length; i += 1) {
-    					out(i);
-    				}
+    				for (i = each_value.length; i < each_blocks.length; i += 1) out(i);
     				check_outros();
     			}
     		},
 
     		i(local) {
     			if (current) return;
-    			for (let i = 0; i < each_value.length; i += 1) {
-    				transition_in(each_blocks[i]);
-    			}
+    			for (var i = 0; i < each_value.length; i += 1) transition_in(each_blocks[i]);
 
     			current = true;
     		},
 
     		o(local) {
     			each_blocks = each_blocks.filter(Boolean);
-    			for (let i = 0; i < each_blocks.length; i += 1) {
-    				transition_out(each_blocks[i]);
-    			}
+    			for (let i = 0; i < each_blocks.length; i += 1) transition_out(each_blocks[i]);
 
     			current = false;
     		},
@@ -1215,7 +1293,7 @@ var app = (function () {
     	}
     }
 
-    /* src/Controls/Zoom/Zoom.svelte generated by Svelte v3.10.0 */
+    /* src\Controls\Zoom\Zoom.svelte generated by Svelte v3.7.1 */
 
     function create_fragment$3(ctx) {
     	var div3, div0, t0, div1, t2, div2, dispose;
@@ -1339,7 +1417,7 @@ var app = (function () {
         };
     }
 
-    /* src/Controls/Base/Base.svelte generated by Svelte v3.10.0 */
+    /* src\Controls\Base\Base.svelte generated by Svelte v3.7.1 */
 
     function create_fragment$4(ctx) {
     	var div12, div11, div2, div0, t1, div1, t2, div8, div3, span0, input0, label0, t4, div4, span1, input1, label1, t6, div5, span2, input2, label2, t8, div6, span3, input3, label3, t10, div7, span4, input4, label4, t12, div10, div12_class_value, div12_intro, div12_outro, current, dispose;
@@ -1629,8 +1707,8 @@ var app = (function () {
     	}
     }
 
-    const	serverBase = window.serverBase || '//maps.kosmosnimki.ru/',
-    		serverProxy = serverBase + 'Plugins/ForestReport/proxy',
+    const	serverBase$1 = window.serverBase || '//maps.kosmosnimki.ru/',
+    		serverProxy$1 = serverBase$1 + 'Plugins/ForestReport/proxy',
     		scales = [
     			{value: 5000, title: '1:5000'},
     			{value: 10000, title: '1:10000'},
@@ -2127,8 +2205,8 @@ var app = (function () {
     var geoMag = new Geomag(cof).mag;
 
     var Config = /*#__PURE__*/Object.freeze({
-        serverBase: serverBase,
-        serverProxy: serverProxy,
+        serverBase: serverBase$1,
+        serverProxy: serverProxy$1,
         fields: fields,
         fieldsConf: fieldsConf,
         scales: scales,
@@ -2197,7 +2275,7 @@ var app = (function () {
     	}
     };
 
-    /* src/Layers/Layers.svelte generated by Svelte v3.10.0 */
+    /* src\Layers\Layers.svelte generated by Svelte v3.7.1 */
     const { Object: Object_1 } = globals;
 
     function get_each_context$1(ctx, list, i) {
@@ -2234,7 +2312,7 @@ var app = (function () {
 
     // (150:1) {#if Utils.isDelynkaLayer(item)}
     function create_if_block_6(ctx) {
-    	var option, t_value = ctx.item._gmx.rawProperties.title + "", t, option_value_value;
+    	var option, t_value = ctx.item._gmx.rawProperties.title, t, option_value_value;
 
     	return {
     		c() {
@@ -2250,7 +2328,7 @@ var app = (function () {
     		},
 
     		p(changed, ctx) {
-    			if ((changed.gmxMap) && t_value !== (t_value = ctx.item._gmx.rawProperties.title + "")) {
+    			if ((changed.gmxMap) && t_value !== (t_value = ctx.item._gmx.rawProperties.title)) {
     				set_data(t, t_value);
     			}
 
@@ -2271,9 +2349,9 @@ var app = (function () {
 
     // (149:2) {#each gmxMap.layers as item}
     function create_each_block_4(ctx) {
-    	var show_if = Utils.isDelynkaLayer(ctx.item), if_block_anchor;
+    	var if_block_anchor;
 
-    	var if_block = (show_if) && create_if_block_6(ctx);
+    	var if_block = (Utils.isDelynkaLayer(ctx.item)) && create_if_block_6(ctx);
 
     	return {
     		c() {
@@ -2287,9 +2365,7 @@ var app = (function () {
     		},
 
     		p(changed, ctx) {
-    			if (changed.gmxMap) show_if = Utils.isDelynkaLayer(ctx.item);
-
-    			if (show_if) {
+    			if (Utils.isDelynkaLayer(ctx.item)) {
     				if (if_block) {
     					if_block.p(changed, ctx);
     				} else {
@@ -2315,7 +2391,7 @@ var app = (function () {
 
     // (170:1) {#if Utils.isKvartalLayer(item)}
     function create_if_block_5(ctx) {
-    	var option, t_value = ctx.item._gmx.rawProperties.title + "", t, option_value_value;
+    	var option, t_value = ctx.item._gmx.rawProperties.title, t, option_value_value;
 
     	return {
     		c() {
@@ -2331,7 +2407,7 @@ var app = (function () {
     		},
 
     		p(changed, ctx) {
-    			if ((changed.gmxMap) && t_value !== (t_value = ctx.item._gmx.rawProperties.title + "")) {
+    			if ((changed.gmxMap) && t_value !== (t_value = ctx.item._gmx.rawProperties.title)) {
     				set_data(t, t_value);
     			}
 
@@ -2352,9 +2428,9 @@ var app = (function () {
 
     // (169:2) {#each gmxMap.layers as item}
     function create_each_block_3(ctx) {
-    	var show_if = Utils.isKvartalLayer(ctx.item), if_block_anchor;
+    	var if_block_anchor;
 
-    	var if_block = (show_if) && create_if_block_5(ctx);
+    	var if_block = (Utils.isKvartalLayer(ctx.item)) && create_if_block_5(ctx);
 
     	return {
     		c() {
@@ -2368,9 +2444,7 @@ var app = (function () {
     		},
 
     		p(changed, ctx) {
-    			if (changed.gmxMap) show_if = Utils.isKvartalLayer(ctx.item);
-
-    			if (show_if) {
+    			if (Utils.isKvartalLayer(ctx.item)) {
     				if (if_block) {
     					if_block.p(changed, ctx);
     				} else {
@@ -2471,29 +2545,29 @@ var app = (function () {
 
     // (183:0) {#if addDelynkaFlag === 1}
     function create_if_block(ctx) {
-    	var div23, div2, div0, t1, div1, t2, div3, t3, div18, div5, t5, div8, div6, t7, div7, select, option, t8, div10, div9, t10, input0, t11, datalist, raw_value = ctx.kvData && ctx.getOptions(ctx.kvData, 'kvartal') + "", t12, div15, div12, div11, t14, input1, input1_value_value, t15, div14, div13, t16, input2, input2_value_value, t17, div17, div16, t18, t19, t20, t21, div19, t22, div22, div20, t24, div21, dispose;
+    	var div23, div2, div0, t1, div1, t2, div3, t3, div18, div5, t5, div8, div6, t7, div7, select, option, t8, div10, div9, t10, input0, t11, datalist, raw_value = ctx.kvData && ctx.getOptions(ctx.kvData, 'kvartal'), t12, div15, div12, div11, t14, input1, input1_value_value, t15, div14, div13, t16, input2, input2_value_value, t17, div17, div16, t18, t19, t20, t21, div19, t22, div22, div20, t24, div21, dispose;
 
-    	let each_value_2 = ctx.gmxMap.layers;
+    	var each_value_2 = ctx.gmxMap.layers;
 
-    	let each_blocks_2 = [];
+    	var each_blocks_2 = [];
 
-    	for (let i = 0; i < each_value_2.length; i += 1) {
+    	for (var i = 0; i < each_value_2.length; i += 1) {
     		each_blocks_2[i] = create_each_block_2(get_each_context_2(ctx, each_value_2, i));
     	}
 
-    	let each_value_1 = ctx.snap.snap;
+    	var each_value_1 = ctx.snap.snap;
 
-    	let each_blocks_1 = [];
+    	var each_blocks_1 = [];
 
-    	for (let i = 0; i < each_value_1.length; i += 1) {
+    	for (var i = 0; i < each_value_1.length; i += 1) {
     		each_blocks_1[i] = create_each_block_1(get_each_context_1(ctx, each_value_1, i));
     	}
 
-    	let each_value = ctx.snap.ring;
+    	var each_value = ctx.snap.ring;
 
-    	let each_blocks = [];
+    	var each_blocks = [];
 
-    	for (let i = 0; i < each_value.length; i += 1) {
+    	for (var i = 0; i < each_value.length; i += 1) {
     		each_blocks[i] = create_each_block$1(get_each_context$1(ctx, each_value, i));
     	}
 
@@ -2520,7 +2594,7 @@ var app = (function () {
     			select = element("select");
     			option = element("option");
 
-    			for (let i = 0; i < each_blocks_2.length; i += 1) {
+    			for (var i = 0; i < each_blocks_2.length; i += 1) {
     				each_blocks_2[i].c();
     			}
 
@@ -2550,13 +2624,13 @@ var app = (function () {
     			t18 = text(ctx.latlngStr);
     			t19 = space();
 
-    			for (let i = 0; i < each_blocks_1.length; i += 1) {
+    			for (var i = 0; i < each_blocks_1.length; i += 1) {
     				each_blocks_1[i].c();
     			}
 
     			t20 = space();
 
-    			for (let i = 0; i < each_blocks.length; i += 1) {
+    			for (var i = 0; i < each_blocks.length; i += 1) {
     				each_blocks[i].c();
     			}
 
@@ -2639,7 +2713,7 @@ var app = (function () {
     			append(div7, select);
     			append(select, option);
 
-    			for (let i = 0; i < each_blocks_2.length; i += 1) {
+    			for (var i = 0; i < each_blocks_2.length; i += 1) {
     				each_blocks_2[i].m(select, null);
     			}
 
@@ -2668,13 +2742,13 @@ var app = (function () {
     			append(div16, t18);
     			append(div18, t19);
 
-    			for (let i = 0; i < each_blocks_1.length; i += 1) {
+    			for (var i = 0; i < each_blocks_1.length; i += 1) {
     				each_blocks_1[i].m(div18, null);
     			}
 
     			append(div18, t20);
 
-    			for (let i = 0; i < each_blocks.length; i += 1) {
+    			for (var i = 0; i < each_blocks.length; i += 1) {
     				each_blocks[i].m(div18, null);
     			}
 
@@ -2691,8 +2765,7 @@ var app = (function () {
     			if (changed.Utils || changed.gmxMap) {
     				each_value_2 = ctx.gmxMap.layers;
 
-    				let i;
-    				for (i = 0; i < each_value_2.length; i += 1) {
+    				for (var i = 0; i < each_value_2.length; i += 1) {
     					const child_ctx = get_each_context_2(ctx, each_value_2, i);
 
     					if (each_blocks_2[i]) {
@@ -2710,7 +2783,7 @@ var app = (function () {
     				each_blocks_2.length = each_value_2.length;
     			}
 
-    			if ((changed.kvData) && raw_value !== (raw_value = ctx.kvData && ctx.getOptions(ctx.kvData, 'kvartal') + "")) {
+    			if ((changed.kvData) && raw_value !== (raw_value = ctx.kvData && ctx.getOptions(ctx.kvData, 'kvartal'))) {
     				datalist.innerHTML = raw_value;
     			}
 
@@ -2729,8 +2802,7 @@ var app = (function () {
     			if (changed.snap) {
     				each_value_1 = ctx.snap.snap;
 
-    				let i;
-    				for (i = 0; i < each_value_1.length; i += 1) {
+    				for (var i = 0; i < each_value_1.length; i += 1) {
     					const child_ctx = get_each_context_1(ctx, each_value_1, i);
 
     					if (each_blocks_1[i]) {
@@ -2751,8 +2823,7 @@ var app = (function () {
     			if (changed.snap) {
     				each_value = ctx.snap.ring;
 
-    				let i;
-    				for (i = 0; i < each_value.length; i += 1) {
+    				for (var i = 0; i < each_value.length; i += 1) {
     					const child_ctx = get_each_context$1(ctx, each_value, i);
 
     					if (each_blocks[i]) {
@@ -2789,7 +2860,7 @@ var app = (function () {
 
     // (202:1) {#if Utils.isKvartalLayer(item)}
     function create_if_block_3(ctx) {
-    	var option, t_value = ctx.item._gmx.rawProperties.title + "", t, option_value_value;
+    	var option, t_value = ctx.item._gmx.rawProperties.title, t, option_value_value;
 
     	return {
     		c() {
@@ -2805,7 +2876,7 @@ var app = (function () {
     		},
 
     		p(changed, ctx) {
-    			if ((changed.gmxMap) && t_value !== (t_value = ctx.item._gmx.rawProperties.title + "")) {
+    			if ((changed.gmxMap) && t_value !== (t_value = ctx.item._gmx.rawProperties.title)) {
     				set_data(t, t_value);
     			}
 
@@ -2826,9 +2897,9 @@ var app = (function () {
 
     // (201:2) {#each gmxMap.layers as item}
     function create_each_block_2(ctx) {
-    	var show_if = Utils.isKvartalLayer(ctx.item), if_block_anchor;
+    	var if_block_anchor;
 
-    	var if_block = (show_if) && create_if_block_3(ctx);
+    	var if_block = (Utils.isKvartalLayer(ctx.item)) && create_if_block_3(ctx);
 
     	return {
     		c() {
@@ -2842,9 +2913,7 @@ var app = (function () {
     		},
 
     		p(changed, ctx) {
-    			if (changed.gmxMap) show_if = Utils.isKvartalLayer(ctx.item);
-
-    			if (show_if) {
+    			if (Utils.isKvartalLayer(ctx.item)) {
     				if (if_block) {
     					if_block.p(changed, ctx);
     				} else {
@@ -2958,6 +3027,17 @@ var app = (function () {
     		},
 
     		p(changed, ctx) {
+    			if (!ctx.i) {
+    				if (!if_block) {
+    					if_block = create_if_block_2();
+    					if_block.c();
+    					if_block.m(div0, t0);
+    				}
+    			} else if (if_block) {
+    				if_block.d(1);
+    				if_block = null;
+    			}
+
     			if ((changed.snap) && input0_value_value !== (input0_value_value = (ctx.it[2] || ctx.it[0]) !== undefined ? ctx.it[2] || ctx.it[0] : '')) {
     				input0.value = input0_value_value;
     			}
@@ -3068,6 +3148,17 @@ var app = (function () {
     		},
 
     		p(changed, ctx) {
+    			if (!ctx.i) {
+    				if (!if_block) {
+    					if_block = create_if_block_1();
+    					if_block.c();
+    					if_block.m(div0, t0);
+    				}
+    			} else if (if_block) {
+    				if_block.d(1);
+    				if_block = null;
+    			}
+
     			if ((changed.snap) && input0_value_value !== (input0_value_value = (ctx.it[2] || ctx.it[0]) !== undefined ? ctx.it[2] || ctx.it[0] : '')) {
     				input0.value = input0_value_value;
     			}
@@ -3089,30 +3180,30 @@ var app = (function () {
     }
 
     function create_fragment$5(ctx) {
-    	var div19, div2, div0, t0_value = ctx.gmxMap.properties && ctx.gmxMap.properties.title || 'Название проекта/компании' + "", t0, t1, div1, t2, div18, div17, input0, t3, label0, t5, div3, t6, input1, t7, label1, t9, section0, div6, t13, div10, div7, t15, div9, div8, select0, option0, t16, div12, div11, t18, section1, div16, div13, t20, div15, div14, select1, option1, t21, if_block_anchor, dispose;
+    	var div19, div2, div0, t0_value = ctx.gmxMap.properties && ctx.gmxMap.properties.title || 'Название проекта/компании', t0, t1, div1, t2, div18, div17, input0, t3, label0, t5, div3, t6, input1, t7, label1, t9, section0, div6, t13, div10, div7, t15, div9, div8, select0, option0, t16, div12, div11, t18, section1, div16, div13, t20, div15, div14, select1, option1, t21, if_block_anchor, dispose;
 
-    	let each_value_4 = ctx.gmxMap.layers;
+    	var each_value_4 = ctx.gmxMap.layers;
 
-    	let each_blocks_1 = [];
+    	var each_blocks_1 = [];
 
-    	for (let i = 0; i < each_value_4.length; i += 1) {
+    	for (var i = 0; i < each_value_4.length; i += 1) {
     		each_blocks_1[i] = create_each_block_4(get_each_context_4(ctx, each_value_4, i));
     	}
 
-    	let each_value_3 = ctx.gmxMap.layers;
+    	var each_value_3 = ctx.gmxMap.layers;
 
-    	let each_blocks = [];
+    	var each_blocks = [];
 
-    	for (let i = 0; i < each_value_3.length; i += 1) {
+    	for (var i = 0; i < each_value_3.length; i += 1) {
     		each_blocks[i] = create_each_block_3(get_each_context_3(ctx, each_value_3, i));
     	}
 
-    	function select_block_type(changed, ctx) {
+    	function select_block_type(ctx) {
     		if (ctx.addDelynkaFlag === 1) return create_if_block;
     		if (ctx.addDelynkaFlag === 2) return create_if_block_4;
     	}
 
-    	var current_block_type = select_block_type(null, ctx);
+    	var current_block_type = select_block_type(ctx);
     	var if_block = current_block_type && current_block_type(ctx);
 
     	return {
@@ -3151,7 +3242,7 @@ var app = (function () {
     			select0 = element("select");
     			option0 = element("option");
 
-    			for (let i = 0; i < each_blocks_1.length; i += 1) {
+    			for (var i = 0; i < each_blocks_1.length; i += 1) {
     				each_blocks_1[i].c();
     			}
 
@@ -3170,7 +3261,7 @@ var app = (function () {
     			select1 = element("select");
     			option1 = element("option");
 
-    			for (let i = 0; i < each_blocks.length; i += 1) {
+    			for (var i = 0; i < each_blocks.length; i += 1) {
     				each_blocks[i].c();
     			}
 
@@ -3253,7 +3344,7 @@ var app = (function () {
     			append(div8, select0);
     			append(select0, option0);
 
-    			for (let i = 0; i < each_blocks_1.length; i += 1) {
+    			for (var i = 0; i < each_blocks_1.length; i += 1) {
     				each_blocks_1[i].m(select0, null);
     			}
 
@@ -3270,7 +3361,7 @@ var app = (function () {
     			append(div14, select1);
     			append(select1, option1);
 
-    			for (let i = 0; i < each_blocks.length; i += 1) {
+    			for (var i = 0; i < each_blocks.length; i += 1) {
     				each_blocks[i].m(select1, null);
     			}
 
@@ -3280,15 +3371,14 @@ var app = (function () {
     		},
 
     		p(changed, ctx) {
-    			if ((changed.gmxMap) && t0_value !== (t0_value = ctx.gmxMap.properties && ctx.gmxMap.properties.title || 'Название проекта/компании' + "")) {
+    			if ((changed.gmxMap) && t0_value !== (t0_value = ctx.gmxMap.properties && ctx.gmxMap.properties.title || 'Название проекта/компании')) {
     				set_data(t0, t0_value);
     			}
 
     			if (changed.Utils || changed.gmxMap) {
     				each_value_4 = ctx.gmxMap.layers;
 
-    				let i;
-    				for (i = 0; i < each_value_4.length; i += 1) {
+    				for (var i = 0; i < each_value_4.length; i += 1) {
     					const child_ctx = get_each_context_4(ctx, each_value_4, i);
 
     					if (each_blocks_1[i]) {
@@ -3309,8 +3399,7 @@ var app = (function () {
     			if (changed.Utils || changed.gmxMap) {
     				each_value_3 = ctx.gmxMap.layers;
 
-    				let i;
-    				for (i = 0; i < each_value_3.length; i += 1) {
+    				for (var i = 0; i < each_value_3.length; i += 1) {
     					const child_ctx = get_each_context_3(ctx, each_value_3, i);
 
     					if (each_blocks[i]) {
@@ -3328,7 +3417,7 @@ var app = (function () {
     				each_blocks.length = each_value_3.length;
     			}
 
-    			if (current_block_type === (current_block_type = select_block_type(changed, ctx)) && if_block) {
+    			if (current_block_type === (current_block_type = select_block_type(ctx)) && if_block) {
     				if_block.p(changed, ctx);
     			} else {
     				if (if_block) if_block.d(1);
@@ -3474,7 +3563,7 @@ var app = (function () {
 
     const setPoint = (ev) => {
     	let node = ev.target,
-    		key = ev.data;
+    		key = ev.data;
 
     	if (node.value === '') {
     		return;
@@ -3507,7 +3596,7 @@ var app = (function () {
     	}
     }
 
-    /* src/Report/SelectInput.svelte generated by Svelte v3.10.0 */
+    /* src\Report\SelectInput.svelte generated by Svelte v3.7.1 */
 
     function get_each_context_1$1(ctx, list, i) {
     	const child_ctx = Object.create(ctx);
@@ -3553,7 +3642,18 @@ var app = (function () {
     				attr(input, "list", ctx.key);
     			}
 
-    			if (ctx.list) if_block.p(changed, ctx);
+    			if (ctx.list) {
+    				if (if_block) {
+    					if_block.p(changed, ctx);
+    				} else {
+    					if_block = create_if_block_1$1(ctx);
+    					if_block.c();
+    					if_block.m(if_block_anchor.parentNode, if_block_anchor);
+    				}
+    			} else if (if_block) {
+    				if_block.d(1);
+    				if_block = null;
+    			}
     		},
 
     		d(detaching) {
@@ -3577,11 +3677,11 @@ var app = (function () {
     function create_if_block$1(ctx) {
     	var div, select, dispose;
 
-    	let each_value = ctx.delItems.fields;
+    	var each_value = ctx.delItems.fields;
 
-    	let each_blocks = [];
+    	var each_blocks = [];
 
-    	for (let i = 0; i < each_value.length; i += 1) {
+    	for (var i = 0; i < each_value.length; i += 1) {
     		each_blocks[i] = create_each_block$2(get_each_context$2(ctx, each_value, i));
     	}
 
@@ -3590,7 +3690,7 @@ var app = (function () {
     			div = element("div");
     			select = element("select");
 
-    			for (let i = 0; i < each_blocks.length; i += 1) {
+    			for (var i = 0; i < each_blocks.length; i += 1) {
     				each_blocks[i].c();
     			}
     			attr(select, "name", ctx.key);
@@ -3603,7 +3703,7 @@ var app = (function () {
     			insert(target, div, anchor);
     			append(div, select);
 
-    			for (let i = 0; i < each_blocks.length; i += 1) {
+    			for (var i = 0; i < each_blocks.length; i += 1) {
     				each_blocks[i].m(select, null);
     			}
     		},
@@ -3612,8 +3712,7 @@ var app = (function () {
     			if (changed.delItems || changed.colName) {
     				each_value = ctx.delItems.fields;
 
-    				let i;
-    				for (i = 0; i < each_value.length; i += 1) {
+    				for (var i = 0; i < each_value.length; i += 1) {
     					const child_ctx = get_each_context$2(ctx, each_value, i);
 
     					if (each_blocks[i]) {
@@ -3652,11 +3751,11 @@ var app = (function () {
     function create_if_block_1$1(ctx) {
     	var datalist;
 
-    	let each_value_1 = ctx.list;
+    	var each_value_1 = ctx.list;
 
-    	let each_blocks = [];
+    	var each_blocks = [];
 
-    	for (let i = 0; i < each_value_1.length; i += 1) {
+    	for (var i = 0; i < each_value_1.length; i += 1) {
     		each_blocks[i] = create_each_block_1$1(get_each_context_1$1(ctx, each_value_1, i));
     	}
 
@@ -3664,7 +3763,7 @@ var app = (function () {
     		c() {
     			datalist = element("datalist");
 
-    			for (let i = 0; i < each_blocks.length; i += 1) {
+    			for (var i = 0; i < each_blocks.length; i += 1) {
     				each_blocks[i].c();
     			}
     			attr(datalist, "id", ctx.key);
@@ -3673,7 +3772,7 @@ var app = (function () {
     		m(target, anchor) {
     			insert(target, datalist, anchor);
 
-    			for (let i = 0; i < each_blocks.length; i += 1) {
+    			for (var i = 0; i < each_blocks.length; i += 1) {
     				each_blocks[i].m(datalist, null);
     			}
     		},
@@ -3682,8 +3781,7 @@ var app = (function () {
     			if (changed.list) {
     				each_value_1 = ctx.list;
 
-    				let i;
-    				for (i = 0; i < each_value_1.length; i += 1) {
+    				for (var i = 0; i < each_value_1.length; i += 1) {
     					const child_ctx = get_each_context_1$1(ctx, each_value_1, i);
 
     					if (each_blocks[i]) {
@@ -3745,7 +3843,7 @@ var app = (function () {
 
     // (109:2) {#each delItems.fields as it}
     function create_each_block$2(ctx) {
-    	var option, t_value = ctx.it + "", t, option_value_value, option_selected_value;
+    	var option, t_value = ctx.it, t, option_value_value, option_selected_value;
 
     	return {
     		c() {
@@ -3762,7 +3860,7 @@ var app = (function () {
     		},
 
     		p(changed, ctx) {
-    			if ((changed.delItems) && t_value !== (t_value = ctx.it + "")) {
+    			if ((changed.delItems) && t_value !== (t_value = ctx.it)) {
     				set_data(t, t_value);
     			}
 
@@ -3786,14 +3884,14 @@ var app = (function () {
     }
 
     function create_fragment$6(ctx) {
-    	var div2, div0, t0_value = fields[ctx.key].title + "", t0, t1, t2, div1, dispose;
+    	var div2, div0, t0_value = fields[ctx.key].title, t0, t1, t2, div1, dispose;
 
-    	function select_block_type(changed, ctx) {
+    	function select_block_type(ctx) {
     		if (ctx.isClicked) return create_if_block$1;
     		return create_else_block;
     	}
 
-    	var current_block_type = select_block_type(null, ctx);
+    	var current_block_type = select_block_type(ctx);
     	var if_block = current_block_type(ctx);
 
     	return {
@@ -3822,11 +3920,11 @@ var app = (function () {
     		},
 
     		p(changed, ctx) {
-    			if ((changed.key) && t0_value !== (t0_value = fields[ctx.key].title + "")) {
+    			if ((changed.key) && t0_value !== (t0_value = fields[ctx.key].title)) {
     				set_data(t0, t0_value);
     			}
 
-    			if (current_block_type === (current_block_type = select_block_type(changed, ctx)) && if_block) {
+    			if (current_block_type === (current_block_type = select_block_type(ctx)) && if_block) {
     				if_block.p(changed, ctx);
     			} else {
     				if_block.d(1);
@@ -3976,7 +4074,7 @@ var app = (function () {
     	}
     }
 
-    /* src/Report/Report.svelte generated by Svelte v3.10.0 */
+    /* src\Report\Report.svelte generated by Svelte v3.7.1 */
     const { Object: Object_1$1 } = globals;
 
     function get_each_context$3(ctx, list, i) {
@@ -4000,7 +4098,7 @@ var app = (function () {
 
     // (169:1) {#if Utils.isDelynkaLayer(item)}
     function create_if_block_3$1(ctx) {
-    	var option, t_value = ctx.item._gmx.rawProperties.title + "", t, option_value_value;
+    	var option, t_value = ctx.item._gmx.rawProperties.title, t, option_value_value;
 
     	return {
     		c() {
@@ -4016,7 +4114,7 @@ var app = (function () {
     		},
 
     		p(changed, ctx) {
-    			if ((changed.gmxMap) && t_value !== (t_value = ctx.item._gmx.rawProperties.title + "")) {
+    			if ((changed.gmxMap) && t_value !== (t_value = ctx.item._gmx.rawProperties.title)) {
     				set_data(t, t_value);
     			}
 
@@ -4037,9 +4135,9 @@ var app = (function () {
 
     // (168:0) {#each gmxMap.layers as item}
     function create_each_block_2$1(ctx) {
-    	var show_if = Utils.isDelynkaLayer(ctx.item), if_block_anchor;
+    	var if_block_anchor;
 
-    	var if_block = (show_if) && create_if_block_3$1(ctx);
+    	var if_block = (Utils.isDelynkaLayer(ctx.item)) && create_if_block_3$1(ctx);
 
     	return {
     		c() {
@@ -4053,9 +4151,7 @@ var app = (function () {
     		},
 
     		p(changed, ctx) {
-    			if (changed.gmxMap) show_if = Utils.isDelynkaLayer(ctx.item);
-
-    			if (show_if) {
+    			if (Utils.isDelynkaLayer(ctx.item)) {
     				if (if_block) {
     					if_block.p(changed, ctx);
     				} else {
@@ -4083,11 +4179,11 @@ var app = (function () {
     function create_if_block_2$1(ctx) {
     	var div3, div1, label, t0, input, t1, div0, t2, div2, t3, div4, dispose;
 
-    	let each_value_1 = ctx.delItems.values;
+    	var each_value_1 = ctx.delItems.values;
 
-    	let each_blocks = [];
+    	var each_blocks = [];
 
-    	for (let i = 0; i < each_value_1.length; i += 1) {
+    	for (var i = 0; i < each_value_1.length; i += 1) {
     		each_blocks[i] = create_each_block_1$2(get_each_context_1$2(ctx, each_value_1, i));
     	}
 
@@ -4096,7 +4192,7 @@ var app = (function () {
     			div3 = element("div");
     			div1 = element("div");
     			label = element("label");
-    			t0 = text("Выделить все\n                  ");
+    			t0 = text("Выделить все\r\n                  ");
     			input = element("input");
     			t1 = space();
     			div0 = element("div");
@@ -4105,7 +4201,7 @@ var app = (function () {
     			t3 = space();
     			div4 = element("div");
 
-    			for (let i = 0; i < each_blocks.length; i += 1) {
+    			for (var i = 0; i < each_blocks.length; i += 1) {
     				each_blocks[i].c();
     			}
     			attr(input, "type", "checkbox");
@@ -4132,7 +4228,7 @@ var app = (function () {
     			insert(target, t3, anchor);
     			insert(target, div4, anchor);
 
-    			for (let i = 0; i < each_blocks.length; i += 1) {
+    			for (var i = 0; i < each_blocks.length; i += 1) {
     				each_blocks[i].m(div4, null);
     			}
     		},
@@ -4141,8 +4237,7 @@ var app = (function () {
     			if (changed.delItems) {
     				each_value_1 = ctx.delItems.values;
 
-    				let i;
-    				for (i = 0; i < each_value_1.length; i += 1) {
+    				for (var i = 0; i < each_value_1.length; i += 1) {
     					const child_ctx = get_each_context_1$2(ctx, each_value_1, i);
 
     					if (each_blocks[i]) {
@@ -4205,7 +4300,7 @@ var app = (function () {
 
     // (201:0) {#each delItems.values as item, i}
     function create_each_block_1$2(ctx) {
-    	var div4, div1, label, t0, t1_value = ctx.item[ctx.delItems.fieldKeys.gmx_id] + "", t1, t2, input, t3, div0, label_class_value, t4, div3, div2, t5, div20, dispose;
+    	var div4, div1, label, t0, t1_value = ctx.item[ctx.delItems.fieldKeys.gmx_id], t1, t2, input, t3, div0, label_class_value, t4, div3, div2, t5, div20, dispose;
 
     	function click_handler() {
     		return ctx.click_handler(ctx);
@@ -4260,7 +4355,7 @@ var app = (function () {
 
     		p(changed, new_ctx) {
     			ctx = new_ctx;
-    			if ((changed.delItems) && t1_value !== (t1_value = ctx.item[ctx.delItems.fieldKeys.gmx_id] + "")) {
+    			if ((changed.delItems) && t1_value !== (t1_value = ctx.item[ctx.delItems.fieldKeys.gmx_id])) {
     				set_data(t1, t1_value);
     			}
 
@@ -4283,13 +4378,13 @@ var app = (function () {
 
     // (242:0) {#if reportIsOpen}
     function create_if_block$2(ctx) {
-    	var div57, div3, div0, t1, div1, t2, div2, t3, div5, t5, div53, form, div8, div6, t7, div7, select, t8, div10, t10, div13, t14, div15, t16, div18, t20, updating_delItems, updating_changedParams, t21, updating_delItems_1, updating_changedParams_1, t22, div20, t24, div23, t28, div26, t32, div29, t36, div32, t40, div35, t44, div38, t48, div41, t52, div44, t56, div46, t58, div49, t62, div52, t66, div56, div54, t68, div55, current, dispose;
+    	var div54, div3, div0, t1, div1, t2, div2, t3, div5, t5, div50, form, div8, div6, t7, div7, select, t8, div10, t10, div13, t14, div15, t16, updating_delItems, updating_changedParams, t17, updating_delItems_1, updating_changedParams_1, t18, div17, t20, updating_delItems_2, updating_changedParams_2, t21, updating_delItems_3, updating_changedParams_3, t22, div20, t26, div23, t30, div26, t34, div29, t38, div32, t42, div35, t46, div38, t50, div41, t54, div43, t56, div46, t60, div49, t64, div53, div51, t66, div52, current, dispose;
 
-    	let each_value = scales;
+    	var each_value = scales;
 
-    	let each_blocks = [];
+    	var each_blocks = [];
 
-    	for (let i = 0; i < each_value.length; i += 1) {
+    	for (var i = 0; i < each_value.length; i += 1) {
     		each_blocks[i] = create_each_block$3(get_each_context$3(ctx, each_value, i));
     	}
 
@@ -4341,9 +4436,57 @@ var app = (function () {
     	binding_callbacks.push(() => bind(selectinput1, 'delItems', selectinput1_delItems_binding));
     	binding_callbacks.push(() => bind(selectinput1, 'changedParams', selectinput1_changedParams_binding));
 
+    	function selectinput2_delItems_binding(value_4) {
+    		ctx.selectinput2_delItems_binding.call(null, value_4);
+    		updating_delItems_2 = true;
+    		add_flush_callback(() => updating_delItems_2 = false);
+    	}
+
+    	function selectinput2_changedParams_binding(value_5) {
+    		ctx.selectinput2_changedParams_binding.call(null, value_5);
+    		updating_changedParams_2 = true;
+    		add_flush_callback(() => updating_changedParams_2 = false);
+    	}
+
+    	let selectinput2_props = { key: "region" };
+    	if (ctx.delItems !== void 0) {
+    		selectinput2_props.delItems = ctx.delItems;
+    	}
+    	if (ctx.changedParams !== void 0) {
+    		selectinput2_props.changedParams = ctx.changedParams;
+    	}
+    	var selectinput2 = new SelectInput({ props: selectinput2_props });
+
+    	binding_callbacks.push(() => bind(selectinput2, 'delItems', selectinput2_delItems_binding));
+    	binding_callbacks.push(() => bind(selectinput2, 'changedParams', selectinput2_changedParams_binding));
+
+    	function selectinput3_delItems_binding(value_6) {
+    		ctx.selectinput3_delItems_binding.call(null, value_6);
+    		updating_delItems_3 = true;
+    		add_flush_callback(() => updating_delItems_3 = false);
+    	}
+
+    	function selectinput3_changedParams_binding(value_7) {
+    		ctx.selectinput3_changedParams_binding.call(null, value_7);
+    		updating_changedParams_3 = true;
+    		add_flush_callback(() => updating_changedParams_3 = false);
+    	}
+
+    	let selectinput3_props = { key: "forestr" };
+    	if (ctx.delItems !== void 0) {
+    		selectinput3_props.delItems = ctx.delItems;
+    	}
+    	if (ctx.changedParams !== void 0) {
+    		selectinput3_props.changedParams = ctx.changedParams;
+    	}
+    	var selectinput3 = new SelectInput({ props: selectinput3_props });
+
+    	binding_callbacks.push(() => bind(selectinput3, 'delItems', selectinput3_delItems_binding));
+    	binding_callbacks.push(() => bind(selectinput3, 'changedParams', selectinput3_changedParams_binding));
+
     	return {
     		c() {
-    			div57 = element("div");
+    			div54 = element("div");
     			div3 = element("div");
     			div0 = element("div");
     			div0.textContent = "Создание отчетов";
@@ -4355,7 +4498,7 @@ var app = (function () {
     			div5 = element("div");
     			div5.innerHTML = `<div class="popup-map-row2-left">Очистить поля ввода</div>`;
     			t5 = space();
-    			div53 = element("div");
+    			div50 = element("div");
     			form = element("form");
     			div8 = element("div");
     			div6 = element("div");
@@ -4364,7 +4507,7 @@ var app = (function () {
     			div7 = element("div");
     			select = element("select");
 
-    			for (let i = 0; i < each_blocks.length; i += 1) {
+    			for (var i = 0; i < each_blocks.length; i += 1) {
     				each_blocks[i].c();
     			}
 
@@ -4378,55 +4521,56 @@ var app = (function () {
     			div15 = element("div");
     			div15.innerHTML = `<div class="popup-map-row3-left">Организация1   </div>`;
     			t16 = space();
-    			div18 = element("div");
-    			div18.innerHTML = `<div class="kv">Наименование организации</div> <input type="text" name="company" class="input-left-controls-pop-add-kvartal-popmap"> <div class="icon-restore tit"></div>`;
-    			t20 = space();
     			selectinput0.$$.fragment.c();
-    			t21 = space();
+    			t17 = space();
     			selectinput1.$$.fragment.c();
+    			t18 = space();
+    			div17 = element("div");
+    			div17.innerHTML = `<div class="popup-map-row3-left">Расположение объекта</div>`;
+    			t20 = space();
+    			selectinput2.$$.fragment.c();
+    			t21 = space();
+    			selectinput3.$$.fragment.c();
     			t22 = space();
     			div20 = element("div");
-    			div20.innerHTML = `<div class="popup-map-row3-left">Расположение объекта</div>`;
-    			t24 = space();
+    			div20.innerHTML = `<div class="kv">Субъект РФ</div> <input type="text" name="region" class="input-left-controls-pop-add-kvartal-popmap"> <div class="icon-restore tit"></div>`;
+    			t26 = space();
     			div23 = element("div");
-    			div23.innerHTML = `<div class="kv">Субъект РФ</div> <input type="text" name="region" class="input-left-controls-pop-add-kvartal-popmap"> <div class="icon-restore tit"></div>`;
-    			t28 = space();
+    			div23.innerHTML = `<div class="kv">Лесничество</div> <input type="text" name="forestr" class="input-left-controls-pop-add-kvartal-popmap"> <div class="icon-restore tit"></div>`;
+    			t30 = space();
     			div26 = element("div");
-    			div26.innerHTML = `<div class="kv">Лесничество</div> <input type="text" name="forestr" class="input-left-controls-pop-add-kvartal-popmap"> <div class="icon-restore tit"></div>`;
-    			t32 = space();
+    			div26.innerHTML = `<div class="kv">Участковое лесничество</div> <input type="text" name="subforest" class="input-left-controls-pop-add-kvartal-popmap"> <div class="icon-restore tit"></div>`;
+    			t34 = space();
     			div29 = element("div");
-    			div29.innerHTML = `<div class="kv">Участковое лесничество</div> <input type="text" name="subforest" class="input-left-controls-pop-add-kvartal-popmap"> <div class="icon-restore tit"></div>`;
-    			t36 = space();
+    			div29.innerHTML = `<div class="kv">Дача/Урочище</div> <input type="text" name="dacha" class="input-left-controls-pop-add-kvartal-popmap"> <div class="icon-restore tit"></div>`;
+    			t38 = space();
     			div32 = element("div");
-    			div32.innerHTML = `<div class="kv">Дача/Урочище</div> <input type="text" name="dacha" class="input-left-controls-pop-add-kvartal-popmap"> <div class="icon-restore tit"></div>`;
-    			t40 = space();
+    			div32.innerHTML = `<div class="kv">Квартал</div> <input type="text" name="kvartal" class="input-left-controls-pop-add-kvartal-popmap"> <div class="icon-restore tit"></div>`;
+    			t42 = space();
     			div35 = element("div");
-    			div35.innerHTML = `<div class="kv">Квартал</div> <input type="text" name="kvartal" class="input-left-controls-pop-add-kvartal-popmap"> <div class="icon-restore tit"></div>`;
-    			t44 = space();
+    			div35.innerHTML = `<div class="kv">Выдел</div> <input type="text" name="vydel" class="input-left-controls-pop-add-kvartal-popmap"> <div class="icon-restore tit"></div>`;
+    			t46 = space();
     			div38 = element("div");
-    			div38.innerHTML = `<div class="kv">Выдел</div> <input type="text" name="vydel" class="input-left-controls-pop-add-kvartal-popmap"> <div class="icon-restore tit"></div>`;
-    			t48 = space();
+    			div38.innerHTML = `<div class="kv">Делянка</div> <input type="text" name="delyanka" class="input-left-controls-pop-add-kvartal-popmap"> <div class="icon-restore tit"></div>`;
+    			t50 = space();
     			div41 = element("div");
-    			div41.innerHTML = `<div class="kv">Делянка</div> <input type="text" name="delyanka" class="input-left-controls-pop-add-kvartal-popmap"> <div class="icon-restore tit"></div>`;
-    			t52 = space();
-    			div44 = element("div");
-    			div44.innerHTML = `<div class="kv">Площадь</div> <input type="text" name="area" class="input-left-controls-pop-add-kvartal-popmap"> <div class="icon-restore tit"></div>`;
+    			div41.innerHTML = `<div class="kv">Площадь</div> <input type="text" name="area" class="input-left-controls-pop-add-kvartal-popmap"> <div class="icon-restore tit"></div>`;
+    			t54 = space();
+    			div43 = element("div");
+    			div43.innerHTML = `<div class="popup-map-row3-left">Хозмероприятия</div>`;
     			t56 = space();
     			div46 = element("div");
-    			div46.innerHTML = `<div class="popup-map-row3-left">Хозмероприятия</div>`;
-    			t58 = space();
+    			div46.innerHTML = `<div class="kv">Форма рубки</div> <input type="text" name="form_rub" class="input-left-controls-pop-add-kvartal-popmap"> <div class="icon-restore tit"></div>`;
+    			t60 = space();
     			div49 = element("div");
-    			div49.innerHTML = `<div class="kv">Форма рубки</div> <input type="text" name="form_rub" class="input-left-controls-pop-add-kvartal-popmap"> <div class="icon-restore tit"></div>`;
-    			t62 = space();
-    			div52 = element("div");
-    			div52.innerHTML = `<div class="kv">Тип рубки</div> <input type="text" name="type_rub" class="input-left-controls-pop-add-kvartal-popmap"> <div class="icon-restore tit"></div>`;
+    			div49.innerHTML = `<div class="kv">Тип рубки</div> <input type="text" name="type_rub" class="input-left-controls-pop-add-kvartal-popmap"> <div class="icon-restore tit"></div>`;
+    			t64 = space();
+    			div53 = element("div");
+    			div51 = element("div");
+    			div51.textContent = "Отмена";
     			t66 = space();
-    			div56 = element("div");
-    			div54 = element("div");
-    			div54.textContent = "Отмена";
-    			t68 = space();
-    			div55 = element("div");
-    			div55.textContent = "Создать отчет";
+    			div52 = element("div");
+    			div52.textContent = "Создать отчет";
     			attr(div0, "class", "popup-map-row1-left");
     			attr(div1, "class", "ques-map");
     			attr(div2, "class", "restore-icon-ot");
@@ -4440,8 +4584,8 @@ var app = (function () {
     			attr(div10, "class", "popup-map-row3");
     			attr(div13, "class", "popup-map-row-check-1");
     			attr(div15, "class", "popup-map-row3");
-    			attr(div18, "class", "input-kv-map");
-    			attr(div20, "class", "popup-map-row3");
+    			attr(div17, "class", "popup-map-row3");
+    			attr(div20, "class", "input-kv-map");
     			attr(div23, "class", "input-kv-map");
     			attr(div26, "class", "input-kv-map");
     			attr(div29, "class", "input-kv-map");
@@ -4449,45 +4593,44 @@ var app = (function () {
     			attr(div35, "class", "input-kv-map");
     			attr(div38, "class", "input-kv-map");
     			attr(div41, "class", "input-kv-map");
-    			attr(div44, "class", "input-kv-map");
-    			attr(div46, "class", "popup-map-row3");
+    			attr(div43, "class", "popup-map-row3");
+    			attr(div46, "class", "input-kv-map");
     			attr(div49, "class", "input-kv-map");
-    			attr(div52, "class", "input-kv-map");
     			attr(form, "class", "report-form");
-    			attr(div53, "class", "sidebar-opened-el-container margin-bot-50");
-    			attr(div53, "id", "style-4");
-    			attr(div54, "class", "popup-map-bottom-left");
-    			attr(div55, "class", "popup-map-bottom-right");
-    			attr(div56, "class", "popup-map-bottom");
-    			attr(div57, "class", "popup-map");
+    			attr(div50, "class", "sidebar-opened-el-container margin-bot-50");
+    			attr(div50, "id", "style-4");
+    			attr(div51, "class", "popup-map-bottom-left");
+    			attr(div52, "class", "popup-map-bottom-right");
+    			attr(div53, "class", "popup-map-bottom");
+    			attr(div54, "class", "popup-map");
 
     			dispose = [
     				listen(div1, "click", ctx.toggleHint),
-    				listen(div54, "click", ctx.closeReport),
-    				listen(div55, "click", ctx.createReport)
+    				listen(div51, "click", ctx.closeReport),
+    				listen(div52, "click", ctx.createReport)
     			];
     		},
 
     		m(target, anchor) {
-    			insert(target, div57, anchor);
-    			append(div57, div3);
+    			insert(target, div54, anchor);
+    			append(div54, div3);
     			append(div3, div0);
     			append(div3, t1);
     			append(div3, div1);
     			append(div3, t2);
     			append(div3, div2);
-    			append(div57, t3);
-    			append(div57, div5);
-    			append(div57, t5);
-    			append(div57, div53);
-    			append(div53, form);
+    			append(div54, t3);
+    			append(div54, div5);
+    			append(div54, t5);
+    			append(div54, div50);
+    			append(div50, form);
     			append(form, div8);
     			append(div8, div6);
     			append(div8, t7);
     			append(div8, div7);
     			append(div7, select);
 
-    			for (let i = 0; i < each_blocks.length; i += 1) {
+    			for (var i = 0; i < each_blocks.length; i += 1) {
     				each_blocks[i].m(select, null);
     			}
 
@@ -4498,40 +4641,42 @@ var app = (function () {
     			append(form, t14);
     			append(form, div15);
     			append(form, t16);
-    			append(form, div18);
-    			append(form, t20);
     			mount_component(selectinput0, form, null);
-    			append(form, t21);
+    			append(form, t17);
     			mount_component(selectinput1, form, null);
+    			append(form, t18);
+    			append(form, div17);
+    			append(form, t20);
+    			mount_component(selectinput2, form, null);
+    			append(form, t21);
+    			mount_component(selectinput3, form, null);
     			append(form, t22);
     			append(form, div20);
-    			append(form, t24);
+    			append(form, t26);
     			append(form, div23);
-    			append(form, t28);
+    			append(form, t30);
     			append(form, div26);
-    			append(form, t32);
+    			append(form, t34);
     			append(form, div29);
-    			append(form, t36);
+    			append(form, t38);
     			append(form, div32);
-    			append(form, t40);
+    			append(form, t42);
     			append(form, div35);
-    			append(form, t44);
+    			append(form, t46);
     			append(form, div38);
-    			append(form, t48);
+    			append(form, t50);
     			append(form, div41);
-    			append(form, t52);
-    			append(form, div44);
+    			append(form, t54);
+    			append(form, div43);
     			append(form, t56);
     			append(form, div46);
-    			append(form, t58);
+    			append(form, t60);
     			append(form, div49);
-    			append(form, t62);
-    			append(form, div52);
-    			append(div57, t66);
-    			append(div57, div56);
-    			append(div56, div54);
-    			append(div56, t68);
-    			append(div56, div55);
+    			append(div54, t64);
+    			append(div54, div53);
+    			append(div53, div51);
+    			append(div53, t66);
+    			append(div53, div52);
     			current = true;
     		},
 
@@ -4539,8 +4684,7 @@ var app = (function () {
     			if (changed.Config) {
     				each_value = scales;
 
-    				let i;
-    				for (i = 0; i < each_value.length; i += 1) {
+    				for (var i = 0; i < each_value.length; i += 1) {
     					const child_ctx = get_each_context$3(ctx, each_value, i);
 
     					if (each_blocks[i]) {
@@ -4575,6 +4719,24 @@ var app = (function () {
     				selectinput1_changes.changedParams = ctx.changedParams;
     			}
     			selectinput1.$set(selectinput1_changes);
+
+    			var selectinput2_changes = {};
+    			if (!updating_delItems_2 && changed.delItems) {
+    				selectinput2_changes.delItems = ctx.delItems;
+    			}
+    			if (!updating_changedParams_2 && changed.changedParams) {
+    				selectinput2_changes.changedParams = ctx.changedParams;
+    			}
+    			selectinput2.$set(selectinput2_changes);
+
+    			var selectinput3_changes = {};
+    			if (!updating_delItems_3 && changed.delItems) {
+    				selectinput3_changes.delItems = ctx.delItems;
+    			}
+    			if (!updating_changedParams_3 && changed.changedParams) {
+    				selectinput3_changes.changedParams = ctx.changedParams;
+    			}
+    			selectinput3.$set(selectinput3_changes);
     		},
 
     		i(local) {
@@ -4583,18 +4745,24 @@ var app = (function () {
 
     			transition_in(selectinput1.$$.fragment, local);
 
+    			transition_in(selectinput2.$$.fragment, local);
+
+    			transition_in(selectinput3.$$.fragment, local);
+
     			current = true;
     		},
 
     		o(local) {
     			transition_out(selectinput0.$$.fragment, local);
     			transition_out(selectinput1.$$.fragment, local);
+    			transition_out(selectinput2.$$.fragment, local);
+    			transition_out(selectinput3.$$.fragment, local);
     			current = false;
     		},
 
     		d(detaching) {
     			if (detaching) {
-    				detach(div57);
+    				detach(div54);
     			}
 
     			destroy_each(each_blocks, detaching);
@@ -4603,6 +4771,10 @@ var app = (function () {
 
     			destroy_component(selectinput1);
 
+    			destroy_component(selectinput2);
+
+    			destroy_component(selectinput3);
+
     			run_all(dispose);
     		}
     	};
@@ -4610,7 +4782,7 @@ var app = (function () {
 
     // (260:0) {#each Config.scales as item}
     function create_each_block$3(ctx) {
-    	var option, t_value = ctx.item.title + "", t, option_value_value;
+    	var option, t_value = ctx.item.title, t, option_value_value;
 
     	return {
     		c() {
@@ -4638,22 +4810,22 @@ var app = (function () {
     }
 
     function create_fragment$7(ctx) {
-    	var div17, div2, div0, t0_value = ctx.gmxMap.properties && ctx.gmxMap.properties.title || 'Название проекта/компании' + "", t0, t1, div1, t2, div6, div3, t4, div5, t5, div4, t6, t7, div9, t11, div13, div10, t13, div12, div11, select, option, t14, div16, div14, t15, div14_class_value, t16, div15, t17, t18, t19, div22, t24, div27, current, dispose;
+    	var div17, div2, div0, t0_value = ctx.gmxMap.properties && ctx.gmxMap.properties.title || 'Название проекта/компании', t0, t1, div1, t2, div6, div3, t4, div5, t5, div4, t6, t7, div9, t11, div13, div10, t13, div12, div11, select, option, t14, div16, div14, t15, div14_class_value, t16, div15, t17, t18, t19, div22, t24, div27, current, dispose;
 
-    	let each_value_2 = ctx.gmxMap.layers;
+    	var each_value_2 = ctx.gmxMap.layers;
 
-    	let each_blocks = [];
+    	var each_blocks = [];
 
-    	for (let i = 0; i < each_value_2.length; i += 1) {
+    	for (var i = 0; i < each_value_2.length; i += 1) {
     		each_blocks[i] = create_each_block_2$1(get_each_context_2$1(ctx, each_value_2, i));
     	}
 
-    	function select_block_type(changed, ctx) {
+    	function select_block_type(ctx) {
     		if (!ctx.delynkaLayer) return create_if_block_1$2;
     		if (ctx.delItems) return create_if_block_2$1;
     	}
 
-    	var current_block_type = select_block_type(null, ctx);
+    	var current_block_type = select_block_type(ctx);
     	var if_block0 = current_block_type && current_block_type(ctx);
 
     	var if_block1 = (ctx.reportIsOpen) && create_if_block$2(ctx);
@@ -4688,7 +4860,7 @@ var app = (function () {
     			select = element("select");
     			option = element("option");
 
-    			for (let i = 0; i < each_blocks.length; i += 1) {
+    			for (var i = 0; i < each_blocks.length; i += 1) {
     				each_blocks[i].c();
     			}
 
@@ -4767,7 +4939,7 @@ var app = (function () {
     			append(div11, select);
     			append(select, option);
 
-    			for (let i = 0; i < each_blocks.length; i += 1) {
+    			for (var i = 0; i < each_blocks.length; i += 1) {
     				each_blocks[i].m(select, null);
     			}
 
@@ -4789,7 +4961,7 @@ var app = (function () {
     		},
 
     		p(changed, ctx) {
-    			if ((!current || changed.gmxMap) && t0_value !== (t0_value = ctx.gmxMap.properties && ctx.gmxMap.properties.title || 'Название проекта/компании' + "")) {
+    			if ((!current || changed.gmxMap) && t0_value !== (t0_value = ctx.gmxMap.properties && ctx.gmxMap.properties.title || 'Название проекта/компании')) {
     				set_data(t0, t0_value);
     			}
 
@@ -4800,8 +4972,7 @@ var app = (function () {
     			if (changed.Utils || changed.gmxMap) {
     				each_value_2 = ctx.gmxMap.layers;
 
-    				let i;
-    				for (i = 0; i < each_value_2.length; i += 1) {
+    				for (var i = 0; i < each_value_2.length; i += 1) {
     					const child_ctx = get_each_context_2$1(ctx, each_value_2, i);
 
     					if (each_blocks[i]) {
@@ -4823,7 +4994,7 @@ var app = (function () {
     				attr(div14, "class", div14_class_value);
     			}
 
-    			if (current_block_type === (current_block_type = select_block_type(changed, ctx)) && if_block0) {
+    			if (current_block_type === (current_block_type = select_block_type(ctx)) && if_block0) {
     				if_block0.p(changed, ctx);
     			} else {
     				if (if_block0) if_block0.d(1);
@@ -5050,6 +5221,26 @@ var app = (function () {
     		$$invalidate('changedParams', changedParams);
     	}
 
+    	function selectinput2_delItems_binding(value_4) {
+    		delItems$1 = value_4;
+    		$$invalidate('delItems', delItems$1);
+    	}
+
+    	function selectinput2_changedParams_binding(value_5) {
+    		changedParams = value_5;
+    		$$invalidate('changedParams', changedParams);
+    	}
+
+    	function selectinput3_delItems_binding(value_6) {
+    		delItems$1 = value_6;
+    		$$invalidate('delItems', delItems$1);
+    	}
+
+    	function selectinput3_changedParams_binding(value_7) {
+    		changedParams = value_7;
+    		$$invalidate('changedParams', changedParams);
+    	}
+
     	return {
     		changedParams,
     		gmxMap,
@@ -5068,7 +5259,11 @@ var app = (function () {
     		selectinput0_delItems_binding,
     		selectinput0_changedParams_binding,
     		selectinput1_delItems_binding,
-    		selectinput1_changedParams_binding
+    		selectinput1_changedParams_binding,
+    		selectinput2_delItems_binding,
+    		selectinput2_changedParams_binding,
+    		selectinput3_delItems_binding,
+    		selectinput3_changedParams_binding
     	};
     }
 
@@ -5079,7 +5274,7 @@ var app = (function () {
     	}
     }
 
-    /* src/App.svelte generated by Svelte v3.10.0 */
+    /* src\App.svelte generated by Svelte v3.7.1 */
 
     // (107:0) {#if sidebar_visible}
     function create_if_block$3(ctx) {
@@ -5093,14 +5288,14 @@ var app = (function () {
 
     	var if_blocks = [];
 
-    	function select_block_type(changed, ctx) {
+    	function select_block_type(ctx) {
     		if (ctx.sidebar_num === 1) return 0;
     		if (ctx.sidebar_num === 2) return 1;
     		if (ctx.sidebar_num === 3) return 2;
     		return -1;
     	}
 
-    	if (~(current_block_type_index = select_block_type(null, ctx))) {
+    	if (~(current_block_type_index = select_block_type(ctx))) {
     		if_block = if_blocks[current_block_type_index] = if_block_creators[current_block_type_index](ctx);
     	}
 
@@ -5118,7 +5313,7 @@ var app = (function () {
 
     		p(changed, ctx) {
     			var previous_block_index = current_block_type_index;
-    			current_block_type_index = select_block_type(changed, ctx);
+    			current_block_type_index = select_block_type(ctx);
     			if (current_block_type_index === previous_block_index) {
     				if (~current_block_type_index) if_blocks[current_block_type_index].p(changed, ctx);
     			} else {

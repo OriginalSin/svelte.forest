@@ -1,10 +1,27 @@
 
-const	_self = self,
+const	_self = self || window,
 		serverBase = _self.serverBase || '//maps.kosmosnimki.ru/',
 		serverProxy = serverBase + 'Plugins/ForestReport/proxy';
 
 let loaderStatus = {};
 let _sessionKeys = {};
+let _app = {};
+
+const parseURLParams = (str) => {
+	let sp = new URLSearchParams(str || location.search),
+		out = {},
+		arr = [];
+	for (let p of sp) {
+		let k = p[0], z = p[1];
+		if (z) {
+			if (!out[k]) {out[k] = [];}
+			out[k].push(z);
+		} else {
+			arr.push(k);
+		}
+	}
+	return {main: arr, keys: out};
+};
 
 const requestSessionKey = (serverHost, apiKey) => {
 	let keys = _sessionKeys;
@@ -36,7 +53,8 @@ const requestSessionKey = (serverHost, apiKey) => {
 
 const getMapTree = (params) => {
 	params = params || {};
-	
+console.log('parseURLParams', parseURLParams(params.search));
+
 	let url = `${serverBase}Map/GetMapFolder`;
 	url += '?mapId=' + (params.mapId || 'C8612B3A77D84F3F87953BEF17026A5F');
 	url += '&folderId=root';
@@ -130,6 +148,7 @@ const getReportsCount = () => {
 };
 
 export default {
+	parseURLParams,
 	getMapTree,
 	getReportsCount,
 	getLayerItems

@@ -15,7 +15,7 @@ console.log('message ', e);
 			});
 			break;
 		case 'getMap':
-			Requests.getMapTree({mapId: message.mapID}).then((json) => {
+			Requests.getMapTree({mapId: message.mapID, search: message.search}).then((json) => {
 				message.out = json;
 				_self.postMessage(message);
 			});

@@ -5,7 +5,7 @@
 	import { leafletMap, mapLayers, mapTree, worker } from '../stores.js';
 	// import Store from '../stores.js';
 
-	// import Requests from '../worker/Requests.js';
+	import Requests from '../worker/Requests.js';
 	import DataWorker from 'web-worker:../worker';
 
 	let dataWorker = new DataWorker();
@@ -90,7 +90,8 @@
 			}
 	// console.log('onmessage', json);
 		};
-		dataWorker.postMessage({cmd: 'getMap', mapID: mapID});
+		let pars = Requests.parseURLParams(location.search);
+		dataWorker.postMessage({cmd: 'getMap', mapID: pars.main.length ? pars.main[0] : mapID, search: location.search});
     });
 </script>
 

@@ -1,10 +1,27 @@
-const	_self = self,
+const	_self = self || window,
 		serverBase = _self.serverBase || '//maps.kosmosnimki.ru/',
 		serverProxy = serverBase + 'Plugins/ForestReport/proxy';
 
+const parseURLParams = (str) => {
+	let sp = new URLSearchParams(str || location.search),
+		out = {},
+		arr = [];
+	for (let p of sp) {
+		let k = p[0], z = p[1];
+		if (z) {
+			if (!out[k]) {out[k] = [];}
+			out[k].push(z);
+		} else {
+			arr.push(k);
+		}
+	}
+	return {main: arr, keys: out};
+};
+
 const getMapTree = (params) => {
 	params = params || {};
-	
+console.log('parseURLParams', parseURLParams(params.search));
+
 	let url = `${serverBase}Map/GetMapFolder`;
 	url += '?mapId=' + (params.mapId || 'C8612B3A77D84F3F87953BEF17026A5F');
 	url += '&folderId=root';
@@ -95,6 +112,7 @@ const getReportsCount = () => {
 };
 
 var Requests = {
+	parseURLParams,
 	getMapTree,
 	getReportsCount,
 	getLayerItems
@@ -115,7 +133,7 @@ console.log('message ', e);
 			});
 			break;
 		case 'getMap':
-			Requests.getMapTree({mapId: message.mapID}).then((json) => {
+			Requests.getMapTree({mapId: message.mapID, search: message.search}).then((json) => {
 				message.out = json;
 				_self$1.postMessage(message);
 			});
